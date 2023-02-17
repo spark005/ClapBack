@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Code utilized from Geeks for Geeks -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUp">
+
+    <!-- This is to set up the main logo on the login screen -->
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:src="@drawable/clapbacklogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"/>
+
+    <!-- Setting up the name textbox -->
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/app_logo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:hint="Name"
+        android:paddingLeft="13dp" />
+
+    <!-- Setting up the Email textbox -->
+
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/edit_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:hint="Email"
+        android:paddingLeft="13dp" />
+
+    <!-- Setting up the password textbox -->
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/edit_email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:hint="Password"
+        android:paddingLeft="13dp" />
+
+    <!-- Setting up the Sign Up button -->
+    <Button
+        android:id="@+id/signup_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_background"
+        android:text="Sign Up"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+
+
+</RelativeLayout>

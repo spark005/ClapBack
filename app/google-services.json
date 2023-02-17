@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "85711921787",
+    "project_id": "clapback-54c33",
+    "storage_bucket": "clapback-54c33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85711921787:android:7cc24e97b9e0210b3538de",
+        "android_client_info": {
+          "package_name": "com.example.clapback"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85711921787-b234v2fit7qov0ft1eh97s021folker4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB47RGiPyKIsJn1vbYlrM9f1Rn2cuV1P7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85711921787-b234v2fit7qov0ft1eh97s021folker4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
