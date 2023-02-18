@@ -1,4 +1,4 @@
-package com.example.mymessageapp
+package com.example.clapback
 
 import android.app.Activity
 import android.content.Intent
@@ -8,10 +8,12 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.clapback.MainActivity
 import com.example.clapback.R
 
-private lateinit var button: Button
+private lateinit var select: Button
 private lateinit var profilePic: ImageView
+private lateinit var confirm: Button
 
 class ProfilePic : AppCompatActivity() {
     companion object {
@@ -22,8 +24,9 @@ class ProfilePic : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_pic)
 
-        button = findViewById(R.id.selectbutton)
+        select = findViewById(R.id.selectbutton)
         profilePic = findViewById(R.id.profilepic)
+        confirm = findViewById(R.id.confirmbutton)
 
         val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
@@ -33,8 +36,7 @@ class ProfilePic : AppCompatActivity() {
             }
         }
 
-        button.setOnClickListener {
-            print("we made it")
+        select.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
 
@@ -44,5 +46,10 @@ class ProfilePic : AppCompatActivity() {
             //TODO look into this registerForActivityResult(intent, IMAGE_REQUEST_CODE)
 
         }
+
+        confirm.setOnClickListener {
+            val intent = Intent(this@ProfilePic, MainActivity::class.java)
+            finish()
+            startActivity(intent) }
     }
 }

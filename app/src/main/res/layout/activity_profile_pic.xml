@@ -23,4 +23,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         />
+
+    <Button
+        android:id="@+id/confirmbutton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_below="@+id/selectbutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        />
 </RelativeLayout>

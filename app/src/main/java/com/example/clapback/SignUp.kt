@@ -57,7 +57,7 @@ class SignUp : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // If sign in is successful, jump to home
                     addUserToDatabse(name, email, mAuth.currentUser?.uid!!)
-                    val intent = Intent(this@SignUp, MainActivity::class.java)
+                    val intent = Intent(this@SignUp, ProfilePic::class.java)
                     finish()
                     startActivity(intent)
                 } else {
