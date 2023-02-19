@@ -12,7 +12,7 @@
         android:id="@+id/app_logo"
         android:layout_width="350dp"
         android:layout_height="150dp"
-        android:src="@drawable/clapbacklogo"
+        android:src="@drawable/logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"/>
 
@@ -27,7 +27,7 @@
         android:layout_marginTop="27dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
-        android:hint="Name"
+        android:hint="Username"
         android:paddingLeft="13dp" />
 
     <!-- Setting up the Email textbox -->
@@ -38,7 +38,7 @@
         android:layout_height="50dp"
         android:layout_below="@+id/edit_name"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
         android:hint="Email"
@@ -51,7 +51,7 @@
         android:layout_height="50dp"
         android:layout_below="@+id/edit_email"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
         android:hint="Password"
@@ -60,15 +60,14 @@
     <!-- Setting up the Sign Up button -->
     <Button
         android:id="@+id/signup_button"
-        android:layout_width="150dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/btn_background"
         android:text="Sign Up"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textColor="@color/white" />
 
 
 
