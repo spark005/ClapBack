@@ -56,7 +56,7 @@ class SignUp : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // If sign in is successful, jump to home
-                    addUserToDatabse(name, email, mAuth.currentUser?.uid!!)
+                    addUserToDatabase(name, email, mAuth.currentUser?.uid!!)
                     val intent = Intent(this@SignUp, ProfilePic::class.java)
                     finish()
                     startActivity(intent)
@@ -69,7 +69,7 @@ class SignUp : AppCompatActivity() {
 
 
     // Adding user to database
-    private fun addUserToDatabse(name: String, email: String, uid: String) {
+    private fun addUserToDatabase(name: String, email: String, uid: String) {
         mDbRef =FirebaseDatabase.getInstance().getReference()
 
         mDbRef.child("user").child(uid).setValue(User(name, email, uid))
