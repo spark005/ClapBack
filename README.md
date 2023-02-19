@@ -26,7 +26,7 @@ $ pip3 install -r requirements.txt
 ```
 3. Run the development server:
 ```
-$ python app.py
+$ python3 app.py
 ```
 
 #### Error Handling
