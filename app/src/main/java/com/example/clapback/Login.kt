@@ -5,16 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 
 class Login : AppCompatActivity() {
 
     //TODO, figure out what lateinit var means in kotlin
+    //Lateinit allows us to initialize a non-null variable outside constructor
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
     private lateinit var btnLogin: Button
-    private lateinit var btnSignUp: Button
+    private lateinit var btnSignUp: TextView
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -31,7 +33,7 @@ class Login : AppCompatActivity() {
         editEmail = findViewById(R.id.edit_email)
         editPassword = findViewById(R.id.edit_password)
         btnLogin = findViewById(R.id.login_button)
-        btnSignUp = findViewById(R.id.signup_button)
+        btnSignUp = findViewById(R.id.signup_link)
 
         // Creating signup button functionality
         btnSignUp.setOnClickListener {
