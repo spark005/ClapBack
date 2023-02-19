@@ -12,9 +12,9 @@ users = [{'uid': 1, 'name': 'Ilhoon Lee'}]
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    cred = credentials.Certificate('static/fbAdminConfig.json')
+    cred = credentials.Certificate('fbAdminConfig.json')
     firebase = firebase_admin.initialize_app(cred)
-    pb = pyrebase.initialize_app(json.load(open('static/fbconfig.json')))
+    pb = pyrebase.initialize_app(json.load(open('fbconfig.json')))
 
     @app.route("/")
     def index():
