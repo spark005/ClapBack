@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Code utilized from Geeks for Geeks -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login">
+
+    <!-- This is to set up the main logo on the login screen -->
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"/>
+
+    <!-- Setting up the username label -->
+    <TextView
+        android:id="@+id/edit_email_label"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/app_logo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:text="Your Email"
+        android:autofillHints="true"
+        android:clickable="false"
+        android:textSize="15sp"
+        />
+
+
+    <!-- Setting up the Email textbox -->
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/edit_email_label"
+        android:layout_alignStart="@id/edit_email_label"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/edit_background"
+        android:hint="e.g. randomUser@gmail.com"
+        android:paddingLeft="35dp" />
+
+    <!-- Setting up the username image -->
+    <ImageView
+        android:id="@+id/username_image"
+        android:layout_width="22dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_email_label"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="3dp"
+        android:src="@drawable/username_logo" />
+
+    <!-- Setting up the password label -->
+    <TextView
+        android:id="@+id/edit_password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/edit_email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="0dp"
+        android:text="Your Password"
+        android:textSize="15sp"
+        />
+
+    <!-- Setting up the password image -->
+    <ImageView
+        android:id="@+id/username_lock"
+        android:layout_width="25dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/edit_password_label"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/lock" />
+
+    <!-- Setting up the password textbox w/ hide/reveal feature-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/new_password"
+        android:layout_width="371dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/edit_password_label"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_alignEnd="@id/edit_email"
+        app:passwordToggleEnabled="true"
+        android:hint=" ">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/edit_password_label"
+            android:layout_alignStart="@id/edit_email_label"
+            android:layout_alignEnd="@id/edit_email"
+            android:layout_marginTop= "0dp"
+            android:background="@drawable/edit_background"
+            android:hint="e.g. clapbackr@cks"
+            android:paddingLeft="35dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_marginLeft="255dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/new_password"
+        android:autoLink="web"
+        android:clickable="true"
+        android:text="Forgot password?"
+        android:textColor="@color/black"
+        android:focusable="true" />
+
+   <!-- Setting up the login button -->
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/new_password"
+        android:text="Log In"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+
+    <!-- Setting up the Sign Up link -->
+
+    <TextView
+        android:id="@+id/signup"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="180dp"
+        android:layout_below="@id/login_button"
+        android:text="New to ClapBack?"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/signup_link"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignStart="@id/edit_email"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="180dp"
+        android:layout_below="@id/login_button"
+        android:clickable="true"
+        android:text="Sign Up"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:focusable="true" />
+
+
+</RelativeLayout>
