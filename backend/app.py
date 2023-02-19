@@ -1,6 +1,7 @@
 import firebase_admin
 import pyrebase
 import json
+import os
 import sys
 import requests
 from auth.auth import AuthError, check_token
@@ -115,4 +116,4 @@ def create_app(test_config=None):
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get("PORT", 8080)))
