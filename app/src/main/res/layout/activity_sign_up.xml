@@ -27,7 +27,7 @@
         android:layout_marginTop="27dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
-        android:hint="Name"
+        android:text=""
         android:paddingLeft="13dp" />
 
     <!-- Setting up the Email textbox -->
@@ -41,7 +41,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
-        android:hint="Email"
+        android:text=""
         android:paddingLeft="13dp" />
 
     <!-- Setting up the password textbox -->
@@ -54,7 +54,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edit_background"
-        android:hint="Password"
+        android:text=""
         android:paddingLeft="13dp" />
 
     <!-- Setting up the Sign Up button -->
