@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.clapback.MainActivity
 import com.example.clapback.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 private lateinit var select: Button
 private lateinit var profilePic: ImageView
@@ -48,6 +49,16 @@ class ProfilePic : AppCompatActivity() {
         }
 
         confirm.setOnClickListener {
+            if (profilePic.drawable == null){
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Are you sure you want to continue without a Profile pic?")
+                    .setMessage("Don't worry. You can always add or change one in Profile Settings")
+                    .setNegativeButton("Nah"){ dialog, which ->
+
+                    }
+                    .setPositiveButton("Yep"){dialog, which ->}
+                    .show()
+            }
             val intent = Intent(this@ProfilePic, MainActivity::class.java)
             finish()
             startActivity(intent) }
