@@ -74,6 +74,13 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
+        if (item.itemId == R.id.edtProfile) {
+
+            val intent = Intent(this@MainActivity, EditProfile::class.java)
+            finish()
+            startActivity(intent)
+            return true
+        }
         return true
     }
 }

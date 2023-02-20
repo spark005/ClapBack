@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUp">
+
+    <!-- This is to set up the main logo on the login screen -->
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:src="@drawable/clapbacklogo" />
+
+
+    <TextView
+        android:id="@+id/name_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="27dp"
+        android:text="New name"  />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/name_hint"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:text=""
+        android:paddingLeft="13dp" />
+
+    <TextView
+        android:id="@+id/email_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="New email"  />
+
+    <!-- Setting up the Email textbox -->
+
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/email_hint"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:text=""
+        android:paddingLeft="13dp" />
+
+    <TextView
+        android:id="@+id/password_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="New password"  />
+
+    <!-- Setting up the password textbox -->
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/password_hint"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_background"
+        android:hint="Password"
+        android:paddingLeft="13dp" />
+
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_background"
+        android:text="Save"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/save_button"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:background="@drawable/btn_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+
+</RelativeLayout>

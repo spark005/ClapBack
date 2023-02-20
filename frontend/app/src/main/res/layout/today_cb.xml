@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cb_of_day"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:hint="Name of CB for that day"/>
+
+    <ImageView
+        android:id="@+id/cb_profile_image"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:layout_below="@+id/cb_of_day"
+        android:src="@drawable/mongle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:hint="profile image of cb"/>
+
+    <Button
+        android:id="@+id/lets_chat"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
+        android:text="Let's chat!"
+        android:layout_below="@+id/cb_profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_background"/>
+
+    <TextView
+        android:id="@+id/remaining_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:hint="20:03"
+        android:layout_below="@id/lets_chat"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Until next friend is chosen"
+        android:layout_below="@+id/remaining_time"
+        android:layout_marginTop="20dp"/>
+
+
+
+</RelativeLayout>

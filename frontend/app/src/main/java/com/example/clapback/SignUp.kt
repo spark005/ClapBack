@@ -3,6 +3,7 @@ package com.example.clapback
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -39,6 +40,8 @@ class SignUp : AppCompatActivity() {
         editPassword = findViewById(R.id.edit_password)
         btnSignUp = findViewById(R.id.signup_button)
 
+        editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+
         btnSignUp.setOnClickListener {
             val name = editName.text.toString()
             val email = editEmail.text.toString()
@@ -56,8 +59,8 @@ class SignUp : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // If sign in is successful, jump to home
-                    addUserToDatabse(name, email, mAuth.currentUser?.uid!!)
-                    val intent = Intent(this@SignUp, MainActivity::class.java)
+                    addUserToDatabase(name, email, mAuth.currentUser?.uid!!)
+                    val intent = Intent(this@SignUp, ProfilePic::class.java)
                     finish()
                     startActivity(intent)
                 } else {
@@ -69,7 +72,7 @@ class SignUp : AppCompatActivity() {
 
 
     // Adding user to database
-    private fun addUserToDatabse(name: String, email: String, uid: String) {
+    private fun addUserToDatabase(name: String, email: String, uid: String) {
         mDbRef =FirebaseDatabase.getInstance().getReference()
 
         mDbRef.child("user").child(uid).setValue(User(name, email, uid))
