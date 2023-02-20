@@ -3,6 +3,7 @@ package com.example.clapback
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -34,6 +35,8 @@ class Login : AppCompatActivity() {
         editPassword = findViewById(R.id.edit_password)
         btnLogin = findViewById(R.id.login_button)
         btnSignUp = findViewById(R.id.signup_link)
+
+        editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
         // Creating signup button functionality
         btnSignUp.setOnClickListener {

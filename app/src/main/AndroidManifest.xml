@@ -13,6 +13,12 @@
             android:name=".Time"
             android:exported="true" />
         <activity
+            android:name=".EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ProfilePic"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
@@ -29,7 +35,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
