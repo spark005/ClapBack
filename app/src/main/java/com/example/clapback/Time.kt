@@ -37,6 +37,9 @@ class Time : AppCompatActivity() {
             remainingHour = 24 - hour - 1
         }
         val remainingMinute = 60 - minute
+        if (remainingMinute == 0) {
+            remainingHour = 60
+        }
 
         val currentTimeString = String.format("%02d:%02d", remainingHour, remainingMinute)
         currentTimeTextView.text = currentTimeString
