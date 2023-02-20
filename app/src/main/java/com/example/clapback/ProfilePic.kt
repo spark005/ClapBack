@@ -49,7 +49,7 @@ class ProfilePic : AppCompatActivity() {
         }
 
         confirm.setOnClickListener {
-            if (profilePic.drawable == null){
+           /* if (profilePic.drawable == null){
                 MaterialAlertDialogBuilder(this)
                     .setTitle("Are you sure you want to continue without a Profile pic?")
                     .setMessage("Don't worry. You can always add or change one in Profile Settings")
@@ -58,8 +58,8 @@ class ProfilePic : AppCompatActivity() {
                     }
                     .setPositiveButton("Yep"){dialog, which ->}
                     .show()
-            }
-            val intent = Intent(this@ProfilePic, MainActivity::class.java)
+            }*/
+            val intent = Intent(this@ProfilePic, Time::class.java)
             finish()
             startActivity(intent) }
     }
