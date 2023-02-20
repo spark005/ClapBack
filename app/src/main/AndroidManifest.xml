@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack">
         <activity
+            android:name=".Time"
+            android:exported="true" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity

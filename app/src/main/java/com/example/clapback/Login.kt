@@ -57,7 +57,7 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, logs in user
 
-                    val intent = Intent(this@Login, MainActivity::class.java)
+                    val intent = Intent(this@Login, Time::class.java)
                     finish()
                     startActivity(intent)
                 } else {
