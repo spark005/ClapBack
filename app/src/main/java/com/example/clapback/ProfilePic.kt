@@ -9,9 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.clapback.MainActivity
-import com.example.clapback.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 private lateinit var select: Button
 private lateinit var profilePic: ImageView
@@ -66,15 +64,6 @@ class ProfilePic : AppCompatActivity() {
                     return@setNegativeButton
                 }
                 warning.show()
-                /*MaterialAlertDialogBuilder(this)
-                    .setTitle("Are you sure you want to continue without a Profile pic?")
-                    .setMessage("Don't worry. You can always add or change one in Profile Settings")
-                    .setNegativeButton("Nah"){ dialog, which ->
-
-                    }
-                    .setPositiveButton("Yep"){dialog, which ->}
-                    .show()
-                 */
             } else {
                 val intent = Intent(this@ProfilePic, Time::class.java)
                 finish()
