@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -49,8 +50,23 @@ class ProfilePic : AppCompatActivity() {
         }
 
         confirm.setOnClickListener {
-           /* if (profilePic.drawable == null){
-                MaterialAlertDialogBuilder(this)
+            if (profilePic.drawable == null){
+                val warning = AlertDialog.Builder(this)
+                warning.setTitle("Are you sure you want to continue without a Profile pic?")
+                warning.setMessage("Don't worry. You can always add or change one in Profile Settings")
+
+                warning.setPositiveButton("Yep") { dialog, which ->
+                    profilePic.setImageResource(R.drawable.mongle)
+                    val intent = Intent(this@ProfilePic, Time::class.java)
+                    finish()
+                    startActivity(intent)
+                }
+
+                warning.setNegativeButton("Nah") { dialog, which ->
+                    return@setNegativeButton
+                }
+                warning.show()
+                /*MaterialAlertDialogBuilder(this)
                     .setTitle("Are you sure you want to continue without a Profile pic?")
                     .setMessage("Don't worry. You can always add or change one in Profile Settings")
                     .setNegativeButton("Nah"){ dialog, which ->
@@ -58,9 +74,12 @@ class ProfilePic : AppCompatActivity() {
                     }
                     .setPositiveButton("Yep"){dialog, which ->}
                     .show()
-            }*/
-            val intent = Intent(this@ProfilePic, Time::class.java)
-            finish()
-            startActivity(intent) }
+                 */
+            } else {
+                val intent = Intent(this@ProfilePic, Time::class.java)
+                finish()
+                startActivity(intent)
+            }
+        }
     }
 }
