@@ -18,7 +18,7 @@ To start and run the local development server,
 ```
 $ cd YOUR_PROJECT_DIRECTORY_PATH/backend/
 $ python -m venv env
-$ source env/bin/activate
+$ source env/bin/activate // or env/Scripts/activate for windows
 ```
 2. Install the dependencies:
 ```
@@ -26,7 +26,8 @@ $ pip3 install -r requirements.txt
 ```
 3. Run the development server:
 ```
-$ python3 app.py
+$ python3 app.py // or python app.py for windows
+$ deactivate //to turn off virtual environment
 ```
 
 #### Error Handling
