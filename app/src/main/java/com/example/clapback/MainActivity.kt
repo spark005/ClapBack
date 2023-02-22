@@ -64,6 +64,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.sort) {
+            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    userList.clear()
+                    for(postSnapshot in snapshot.children) {
+
+                        val currentUser = postSnapshot.getValue(User::class.java)
+
+                        if (mAuth.currentUser?.uid != currentUser?.uid) {
+                            userList.add(currentUser!!)
+                        }
+
+                    }
+                    userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
+
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
         if (item.itemId == R.id.logout) {
             // logic for logout
 
