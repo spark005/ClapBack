@@ -27,6 +27,7 @@ $ pip3 install -r requirements.txt
 3. Run the development server:
 ```
 $ python3 app.py
+$ deactivaate //to turn off virtual environment
 ```
 
 #### Error Handling
