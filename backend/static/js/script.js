@@ -187,7 +187,6 @@ if (document.getElementById('form-signup')) {
         .then(jsonRes => {
             if (jsonRes.success) {
                 console.log('Success: ' + jsonRes.success)
-                // window.location.replace('/')
             } else {
                 alert('Error: ' + jsonRes.error + '\n' + jsonRes.message)
             }
@@ -243,6 +242,7 @@ if (document.getElementById('form-login')) {
             if (jsonRes.success) {
                 console.log('Success: ' + jsonRes.success)
                 token = jsonRes.token
+                window.location.replace('/selectroom')
             } else {
                 alert('Error: ' + jsonRes.error + '\n' + jsonRes.message)
             }

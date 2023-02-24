@@ -1,4 +1,5 @@
 env/
+flask_session/
 fbAdminConfig.json
 fbconfig.json
 *.iml
