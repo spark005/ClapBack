@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.collections.ArrayList
 
-class UserAdapter (val context: Context, val userList: ArrayList<User>):
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter (val context: Context, var userList: ArrayList<User>): //changed val userList to var userList inorder to make changes using filter
+    RecyclerView.Adapter<UserAdapter.UserViewHolder>(){
+
+    private lateinit var filteredList: ArrayList<User>
 
     //TODO Figure out what a recycler view is and what this code does
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -42,5 +45,15 @@ class UserAdapter (val context: Context, val userList: ArrayList<User>):
 
     class  UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textName = itemView.findViewById<TextView>(R.id.txt_name)
+    }
+
+    fun setFilteredList(filteredList: ArrayList<User>) {
+        this.filteredList = filteredList
+        userList = filteredList
+        notifyDataSetChanged()
+    }
+
+    fun getFilteredList(): ArrayList<User> {
+        return filteredList
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,10 +18,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        searchView = findViewById(R.id.searchView)
+        searchView.clearFocus()
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterList(newText!!)      //added null check same as line 38 i.e. String?
+                return true
+            }
+        })
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
@@ -58,6 +72,28 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    /*
+     *  Filter the users inside the searchView
+     */
+    private fun filterList(newText: String) {
+        var filteredList: ArrayList<User> = ArrayList()
+        for (user in userList) {
+            if (user.name?.lowercase()?.contains(newText)!!) {
+                filteredList.add(user)
+            }
+        }
+        if (filteredList.isEmpty()) {
+        //    Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
+        } else {
+            adapter.setFilteredList(filteredList)
+        }
+    }
+
+    private fun sortFilteredList() {
+        adapter.getFilteredList().sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -78,7 +114,9 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                    userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
+                    //Since the sort didn't work after searching a friend, so I combined them together.
+                    //userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
+                    sortFilteredList()
 
                     adapter.notifyDataSetChanged()
                 }
