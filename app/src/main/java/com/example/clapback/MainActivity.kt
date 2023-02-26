@@ -3,8 +3,11 @@ package com.example.clapback
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var detector: GestureDetectorCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
+
+        detector = GestureDetectorCompat(this, DiaryGestureListener())
 
         //TODO figure out what this does
         userList = ArrayList()
@@ -83,4 +89,55 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (detector.onTouchEvent(event)) {
+            return true
+        }
+        else {
+            return super.onTouchEvent(event)
+        }
+    }
+    inner class DiaryGestureListener : GestureDetector.OnGestureListener {
+        override fun onDown(e: MotionEvent): Boolean {
+            return false
+        }
+
+        override fun onShowPress(e: MotionEvent) {
+        }
+
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            return false
+        }
+
+        override fun onScroll(
+            e1: MotionEvent,
+            e2: MotionEvent,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            return false
+        }
+
+        override fun onLongPress(e: MotionEvent) {
+        }
+
+        override fun onFling(
+            e1: MotionEvent,
+            e2: MotionEvent,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            if (e1.x > e2.x) {
+                this@MainActivity.onSwipeLeft()
+            }
+            return true
+        }
+    }
+
+    private fun onSwipeLeft() {
+        val intent = Intent(this, Time::class.java)
+        startActivity(intent)
+    }
+
 }

@@ -100,7 +100,7 @@ class Time : AppCompatActivity() {
     }
 
     private fun onSwipeLeft() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ProfilePage::class.java)
         startActivity(intent)
     }
 
