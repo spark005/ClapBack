@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -83,8 +85,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if (filteredList.isEmpty()) {
-        //    Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No such friend", Toast.LENGTH_SHORT).show()
+            userRecyclerView.visibility = View.INVISIBLE
         } else {
+            userRecyclerView.visibility = View.VISIBLE
             adapter.setFilteredList(filteredList)
         }
     }
@@ -114,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                    //Since the sort didn't work after searching a friend, so I combined them together.
+                    //Since the sort didn't work after searching a friend, so I combined them together and commented below line just in case there is an error
                     //userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
                     sortFilteredList()
 
