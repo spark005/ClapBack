@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 class UserAdapter (val context: Context, var userList: ArrayList<User>):
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private lateinit var filteredList: ArrayList<User>
+    private var filteredList: ArrayList<User> = ArrayList()
 
 
     //TODO Figure out what a recycler view is and what this code does
