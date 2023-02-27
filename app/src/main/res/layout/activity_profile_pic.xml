@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfilePic">
+    tools:context=".ProfilePic"
+    android:background="@drawable/gradient_layer">
 
     <ImageView
         android:id="@+id/profilepic"
@@ -17,21 +18,21 @@
 
     <Button
         android:id="@+id/selectbutton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
         android:text="Pick a Pic"
         android:layout_below="@+id/profilepic"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        />
+        android:background="@drawable/btn_background"/>
 
     <Button
         android:id="@+id/confirmbutton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
         android:text="Confirm"
         android:layout_below="@+id/selectbutton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        />
+        android:background="@drawable/btn_background"/>
 </RelativeLayout>
