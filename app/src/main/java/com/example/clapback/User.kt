@@ -9,7 +9,9 @@ class User {
     var desc: String? = null
     var image: Uri? = null
 
-    constructor(){}
+    constructor(uid: String?){
+        this.uid = uid
+    }
 
     constructor(name: String?, email: String?, uid: String?) {
         this.name = name

@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, jsonify, abort, session, redi
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from flask_session import Session
 
-users = [{'uid': 1, 'name': 'Ilhoon Lee'}]
+users = []
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -20,6 +20,23 @@ socketio = SocketIO(app)
 cred = credentials.Certificate('fbAdminConfig.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('fbconfig.json')))
+db = pb.database()
+
+def update_user_list(uid):
+    print("PROVOKED")
+    users.clear()
+    users_list = db.child("users").get()
+    for user in users_list.each():
+        if user.val().get("uid", None) != uid:
+            users.append(user.val())
+
+    socketio.emit('userListUpdate', json.dumps(users))
+
+def stream_handler(message):
+    print(message["data"])
+    update_user_list("As2FInWsECSdhCKmB4wtRCQMefD2")
+
+my_stream = db.child("users").stream(stream_handler)
 
 @app.route("/")
 def index():
@@ -52,6 +69,15 @@ def chat():
 # @socketio.on('disconnect')
 # def test_disconnect():
 #     print('Client disconnected')
+
+@socketio.on('render_userlist')
+def render_userlist(user_data):
+    body = json.loads(user_data)
+    users.clear()
+    uid = body.get('uid', None)
+
+    update_user_list(uid)
+
 
 @socketio.on('join', namespace='/chat')
 def join(message):
@@ -162,6 +188,6 @@ def authentication_error(error):
         'error': error.error['code'],
         'message': error.error['description']
     }), error.status_code
-    
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(os.environ.get("PORT", 8080)), debug=True)
