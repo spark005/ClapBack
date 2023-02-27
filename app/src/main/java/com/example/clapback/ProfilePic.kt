@@ -55,7 +55,8 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
-                    val intent = Intent(this@ProfilePic, Time::class.java)
+                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for line 69
+                    val intent = Intent(this@ProfilePic, MainActivity::class.java)
                     finish()
                     startActivity(intent)
                 }
@@ -65,7 +66,7 @@ class ProfilePic : AppCompatActivity() {
                 }
                 warning.show()
             } else {
-                val intent = Intent(this@ProfilePic, Time::class.java)
+                val intent = Intent(this@ProfilePic, MainActivity::class.java)
                 finish()
                 startActivity(intent)
             }

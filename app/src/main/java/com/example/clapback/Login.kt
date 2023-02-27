@@ -48,7 +48,11 @@ class Login : AppCompatActivity() {
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
 
-            login(email,password)
+            if (email == "" || password == "") {
+                Toast.makeText(this@Login, "User does not exist", Toast.LENGTH_SHORT).show()
+            } else {
+                login(email,password)
+            }
         }
     }
 
