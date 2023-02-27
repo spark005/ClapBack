@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 
@@ -10,13 +11,14 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportFragmentManager
             .beginTransaction()
-            //.replace(R.id.settings, SettingsFragment()) //not sure if this is correct lol
+            .replace(R.id.fragment_container_view, SettingsFragment())
             .commit()
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
         }
     }
 }
