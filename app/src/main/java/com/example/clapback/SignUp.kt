@@ -55,7 +55,6 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    //TODO, fix signup error "xxx "
     // Function to signup
     private fun signUp(name: String, email: String, password: String) {
         // logic for creating a new user
@@ -83,7 +82,9 @@ class SignUp : AppCompatActivity() {
     // Adding user to database
     private fun addUserToDatabase(name: String, email: String, uid: String) {
         mDbRef =FirebaseDatabase.getInstance().getReference()
-
-        mDbRef.child("user").child(uid).setValue(User(name, email, uid))
+        // Initializing empty friendlist to save into database
+        val friendlist = ArrayList<String>()
+        friendlist.add("bitneqvCvdOl4fVxGmI4KIih6I43")
+        mDbRef.child("user").child(uid).setValue(User(name, email, uid, friendlist))
     }
 }
