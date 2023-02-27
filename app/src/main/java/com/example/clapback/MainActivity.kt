@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                filterList(newText!!)      //added null check same as line 38 i.e. String?
+                filterList(newText!!.lowercase())      //added null check same as line 38 i.e. String?
                 return true
             }
         })
