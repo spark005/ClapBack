@@ -29,8 +29,8 @@ class ChatActivity : AppCompatActivity() {
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
-    val CHANNEL_ID = "MESSAGE"
 
+    val CHANNEL_ID = "MESSAGE"
     val name = "Hidden Messages"
     val descriptionText = "You sent a message"
     val importance = NotificationManager.IMPORTANCE_DEFAULT
