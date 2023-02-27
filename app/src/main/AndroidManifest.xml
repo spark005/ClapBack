@@ -11,10 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack" >
         <activity
-            android:name=".SettingsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_settings"/>
-        <activity
             android:name=".Time"
             android:exported="true" />
         <activity

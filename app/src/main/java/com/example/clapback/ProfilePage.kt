@@ -35,10 +35,7 @@ class ProfilePage : AppCompatActivity() {
         notifications = findViewById(R.id.notifications)
         detector = GestureDetectorCompat(this, DiaryGestureListener())
 
-        settings.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
+
 
     }
 
