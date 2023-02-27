@@ -51,7 +51,7 @@ class Time : AppCompatActivity() {
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
          if (detector.onTouchEvent(event)) {
             return true
         }
