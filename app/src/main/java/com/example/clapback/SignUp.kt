@@ -47,7 +47,11 @@ class SignUp : AppCompatActivity() {
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
 
-            signUp(name, email,password)
+            if (email == "" || password == "" || name == "") {
+                Toast.makeText(this@SignUp, "Check your name, email, or password", Toast.LENGTH_SHORT).show()
+            } else {
+                signUp(name, email,password)
+            }
         }
     }
 
@@ -64,8 +68,13 @@ class SignUp : AppCompatActivity() {
                     finish()
                     startActivity(intent)
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(this@SignUp, "Some error occurred", Toast.LENGTH_SHORT).show()
+                    if (password.length < 6) {
+                        Toast.makeText(this@SignUp, "Password should be 6 letters or longer", Toast.LENGTH_SHORT).show()
+                    }
+                    if (!email.contains("@") || email.substring(0) == "@" || !email.contains(".") ||
+                            email.substring(email.lastIndex) == ".") {
+                        Toast.makeText(this@SignUp, "Invalid email format", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
     }
