@@ -40,6 +40,10 @@ class ProfilePage : AppCompatActivity() {
             startActivity(intent)
         }
 
+        requests.setOnClickListener {
+            val intent = Intent(this, FriendRequest::class.java)
+            startActivity(intent)
+        }
     }
 
 

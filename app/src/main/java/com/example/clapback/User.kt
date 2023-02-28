@@ -8,6 +8,7 @@ class User {
     var uid: String? = null
     var desc: String? = null
     var image: Uri? = null
+    var streak: Int? = 1
     var friendlist = ArrayList<String>()
 
     constructor(){}

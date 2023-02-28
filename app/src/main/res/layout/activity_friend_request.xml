@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/gradient_layer"
+    tools:context=".FriendRequest">
+
+    <EditText
+        android:id="@+id/search_user"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/edit_background"
+        android:hint="Enter username"
+        android:paddingLeft="35dp" />
+
+    <Button
+        android:id="@+id/send_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_user"
+        android:text="Send Friend Request"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:padding="15dp"/>
+
+</RelativeLayout>
