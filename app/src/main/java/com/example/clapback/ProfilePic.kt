@@ -20,9 +20,6 @@ private lateinit var confirm: Button
 private lateinit var image: Uri
 
 class ProfilePic : AppCompatActivity() {
-    companion object {
-        val IMAGE_REQUEST_CODE = 100
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +45,6 @@ class ProfilePic : AppCompatActivity() {
 
             intent.action = Intent.ACTION_GET_CONTENT
             getPic.launch(intent)
-            //startActivityForResult(intent, IMAGE_REQUEST_CODE)
-            //TODO look into this registerForActivityResult(intent, IMAGE_REQUEST_CODE)
 
         }
 
@@ -62,7 +57,6 @@ class ProfilePic : AppCompatActivity() {
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
 
-                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for line 69
                     val intent = Intent(this@ProfilePic, WalkThrough::class.java)
 
                     finish()
