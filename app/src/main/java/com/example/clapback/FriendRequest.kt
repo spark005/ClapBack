@@ -28,10 +28,11 @@ class FriendRequest : AppCompatActivity() {
         // Grabbing current logged in user
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
-
+        currentUser = User()
         val currentUserUID = mAuth.currentUser?.uid
         if (currentUserUID != null) {
 
+            // TODO this isn't populating the user object correctly, fix
             mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
                 if (it.exists()) {
                     currentUser = it.getValue(User::class.java)!!
@@ -46,7 +47,9 @@ class FriendRequest : AppCompatActivity() {
 
         }
 
-
+        println("---------------------------")
+        println(currentUserUID.toString())
+        println("---------------------------")
 
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
@@ -58,6 +61,7 @@ class FriendRequest : AppCompatActivity() {
             }
 
             val searchedEmail = usernameField.text.toString()
+            // TODO has to be uid then email
             mDbRef.child("user").child(searchedEmail).get().addOnSuccessListener {
                 if (it.exists()) {
                     val foundFriend = it.getValue(User::class.java)
@@ -94,11 +98,6 @@ class FriendRequest : AppCompatActivity() {
                 // If user not found
                 Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show()
             }
-
-
-
-
-
         }
     }
 }
