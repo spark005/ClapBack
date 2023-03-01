@@ -4,14 +4,15 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import java.io.InputStream
 
 
 private lateinit var select: Button
@@ -20,9 +21,6 @@ private lateinit var confirm: Button
 private lateinit var image: Uri
 
 class ProfilePic : AppCompatActivity() {
-    companion object {
-        val IMAGE_REQUEST_CODE = 100
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +46,6 @@ class ProfilePic : AppCompatActivity() {
 
             intent.action = Intent.ACTION_GET_CONTENT
             getPic.launch(intent)
-            //startActivityForResult(intent, IMAGE_REQUEST_CODE)
-            //TODO look into this registerForActivityResult(intent, IMAGE_REQUEST_CODE)
 
         }
 
@@ -61,9 +57,13 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
+                    //image = Uri.parse("android.resource://res/drawable/mongle.png")
 
-                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for line 69
                     val intent = Intent(this@ProfilePic, WalkThrough::class.java)
+
+                   // val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
+
+                    //val updates = store.putFile(image)
 
                     finish()
                     startActivity(intent)

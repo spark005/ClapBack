@@ -2,6 +2,7 @@ package com.example.clapback
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.GestureDetector
@@ -9,6 +10,10 @@ import android.view.MotionEvent
 import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.File
 
 class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
@@ -20,6 +25,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var notifications: CardView
     private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
+    private lateinit var image: CircleImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,19 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         notifications = findViewById(R.id.notifications)
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
         edit = findViewById(R.id.edit)
+        image = findViewById(R.id.profile_image)
+
+        val profileUid = FirebaseAuth.getInstance().currentUser?.uid
+        val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
+
+        val pic = File.createTempFile("profile", "jpg")
+        storage.getFile(pic).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeFile(pic.absolutePath)
+            image.setImageBitmap(bitmap)
+
+        }.addOnFailureListener{
+            image.setImageResource(R.drawable.mongle)
+        }
 
         settings.setOnClickListener() {
             val intent = Intent(this, SettingsActivity::class.java)
