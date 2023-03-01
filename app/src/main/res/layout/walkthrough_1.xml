@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_layer"
+    android:id="@+id/walkthrough_1">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/cb_layout_example" />
+
+    <View
+        android:id="@+id/view_example"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#22000000" />
+
+    <Button
+        android:id="@+id/walkthrough1_next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/view_example"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="606dp"
+        android:background="@color/blue"
+        android:text="Next" />
+
+    <ImageView
+        android:id="@+id/left_arrow"
+        android:layout_width="96dp"
+        android:layout_height="64dp"
+        android:layout_alignTop="@+id/view_example"
+        android:layout_marginTop="355dp"
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <ImageView
+        android:id="@+id/right_arrow"
+        android:layout_width="96dp"
+        android:layout_height="64dp"
+        android:layout_alignTop="@+id/view_example"
+        android:layout_alignRight="@+id/view_example"
+        android:layout_marginTop="355dp"
+        android:rotation="180"
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/view_example"
+        android:layout_alignTop="@+id/view_example"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="304dp"
+        android:text="Right swipe is chat"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/view_example"
+        android:layout_alignTop="@+id/view_example"
+        android:layout_marginStart="335dp"
+        android:layout_marginTop="304dp"
+        android:text="Left swipe is setting"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</RelativeLayout>

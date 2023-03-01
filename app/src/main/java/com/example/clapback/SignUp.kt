@@ -72,7 +72,7 @@ class SignUp : AppCompatActivity() {
                         Toast.makeText(this@SignUp, "Password should be 6 letters or longer", Toast.LENGTH_SHORT).show()
                     }
                     if (!email.contains("@") || email.substring(0) == "@" || !email.contains(".") ||
-                            email.substring(email.lastIndex) == ".") {
+                            email.substring(email.lastIndex) == "." || email.substringAfter(".").length < 2) {
                         Toast.makeText(this@SignUp, "Invalid email format", Toast.LENGTH_SHORT).show()
                     }
                 }
