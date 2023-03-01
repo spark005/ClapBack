@@ -56,6 +56,7 @@ class SignUp : AppCompatActivity() {
     }
 
     // Function to signup
+    // TODO add scenario where user already exists
     private fun signUp(name: String, email: String, password: String) {
         // logic for creating a new user
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -82,9 +83,10 @@ class SignUp : AppCompatActivity() {
     // Adding user to database
     private fun addUserToDatabase(name: String, email: String, uid: String) {
         mDbRef =FirebaseDatabase.getInstance().getReference()
-        // Initializing empty friendlist to save into database
+        // Initializing empty friendlist and request list to save into database
         val friendlist = ArrayList<String>()
-        friendlist.add("bitneqvCvdOl4fVxGmI4KIih6I43")
-        mDbRef.child("user").child(uid).setValue(User(name, email, uid, friendlist))
+        val friendRequests = ArrayList<FriendR>()
+        //friendlist.add("bitneqvCvdOl4fVxGmI4KIih6I43")
+        mDbRef.child("user").child(uid).setValue(User(name, email, uid, friendlist, friendRequests))
     }
 }
