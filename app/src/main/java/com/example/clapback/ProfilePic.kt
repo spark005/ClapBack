@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 
 
 private lateinit var select: Button
@@ -29,6 +31,7 @@ class ProfilePic : AppCompatActivity() {
         select = findViewById(R.id.selectbutton)
         profilePic = findViewById(R.id.profilepic)
         confirm = findViewById(R.id.confirmbutton)
+        val profileUid = FirebaseAuth.getInstance().currentUser?.uid
 
         val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
@@ -71,9 +74,9 @@ class ProfilePic : AppCompatActivity() {
                 warning.show()
             } else {
 
-                //val store = FirebaseStorage.getInstance.getReference("profilePic/")
+                val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
 
-                //store.putFile(image)
+                val uploadTask = store.putFile(image)
 
                 val intent = Intent(this@ProfilePic, MainActivity::class.java)
                 finish()
