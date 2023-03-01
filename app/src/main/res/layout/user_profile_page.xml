@@ -28,7 +28,7 @@
         android:layout_height="20dp"
         android:layout_marginStart="140dp"
         android:layout_marginEnd="145dp"
-        android:text="nickname"
+        android:text="username"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,12 +37,12 @@
     <TextView
         android:id="@+id/name"
         android:layout_width="391dp"
-        android:layout_height="67dp"
+        android:layout_height="25dp"
         android:layout_marginStart="101dp"
         android:layout_marginEnd="101dp"
-        android:text="description"
+        android:text="Bio"
         android:textAlignment="center"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name">
+        app:layout_constraintTop_toBottomOf="@+id/edit">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +67,7 @@
             android:orientation="horizontal"
             android:elevation="10dp"
             android:weightSum="2">
-            
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/chat"
                 android:layout_width="0dp"
@@ -76,7 +76,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 app:cardBackgroundColor="@android:color/transparent">
-                
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -276,6 +276,21 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="157dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/better_button"
+        android:minHeight="30dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:text="Edit Profile"
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

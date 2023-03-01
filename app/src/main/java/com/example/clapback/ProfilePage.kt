@@ -18,6 +18,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var bio: CardView
     private lateinit var requests: CardView
     private lateinit var notifications: CardView
+    private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +35,15 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         requests = findViewById(R.id.requests)
         notifications = findViewById(R.id.notifications)
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
+        edit = findViewById(R.id.edit)
 
         settings.setOnClickListener() {
             val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+        edit.setOnClickListener() {
+            val intent = Intent(this, EditMainProfile::class.java)
             startActivity(intent)
         }
 

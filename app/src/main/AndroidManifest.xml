@@ -21,6 +21,9 @@
             android:name=".EditProfile"
             android:exported="false" />
         <activity
+            android:name=".EditMainProfile"
+            android:exported="true" />
+        <activity
             android:name=".ProfilePic"
             android:exported="false" />
         <activity
