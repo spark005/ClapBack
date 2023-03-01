@@ -1,14 +1,16 @@
 package com.example.clapback
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
@@ -23,6 +25,7 @@ class EditMainProfile : AppCompatActivity() {
     private lateinit var username: EditText
     private lateinit var bio: EditText
     private lateinit var image: CircleImageView
+    private lateinit var newPic: Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editmain_profile)
@@ -36,6 +39,8 @@ class EditMainProfile : AppCompatActivity() {
         name = findViewById(R.id.name)
         username = findViewById(R.id.username)
         bio = findViewById(R.id.bio)
+        image = findViewById(R.id.profile_image)
+
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
 
@@ -48,8 +53,24 @@ class EditMainProfile : AppCompatActivity() {
             image.setImageResource(R.drawable.mongle)
         }
 
-        changePic.setOnClickListener() {
+        val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
 
+            if (result.resultCode == Activity.RESULT_OK) {
+                image.setImageURI(result.data?.data)
+                newPic = result.data?.data!!
+
+                val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
+
+                store.putFile(newPic)
+            }
+        }
+        changePic.setOnClickListener() {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+
+            intent.action = Intent.ACTION_GET_CONTENT
+            getPic.launch(intent)
         }
 
         cancel.setOnClickListener() {

@@ -57,7 +57,7 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
-                    image = Uri.parse("android.resource://res/drawable/mongle.png")
+                    //image = Uri.parse("android.resource://res/drawable/mongle.png")
 
                     val intent = Intent(this@ProfilePic, WalkThrough::class.java)
 
