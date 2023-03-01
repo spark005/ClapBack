@@ -109,7 +109,6 @@ class WalkThrough : AppCompatActivity() {
     }
 
     private fun onSwipeLeft() {
-      //  if( current is walkthrough then do ~~~)
         if (is_walkthrough) {
             is_walkthrough = false
             first_walkThrough()
