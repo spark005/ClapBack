@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnSwipeListener {
 
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var userList: ArrayList<User>
@@ -33,14 +33,13 @@ class MainActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        detector = GestureDetectorCompat(this, DiaryGestureListener())
+        detector = GestureDetectorCompat(this, DiaryGestureListener(this))
 
         //TODO figure out what this does
         userList = ArrayList()
         adapter = UserAdapter(this, userList)
 
         userRecyclerView = findViewById(R.id.userRecyclerView)
-
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
@@ -73,10 +72,12 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                filterList(newText!!.lowercase())      //added null check same as line 38 i.e. String?
+                filterList(newText!!.lowercase())
                 return true
             }
         })
+
+        findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> detector.onTouchEvent(event) }
     }
     /*
      *  Filter the users inside the searchView
@@ -122,8 +123,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                    //Since the sort didn't work after searching a friend, so I combined them together.
-                    //userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
+                    userList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it -> it.name.toString() })
                     sortFilteredList()
 
                     adapter.notifyDataSetChanged()
@@ -156,15 +156,11 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (detector.onTouchEvent(event)) {
-            return true
-        }
-        else {
-            return super.onTouchEvent(event)
-        }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        detector.onTouchEvent(event)
+        return super.dispatchTouchEvent(event)
     }
-    inner class DiaryGestureListener : GestureDetector.OnGestureListener {
+    inner class DiaryGestureListener(private val onSwipeListener: OnSwipeListener) : GestureDetector.OnGestureListener {
         override fun onDown(e: MotionEvent): Boolean {
             return false
         }
@@ -195,15 +191,23 @@ class MainActivity : AppCompatActivity() {
             velocityY: Float
         ): Boolean {
             if (e1.x > e2.x) {
-                this@MainActivity.onSwipeLeft()
+                onSwipeListener.onSwipeLeft()
             }
             return true
         }
     }
-
-    private fun onSwipeLeft() {
+    override fun onSwipeLeft() {
         val intent = Intent(this, Time::class.java)
         startActivity(intent)
     }
 
+    override fun onSwipeRight() {
+        TODO("Not yet implemented")
+    }
+
+}
+
+interface OnSwipeListener {
+    fun onSwipeLeft()
+    fun onSwipeRight()
 }

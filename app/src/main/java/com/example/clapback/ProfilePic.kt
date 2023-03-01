@@ -61,9 +61,10 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
-                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for other one
-                    //TODO fix with pic upload
-                    val intent = Intent(this@ProfilePic, MainActivity::class.java)
+
+                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for line 69
+                    val intent = Intent(this@ProfilePic, WalkThrough::class.java)
+
                     finish()
                     startActivity(intent)
                 }
@@ -73,12 +74,11 @@ class ProfilePic : AppCompatActivity() {
                 }
                 warning.show()
             } else {
-
                 val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
 
                 store.putFile(image)
-
-                val intent = Intent(this@ProfilePic, MainActivity::class.java)
+                
+                val intent = Intent(this@ProfilePic, WalkThrough::class.java)
                 finish()
                 startActivity(intent)
             }

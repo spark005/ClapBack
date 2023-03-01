@@ -10,7 +10,7 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
 
-class ProfilePage : AppCompatActivity() {
+class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
     private lateinit var friends: CardView
     private lateinit var chat: CardView
@@ -18,6 +18,7 @@ class ProfilePage : AppCompatActivity() {
     private lateinit var bio: CardView
     private lateinit var requests: CardView
     private lateinit var notifications: CardView
+    private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,27 +34,29 @@ class ProfilePage : AppCompatActivity() {
         bio = findViewById(R.id.bio)
         requests = findViewById(R.id.requests)
         notifications = findViewById(R.id.notifications)
-        detector = GestureDetectorCompat(this, DiaryGestureListener())
+        detector = GestureDetectorCompat(this, DiaryGestureListener(this))
+        edit = findViewById(R.id.edit)
 
-        settings.setOnClickListener {
+        settings.setOnClickListener() {
             val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+        edit.setOnClickListener() {
+            val intent = Intent(this, EditMainProfile::class.java)
             startActivity(intent)
         }
 
     }
 
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (detector.onTouchEvent(event)) {
-            return true
-        }
-        else {
-            return super.onTouchEvent(event)
-        }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        detector.onTouchEvent(event)
+        return super.dispatchTouchEvent(event)
     }
 
 
-    inner class DiaryGestureListener : GestureDetector.OnGestureListener {
+    inner class DiaryGestureListener(private val onSwipeListener: OnSwipeListener) : GestureDetector.OnGestureListener {
         override fun onDown(e: MotionEvent): Boolean {
             return false
         }
@@ -84,14 +87,18 @@ class ProfilePage : AppCompatActivity() {
             velocityY: Float
         ): Boolean {
             if (e1.x < e2.x) {
-                this@ProfilePage.onSwipeRight()
+                onSwipeListener.onSwipeRight()
             }
             return true
         }
     }
 
+    override fun onSwipeLeft() {
+        TODO("Not yet implemented")
+    }
 
-    private fun onSwipeRight() {
+
+    override fun onSwipeRight() {
         val intent = Intent(this, Time::class.java)
         startActivity(intent)
     }
