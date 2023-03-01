@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_layer">
 
@@ -13,14 +13,16 @@
         android:layout_marginStart="140dp"
         android:layout_marginTop="53dp"
         android:layout_marginEnd="141dp"
-        android:layout_marginBottom="548dp"
+        android:layout_marginBottom="547dp"
         android:src="@drawable/pfp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.51" />
 
     <TextView
         android:id="@+id/username"
@@ -38,8 +40,6 @@
         android:id="@+id/name"
         android:layout_width="391dp"
         android:layout_height="25dp"
-        android:layout_marginStart="101dp"
-        android:layout_marginEnd="101dp"
         android:text="Bio"
         android:textAlignment="center"
         android:textSize="20dp"
@@ -281,7 +281,6 @@
         android:id="@+id/edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="157dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/better_button"
         android:minHeight="30dp"
@@ -289,7 +288,8 @@
         android:paddingEnd="5dp"
         android:text="Edit Profile"
         android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
 

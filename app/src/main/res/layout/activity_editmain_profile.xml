@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_layer">
 
@@ -10,12 +10,13 @@
         android:id="@+id/confirm"
         android:layout_width="34dp"
         android:layout_height="30dp"
-        android:layout_marginStart="360dp"
-        android:layout_marginBottom="332dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="7dp"
         android:clickable="true"
         android:src="@drawable/check"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/cancel"
@@ -30,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="145dp"
         android:layout_marginTop="8dp"
@@ -76,7 +77,7 @@
 
     <TextView
         android:id="@+id/name_label"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
@@ -91,7 +92,7 @@
 
     <EditText
         android:id="@+id/name"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="0dp"
@@ -105,7 +106,7 @@
 
     <TextView
         android:id="@+id/username_label"
-        android:layout_width="140dp"
+        android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
@@ -120,7 +121,7 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="0dp"
@@ -134,7 +135,7 @@
 
     <TextView
         android:id="@+id/bio_label"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
@@ -149,7 +150,7 @@
 
     <EditText
         android:id="@+id/bio"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="0dp"
