@@ -3,6 +3,7 @@ package com.example.clapback
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -14,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 private lateinit var select: Button
 private lateinit var profilePic: ImageView
 private lateinit var confirm: Button
+private lateinit var image: Uri
 
 class ProfilePic : AppCompatActivity() {
     companion object {
@@ -33,6 +35,7 @@ class ProfilePic : AppCompatActivity() {
 
             if (result.resultCode == Activity.RESULT_OK) {
                 profilePic.setImageURI(result.data?.data)
+                image = result.data?.data!!
             }
         }
 
@@ -55,7 +58,8 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
-                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for line 69
+                    //Should go to MainAcitivity since new user shouldn't have a cb . Same for other one
+                    //TODO fix with pic upload
                     val intent = Intent(this@ProfilePic, MainActivity::class.java)
                     finish()
                     startActivity(intent)
@@ -66,6 +70,11 @@ class ProfilePic : AppCompatActivity() {
                 }
                 warning.show()
             } else {
+
+                //val store = FirebaseStorage.getInstance.getReference("profilePic/")
+
+                //store.putFile(image)
+
                 val intent = Intent(this@ProfilePic, MainActivity::class.java)
                 finish()
                 startActivity(intent)
