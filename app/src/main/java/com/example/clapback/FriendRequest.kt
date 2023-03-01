@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -13,6 +14,9 @@ class FriendRequest : AppCompatActivity() {
 
     private lateinit var sendRequestBtn: Button
     private lateinit var usernameField: EditText
+    private lateinit var mDbRef: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,10 +25,28 @@ class FriendRequest : AppCompatActivity() {
         usernameField = findViewById(R.id.search_user)
         sendRequestBtn = findViewById(R.id.send_request)
 
-        // TODO placeholder user info
-        val currentUser = User()
+        // Grabbing current logged in user
+        mAuth = FirebaseAuth.getInstance()
+        mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        lateinit var mDbRef: DatabaseReference
+        val currentUserUID = mAuth.currentUser?.uid
+        if (currentUserUID != null) {
+
+            mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
+                if (it.exists()) {
+                    currentUser = it.getValue(User::class.java)!!
+                }
+            }
+
+        } else {
+
+            // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
+            Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
+            println(currentUser.toString())
+
+        }
+
+
 
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
@@ -35,7 +57,6 @@ class FriendRequest : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            mDbRef = FirebaseDatabase.getInstance().getReference()
             val searchedEmail = usernameField.text.toString()
             mDbRef.child("user").child(searchedEmail).get().addOnSuccessListener {
                 if (it.exists()) {
