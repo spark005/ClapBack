@@ -30,6 +30,10 @@ class FriendRequest : AppCompatActivity() {
         sendRequestBtn.setOnClickListener {
 
             // Error checking for no user entered
+            if (usernameField.text.toString().equals("")) {
+                Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             mDbRef = FirebaseDatabase.getInstance().getReference()
             val searchedEmail = usernameField.text.toString()
@@ -37,19 +41,32 @@ class FriendRequest : AppCompatActivity() {
                 if (it.exists()) {
                     val foundFriend = it.getValue(User::class.java)
 
-                    // If friend request was already sent
-                    if (foundFriend?.friendRequests?.contains(FriendR(currentUser.uid, foundFriend.uid)) == true) {
-                        Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
-                    } else {
-                        foundFriend?.friendRequests?.add(FriendR(currentUser.uid, foundFriend.uid))
-                        // Uploading friend requests to database
-                        foundFriend?.uid?.let { ffuid -> mDbRef.child(ffuid).child("friendRequests")
-                            .setValue(foundFriend.friendRequests)}
+                    // Error handler if getValue doesn't "populate" the foundFriend user object
+                    // **For Debugging Purposes**
+                    if (foundFriend == null) {
 
+                        Toast.makeText(this, "**BIG ERROR HERE FIX**", Toast.LENGTH_SHORT).show()
+                        return@addOnSuccessListener
                     }
 
+                    // If friend request was already sent before
+                    if (foundFriend?.friendRequests?.contains(FriendR(currentUser.uid, foundFriend.uid, true)) == true) {
 
+                        Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
 
+                    } else {
+
+                        // Adding the request to both user's request list
+                        foundFriend?.friendRequests?.add(FriendR(currentUser.uid, foundFriend.uid, true))
+                        currentUser.friendRequests.add(FriendR(currentUser.uid, foundFriend?.uid, false))
+
+                        // Uploading friend requests to database of both parties
+                        foundFriend?.uid?.let { ffuid -> mDbRef.child(ffuid).child("friendRequests")
+                            .setValue(foundFriend.friendRequests)}
+                        currentUser.uid?.let { cuuid -> mDbRef.child(cuuid).child("friendRequests")
+                            .setValue(currentUser.friendRequests)}
+
+                    }
                 }
 
             } .addOnFailureListener {
