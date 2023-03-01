@@ -15,6 +15,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.core.view.GestureDetectorCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class EditMainProfile : AppCompatActivity() {
 
@@ -26,6 +33,10 @@ class EditMainProfile : AppCompatActivity() {
     private lateinit var bio: EditText
     private lateinit var image: CircleImageView
     private lateinit var newPic: Uri
+
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDbRef: DatabaseReference
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editmain_profile)
@@ -73,10 +84,36 @@ class EditMainProfile : AppCompatActivity() {
             getPic.launch(intent)
         }
 
+        mAuth = FirebaseAuth.getInstance()
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+
+        username.setText(mAuth.currentUser!!.displayName)
+
         cancel.setOnClickListener() {
             val intent = Intent(this, ProfilePage::class.java)
+            finish()
             startActivity(intent)
         }
-
+        confirm.setOnClickListener() {
+            val newName = username.text.toString()
+            changeNameOfUser(newName)
+            val intent = Intent(this, ProfilePage::class.java)
+            finish()
+            startActivity(intent)
+        }
     }
+
+    private fun changeNameOfUser(name:String) {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("name").setValue(name)
+            .addOnSuccessListener {
+                val toast = Toast.makeText(applicationContext, "Name changed successfully", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+            .addOnFailureListener {
+                val toast = Toast.makeText(applicationContext, "Failed to change name", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+    }
+
 }

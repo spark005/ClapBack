@@ -27,8 +27,6 @@
         android:id="@+id/username"
         android:layout_width="126dp"
         android:layout_height="20dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginEnd="145dp"
         android:text="username"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
@@ -286,9 +284,9 @@
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:text="Edit Profile"
-        android:textSize="15dp"
-        android:layout_marginLeft="10dp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="@id/username"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
 

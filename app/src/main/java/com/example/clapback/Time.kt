@@ -22,6 +22,7 @@ class Time : AppCompatActivity() {
         setContentView(R.layout.today_cb)
 
         detector = GestureDetectorCompat(this, DiaryGestureListener())
+        supportActionBar?.hide()
 
         currentTimeTextView = findViewById(R.id.remaining_time)
         btn_lets_chat = findViewById(R.id.lets_chat)
