@@ -6,8 +6,9 @@
     android:background="@drawable/gradient_layer">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/cb_layout_example" />
 
     <View
@@ -33,7 +34,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
-        android:paddingTop="30dp"
+        android:layout_marginTop="30dp"
         android:textSize="30dp"
         android:text="Walkthrough"/>
 
@@ -41,11 +42,10 @@
         android:id="@+id/textView2"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/view_example"
-        android:layout_alignTop="@+id/view_example"
+        android:layout_below="@+id/textView9"
+
         android:layout_marginStart="8dp"
-        android:layout_marginTop="123dp"
+        android:layout_marginTop="3dp"
         android:text="You can chat with a random friend(CB) for 24 hours"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -54,11 +54,10 @@
         android:id="@+id/textView3"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/view_example"
-        android:layout_alignTop="@+id/view_example"
+        android:layout_below="@+id/textView9"
+
         android:layout_marginStart="311dp"
-        android:layout_marginTop="404dp"
+        android:layout_marginTop="261dp"
         android:text="This shows the remaining time for a new CB to be chosen"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -67,22 +66,19 @@
         android:id="@+id/arrow_image"
         android:layout_width="83dp"
         android:layout_height="80dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/view_example"
-        android:layout_alignTop="@+id/view_example"
+        android:layout_below="@+id/textView9"
+
         android:layout_marginStart="221dp"
-        android:layout_marginTop="396dp"
+        android:layout_marginTop="254dp"
         app:srcCompat="@drawable/arrow" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/view_example"
-        android:layout_alignTop="@+id/view_example"
-        android:layout_marginStart="145dp"
-        android:layout_marginTop="323dp"
+        android:layout_below="@+id/textView9"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="184dp"
         android:text="Chat with your CB!"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -92,11 +88,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/walkthrough_next_btn"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+
         android:layout_centerHorizontal="true"
         android:layout_marginStart="153dp"
-        android:layout_marginTop="684dp"
+        android:layout_marginTop="30dp"
         android:text="swipe left or right"
         android:textColor="@color/white"
         android:textStyle="bold" />
@@ -112,5 +107,16 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:text="or" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="173dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="101dp"
+        android:text="" />
 
 </RelativeLayout>
