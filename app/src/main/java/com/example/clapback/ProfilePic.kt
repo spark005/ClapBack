@@ -61,9 +61,9 @@ class ProfilePic : AppCompatActivity() {
 
                     val intent = Intent(this@ProfilePic, WalkThrough::class.java)
 
-                    val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
+                   // val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
 
-                    val updates = store.putFile(image)
+                    //val updates = store.putFile(image)
 
                     finish()
                     startActivity(intent)
