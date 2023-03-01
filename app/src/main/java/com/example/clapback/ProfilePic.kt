@@ -4,14 +4,15 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import java.io.InputStream
 
 
 private lateinit var select: Button
@@ -56,8 +57,13 @@ class ProfilePic : AppCompatActivity() {
 
                 warning.setPositiveButton("Yep") { dialog, which ->
                     profilePic.setImageResource(R.drawable.mongle)
+                    image = Uri.parse("android.resource://res/drawable/mongle.png")
 
                     val intent = Intent(this@ProfilePic, WalkThrough::class.java)
+
+                    val store = FirebaseStorage.getInstance().getReference("profilePic/$profileUid")
+
+                    val updates = store.putFile(image)
 
                     finish()
                     startActivity(intent)
