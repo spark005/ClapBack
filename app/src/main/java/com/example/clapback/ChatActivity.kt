@@ -1,14 +1,19 @@
 package com.example.clapback
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +31,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var  mDbRef: DatabaseReference
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
+    private lateinit var selectImageButton: ImageView
+    private lateinit var image: Uri
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -58,6 +65,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
+        selectImageButton = findViewById(R.id.chooseImage)
         sendButton = findViewById(R.id.sentButton)
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
@@ -86,6 +94,16 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+
+
+        val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                image = result.data?.data!!
+            }
+        }
+
 
 /* TODO Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
         you should execute this code as soon as your app starts.
@@ -123,6 +141,13 @@ class ChatActivity : AppCompatActivity() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
             notificationManager.notify(1234, builder.build())
+        }
+
+        selectImageButton.setOnClickListener() {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            getPic.launch(intent)
         }
     }
 }

@@ -23,6 +23,14 @@
         android:layout_marginBottom="5dp"
         android:weightSum="100">
 
+        <ImageView
+            android:id="@+id/chooseImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/select_image"
+            android:paddingLeft="10dp"/>
+
+
         <EditText
             android:id="@+id/messageBox"
             android:layout_width="wrap_content"
