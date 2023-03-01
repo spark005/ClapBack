@@ -74,6 +74,8 @@ class SignUp : AppCompatActivity() {
                     if (!email.contains("@") || email.substring(0) == "@" || !email.contains(".") ||
                             email.substring(email.lastIndex) == "." || email.substringAfter(".").length < 2) {
                         Toast.makeText(this@SignUp, "Invalid email format", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@SignUp, "Invalid character", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
