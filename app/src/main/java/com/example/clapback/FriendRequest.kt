@@ -6,17 +6,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class FriendRequest : AppCompatActivity() {
 
     private lateinit var sendRequestBtn: Button
     private lateinit var usernameField: EditText
-    private lateinit var mDbRef: DatabaseReference
+
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var currentUser: User
+
+    private lateinit var userList: ArrayList<User>
+    private lateinit var adapter: UserAdapter
+    private lateinit var userRequestRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,26 +29,20 @@ class FriendRequest : AppCompatActivity() {
         usernameField = findViewById(R.id.search_user)
         sendRequestBtn = findViewById(R.id.send_request)
 
-        // Grabbing current logged in user
         mAuth = FirebaseAuth.getInstance()
-        mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        val currentUserUID = mAuth.currentUser?.uid
-        if (currentUserUID != null) {
+        userList = ArrayList()
+        adapter = UserAdapter(this, userList)
 
-            mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
-                if (it.exists()) {
-                    currentUser = it.getValue(User::class.java)!!
-                }
-            }
+        userRequestRecyclerView = findViewById(R.id.userRequestRecyclerView)
 
-        } else {
+        userRequestRecyclerView.layoutManager = LinearLayoutManager(this)
+        userRequestRecyclerView.adapter = adapter
 
-            // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
-            Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
-            println(currentUser.toString())
+        // TODO placeholder user info
+        val currentUser = User()
 
-        }
+        lateinit var mDbRef: DatabaseReference
 
 
 
@@ -57,6 +55,7 @@ class FriendRequest : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            mDbRef = FirebaseDatabase.getInstance().getReference()
             val searchedEmail = usernameField.text.toString()
             mDbRef.child("user").child(searchedEmail).get().addOnSuccessListener {
                 if (it.exists()) {
@@ -95,10 +94,28 @@ class FriendRequest : AppCompatActivity() {
                 Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show()
             }
 
+            // Create List of Received Friend Requests
+            mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
 
+                    userList.clear()
+                    for(postSnapshot in snapshot.children) {
 
+                        val currentUser = postSnapshot.getValue(User::class.java)
 
+                        if (mAuth.currentUser?.uid != currentUser?.uid) {
+                            userList.add(currentUser!!)
+                        }
 
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
     }
 }
