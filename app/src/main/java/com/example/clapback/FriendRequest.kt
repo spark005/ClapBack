@@ -2,10 +2,13 @@ package com.example.clapback
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -15,6 +18,13 @@ class FriendRequest : AppCompatActivity() {
     private lateinit var usernameField: EditText
     private lateinit var mDbRef: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
+
+    private lateinit var requestRecyclerView: RecyclerView
+    private lateinit var pendingRecyclerView: RecyclerView
+    private lateinit var userList: ArrayList<User>
+    private lateinit var userPendingList: ArrayList<User>
+    private lateinit var adapter: RequestAdapter
+    private lateinit var pendingAdapter: RequestAdapter
     private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,22 +40,32 @@ class FriendRequest : AppCompatActivity() {
 
         val currentUserUID = mAuth.currentUser?.uid
         if (currentUserUID != null) {
-
             mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
-
                 currentUser = it.getValue(User::class.java)!!
-
             }
-
         } else {
-
             // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
             Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
             println(currentUser.toString())
-
         }
 
+        userList = ArrayList()
+        userPendingList = ArrayList()
+        adapter = RequestAdapter(this, userList)
+        pendingAdapter = RequestAdapter(this, userPendingList, true)
 
+        requestRecyclerView = findViewById(R.id.userRequestRecyclerView)
+        pendingRecyclerView = findViewById(R.id.userPendingRequest)
+
+        requestRecyclerView.layoutManager = LinearLayoutManager(this)
+        requestRecyclerView.adapter = adapter
+        pendingRecyclerView.layoutManager = LinearLayoutManager(this)
+        pendingRecyclerView.adapter = pendingAdapter
+
+        addUsersToList(userList, adapter)
+        addUsersToList(userPendingList, pendingAdapter, true)
+
+        // TODO placeholder user info
 
 
 
@@ -128,5 +148,42 @@ class FriendRequest : AppCompatActivity() {
             // If user not found
             Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // Create List of Received Friend Requests
+    private fun addUsersToList(userList: ArrayList<User>, adapter: RequestAdapter, isPending: Boolean?=false){
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("DEBUG", snapshot.toString())
+                userList.clear()
+                for(postSnapshot in snapshot.children) {
+                    if (postSnapshot.exists()) {
+                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
+                        var user: String
+                        if (!isPending!!) {
+                            user = currentRequest?.sender!!
+                        } else {
+                            user = currentRequest?.recipient!!
+                        }
+                        if (currentRequest?.ifResponse == !isPending!!) {
+                            mDbRef.child("user").child(user).get()
+                                .addOnSuccessListener {
+                                    val targetUser = it.getValue(User::class.java)
+                                    Log.d("Target User", targetUser?.name!!)
+                                    userList.add(targetUser!!)
+                                    adapter.notifyDataSetChanged()
+                                }.addOnFailureListener {
+                                    Log.e("ERROR", "Couldn't find User")
+                                }
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+                Log.e("ERROR", error.toString())
+            }
+        })
     }
 }

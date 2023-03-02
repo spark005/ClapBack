@@ -8,11 +8,11 @@ class FriendR {
 
     // If response is a quick field to check if this is a request you're supposed
     // to respond to (so if you were the recipient, you can respond. Otherwise no)
-    var ifResponse: Boolean = false
+    var ifResponse: Boolean? = false
 
     constructor(){}
 
-    constructor(sender: String?, recipient: String?, ifResponse: Boolean) {
+    constructor(sender: String?, recipient: String?, ifResponse: Boolean?=false) {
         this.sender = sender
         this.recipient = recipient
         this.ifResponse = ifResponse

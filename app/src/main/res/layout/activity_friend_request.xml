@@ -45,8 +45,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRequestRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="230dp"
         android:layout_below="@id/request_list_label"
+        tools:listitem="@layout/request_layout"/>
+
+    <TextView
+        android:id="@+id/pending"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/userRequestRecyclerView"
+        android:text="Pending"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userPendingRequest"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/pending"
         tools:listitem="@layout/request_layout"/>
 
 </RelativeLayout>
