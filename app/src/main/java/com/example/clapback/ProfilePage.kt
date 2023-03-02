@@ -53,7 +53,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             image.setImageBitmap(bitmap)
 
         }.addOnFailureListener{
-            image.setImageResource(R.drawable.mongle)
+            image.setImageResource(R.drawable.pfp)
         }
 
         settings.setOnClickListener() {
