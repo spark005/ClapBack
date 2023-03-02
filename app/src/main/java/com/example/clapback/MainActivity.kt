@@ -43,6 +43,13 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
+        val currentUserUID = mAuth.currentUser?.uid
+        var currentUser = User()
+
+        mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
+            currentUser = it.getValue(User::class.java)!!
+        }
+
         // Going into user node of realtime database
         mDbRef.child("user").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -50,10 +57,11 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
                 userList.clear()
                 for(postSnapshot in snapshot.children) {
 
-                    val currentUser = postSnapshot.getValue(User::class.java)
+                    val traversedUser = postSnapshot.getValue(User::class.java)
 
-                    if (mAuth.currentUser?.uid != currentUser?.uid) {
-                        userList.add(currentUser!!)
+                    if (currentUser.uid != traversedUser?.uid
+                        && currentUser.friendlist.contains(traversedUser?.uid)) {
+                        userList.add(traversedUser!!)
                     }
 
                 }
