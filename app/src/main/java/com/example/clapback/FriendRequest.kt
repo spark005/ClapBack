@@ -62,17 +62,25 @@ class FriendRequest : AppCompatActivity() {
             var searchUID = "Nothing"
 
             // Linearly traversing users to see if a user exists with the given email
-            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+            mDbRef.child("user").addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     for(postSnapshot in snapshot.children) {
 
-                        val traversedUser = postSnapshot.getValue(User::class.java)
+                        val foundFriend = postSnapshot.getValue(User::class.java)
 
-                        if (traversedUser?.email.equals(searchedEmail)) {
-                            searchUID = traversedUser!!.uid.toString()
+                        if (foundFriend?.email.equals(searchedEmail)) {
+                            searchUID = foundFriend!!.uid.toString()
+
+                            sendRequest(searchUID)
+                            break
                         }
 
+                    }
+
+                    // If the user does not exist
+                    if (searchUID.equals("Nothing")) {
+                        Toast.makeText(applicationContext, "User Not Found", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -80,57 +88,45 @@ class FriendRequest : AppCompatActivity() {
                     TODO("Not yet implemented")
                 }
             })
+        }
+    }
 
-            // If the user does not exist
-            if (searchUID.equals("Nothing")) {
-                // If user not found
-                Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    // Sends friend request to user and saves requests in database for both sender and recipient
+    fun sendRequest(searchUID: String) {
+        mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
+            val foundFriend = it.getValue(User::class.java)
+
+            // Error handler if getValue doesn't "populate" the foundFriend user object
+            // **For Debugging Purposes**
+            if (foundFriend == null) {
+
+                Toast.makeText(this, "**BIG ERROR HERE FIX**", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
             }
 
-            // Grabbing searched user from database
-            mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
-                if (it.exists()) {
-                    val foundFriend = it.getValue(User::class.java)
+            // TODO If friend request was already sent before, this doesn't work
+            if (foundFriend.friendRequests.contains(FriendR(currentUser.uid, foundFriend.uid, true))) {
 
-                    // Error handler if getValue doesn't "populate" the foundFriend user object
-                    // **For Debugging Purposes**
-                    if (foundFriend == null) {
+                Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
 
-                        Toast.makeText(this, "**BIG ERROR HERE FIX**", Toast.LENGTH_SHORT).show()
-                        return@addOnSuccessListener
-                    }
+            } else {
 
-                    // If friend request was already sent before
-                    if (foundFriend.friendRequests.contains(FriendR(currentUser.uid, foundFriend.uid, true))) {
+                // Adding the request to both user's request list
+                foundFriend.friendRequests.add(FriendR(currentUser.uid, foundFriend.uid, true))
+                currentUser.friendRequests.add(FriendR(currentUser.uid,
+                    foundFriend.uid, false))
 
-                        Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
+                // Uploading friend requests to database of both parties
+                foundFriend.uid?.let { ffuid -> mDbRef.child("user").child(ffuid).child("friendRequests")
+                    .setValue(foundFriend.friendRequests)}
+                currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                    .setValue(currentUser.friendRequests)}
 
-                    } else {
-
-                        // Adding the request to both user's request list
-                        foundFriend.friendRequests.add(FriendR(currentUser.uid, foundFriend.uid, true))
-                        currentUser.friendRequests.add(FriendR(currentUser.uid,
-                            foundFriend.uid, false))
-
-                        // Uploading friend requests to database of both parties
-                        foundFriend.uid?.let { ffuid -> mDbRef.child(ffuid).child("friendRequests")
-                            .setValue(foundFriend.friendRequests)}
-                        currentUser.uid?.let { cuuid -> mDbRef.child(cuuid).child("friendRequests")
-                            .setValue(currentUser.friendRequests)}
-
-                    }
-                }
-
-            } .addOnFailureListener {
-                // If user not found
-                Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
             }
 
-
-
-
-
+        } .addOnFailureListener {
+            // If user not found
+            Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
         }
     }
 }
