@@ -1,11 +1,12 @@
 package com.example.clapback
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 
-private const val TITLE_TAG = "settingsActivityTitle"
+private const val TITLE_TAG = "Settings"
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -23,7 +24,7 @@ class SettingsActivity : AppCompatActivity(),
         }
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) {
-                setTitle(R.string.title_activity_settings)
+                setTitle("Settings")
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -67,6 +68,14 @@ class SettingsActivity : AppCompatActivity(),
     class HeaderFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.header_preferences, rootKey)
+
+            val preference: Preference? = findPreference("cpass_header")
+            val intent = Intent(context, EditPassword::class.java)
+            preference?.setIntent(intent)
+
+            val email: Preference? = findPreference("cemail_header")
+            val emailIntent = Intent(context, EditEmail::class.java)
+            email?.setIntent(emailIntent)
         }
     }
 

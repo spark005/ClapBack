@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import org.json.JSONException
+import org.json.JSONObject
 
 private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
@@ -44,6 +46,10 @@ class ChatActivity : AppCompatActivity() {
     val name = "Hidden Messages"
     val descriptionText = "You sent a message"
     val importance = NotificationManager.IMPORTANCE_DEFAULT
+    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private val serverKey =
+        "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
+    private val contentType = "application/json"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,6 +151,20 @@ class ChatActivity : AppCompatActivity() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
             notificationManager.notify(1234, builder.build())
+
+            val notification = JSONObject()
+            val notifcationBody = JSONObject()
+
+            /*try {
+                notifcationBody.put("title", "Enter_title")
+                notifcationBody.put("message", )   //Enter your notification message
+                notification.put("to", topic)
+                notification.put("data", notifcationBody)
+            } catch (e: JSONException) {
+
+            }*/
+
+            //sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.clapback">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -11,11 +12,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack">
+        <service
+            android:name=".DtDNotifications"
+            android:enabled="false"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:exported="true"
+            android:label="Settings" />
         <activity
             android:name=".Time"
             android:exported="true" />
@@ -24,6 +35,12 @@
             android:exported="false" />
         <activity
             android:name=".EditMainProfile"
+            android:exported="true" />
+        <activity
+            android:name=".EditPassword"
+            android:exported="true" />
+        <activity
+            android:name=".EditEmail"
             android:exported="true" />
         <activity
             android:name=".ProfilePic"
@@ -40,6 +57,9 @@
         <activity
             android:name=".WalkThrough"
             android:exported="false" />
+        <activity
+            android:name=".FriendRequest"
+            android:exported="true" />
         <activity
             android:name=".Login"
             android:exported="true">
