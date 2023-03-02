@@ -82,7 +82,7 @@ class SignUp : AppCompatActivity() {
 
     // Adding user to database
     private fun addUserToDatabase(name: String, email: String, uid: String) {
-        mDbRef =FirebaseDatabase.getInstance().getReference()
+        mDbRef = FirebaseDatabase.getInstance().getReference()
         // Initializing empty friendlist and request list to save into database
         val friendlist = ArrayList<String>()
         val friendRequests = ArrayList<FriendR>()
