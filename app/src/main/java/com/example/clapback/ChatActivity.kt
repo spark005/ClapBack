@@ -1,14 +1,21 @@
 package com.example.clapback
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 import org.json.JSONException
 import org.json.JSONObject
 
+private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
@@ -28,6 +36,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var  mDbRef: DatabaseReference
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
+    private lateinit var selectImageButton: ImageView
+    private lateinit var image: Uri
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -64,6 +74,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
+        selectImageButton = findViewById(R.id.chooseImage)
         sendButton = findViewById(R.id.sentButton)
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
@@ -92,6 +103,17 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+
+
+        val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                image = result.data?.data!!
+            }
+
+        }
+
 
 /* TODO Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
         you should execute this code as soon as your app starts.
@@ -143,6 +165,37 @@ class ChatActivity : AppCompatActivity() {
             }*/
 
             //sendNotification(notification)
+        }
+
+        selectImageButton.setOnClickListener() {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.type = "image/*"
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            intent.action = Intent.ACTION_OPEN_DOCUMENT
+            getPic.launch(intent)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && data != null && data.data != null) {
+            val contentResolver = applicationContext.contentResolver
+            val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(data.data!!, takeFlags)
+            val messageObject = Message(data.data, FirebaseAuth.getInstance().currentUser?.uid)
+            Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+                .setValue(messageObject).addOnSuccessListener {
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                        .setValue(messageObject).addOnSuccessListener {
+                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()
+                        }
+                }
+
         }
     }
 }
