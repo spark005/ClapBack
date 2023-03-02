@@ -8,8 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class SignUp : AppCompatActivity() {
 
@@ -21,6 +20,10 @@ class SignUp : AppCompatActivity() {
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
     private lateinit var btnSignUp: Button
+
+    // Match
+    private lateinit var myObject: MainActivity
+    private var exist: Boolean = false
 
     // Networking stuff
     private lateinit var mAuth: FirebaseAuth
@@ -35,6 +38,8 @@ class SignUp : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        myObject = MainActivity()
+
         editName = findViewById(R.id.edit_name)
         editEmail = findViewById(R.id.edit_email)
         editPassword = findViewById(R.id.edit_password)
@@ -42,11 +47,28 @@ class SignUp : AppCompatActivity() {
 
         editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+
         btnSignUp.setOnClickListener {
             val name = editName.text.toString()
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
 
+            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for(postSnapshot in snapshot.children) {
+                        val currentUser = postSnapshot.getValue(User::class.java)
+                        if (currentUser?.email.equals(email)) {
+                            exist = true
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
             if (email == "" || password == "" || name == "") {
                 Toast.makeText(this@SignUp, "Check your name, email, or password", Toast.LENGTH_SHORT).show()
             } else {
@@ -75,7 +97,11 @@ class SignUp : AppCompatActivity() {
                             email.substring(email.lastIndex) == "." || email.substringAfter(".").length < 2) {
                         Toast.makeText(this@SignUp, "Invalid email format", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this@SignUp, "Invalid character", Toast.LENGTH_SHORT).show()
+                        if (exist) {
+                            Toast.makeText(this@SignUp, "Already registered email", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@SignUp, "Invalid character", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }

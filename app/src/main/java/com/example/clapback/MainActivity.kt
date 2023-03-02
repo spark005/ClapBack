@@ -19,7 +19,7 @@ import com.google.firebase.database.*
 class MainActivity : AppCompatActivity(), OnSwipeListener {
 
     private lateinit var userRecyclerView: RecyclerView
-    private lateinit var userList: ArrayList<User>
+    lateinit var userList: ArrayList<User>
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
