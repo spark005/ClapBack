@@ -100,6 +100,7 @@ class FriendRequest : AppCompatActivity() {
                         }
                     }
                 }
+                pendingAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
