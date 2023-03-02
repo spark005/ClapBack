@@ -160,7 +160,9 @@ class ChatActivity : AppCompatActivity() {
         //super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && data != null && data.data != null) {
-
+            val contentResolver = applicationContext.contentResolver
+            val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(data.data!!, takeFlags)
             val messageObject = Message(data.data, FirebaseAuth.getInstance().currentUser?.uid)
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
