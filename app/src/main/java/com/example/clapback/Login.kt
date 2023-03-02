@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class Login : AppCompatActivity() {
 
@@ -20,6 +23,7 @@ class Login : AppCompatActivity() {
     private lateinit var btnSignUp: TextView
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +67,9 @@ class Login : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, logs in user
-
+                    val uid = task.result.user!!.uid
                     val intent = Intent(this@Login, Time::class.java)
+                    incrementStreak(uid)
                     finish()
                     startActivity(intent)
                 } else {
@@ -72,6 +77,21 @@ class Login : AppCompatActivity() {
                     Toast.makeText(this@Login, "User does not exist", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun incrementStreak(uid: String) {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+        mDbRef.child("user").child(uid).get().addOnSuccessListener {
+            if (it.exists()) {
+                val user = it.getValue(User::class.java)
+                var streak = user?.streak!!
+                streak += 1
+                Log.i("STREAK INFO", streak.toString())
+                mDbRef.child("user").child(uid).child("streak").setValue(streak)
+            }
+        }.addOnFailureListener {
+            Log.e("STREAK ERROR", "Could not increment streak!")
+        }
     }
 
 }

@@ -23,8 +23,8 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:exported="true"
+            android:label="Settings" />
         <activity
             android:name=".Time"
             android:exported="true" />
@@ -33,6 +33,12 @@
             android:exported="false" />
         <activity
             android:name=".EditMainProfile"
+            android:exported="true" />
+        <activity
+            android:name=".EditPassword"
+            android:exported="true" />
+        <activity
+            android:name=".EditEmail"
             android:exported="true" />
         <activity
             android:name=".ProfilePic"
@@ -49,6 +55,9 @@
         <activity
             android:name=".WalkThrough"
             android:exported="false" />
+        <activity
+            android:name=".FriendRequest"
+            android:exported="true" />
         <activity
             android:name=".Login"
             android:exported="true">

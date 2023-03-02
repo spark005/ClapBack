@@ -73,8 +73,11 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             startActivity(intent)
         }
 
+        requests.setOnClickListener {
+            val intent = Intent(this, FriendRequest::class.java)
+            startActivity(intent)
+        }
     }
-
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
@@ -129,6 +132,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         startActivity(intent)
     }
 
+
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
         val ei: ExifInterface = ExifInterface(image_absolute_path);
         val orientation: Int =
@@ -170,6 +174,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
     }
+
 
 
 }
