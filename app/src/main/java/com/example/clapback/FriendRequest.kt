@@ -7,8 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class FriendRequest : AppCompatActivity() {
 
@@ -33,9 +32,9 @@ class FriendRequest : AppCompatActivity() {
         if (currentUserUID != null) {
 
             mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
-                if (it.exists()) {
-                    currentUser = it.getValue(User::class.java)!!
-                }
+
+                currentUser = it.getValue(User::class.java)!!
+
             }
 
         } else {
@@ -48,17 +47,49 @@ class FriendRequest : AppCompatActivity() {
 
 
 
+
+
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
 
             // Error checking for no user entered
             if (usernameField.text.toString().equals("")) {
-                Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Nothing Entered In Name Field", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val searchedEmail = usernameField.text.toString()
-            mDbRef.child("user").child(searchedEmail).get().addOnSuccessListener {
+            var searchUID = "Nothing"
+
+            // Linearly traversing users to see if a user exists with the given email
+            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for(postSnapshot in snapshot.children) {
+
+                        val traversedUser = postSnapshot.getValue(User::class.java)
+
+                        if (traversedUser?.email.equals(searchedEmail)) {
+                            searchUID = traversedUser!!.uid.toString()
+                        }
+
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+            // If the user does not exist
+            if (searchUID.equals("Nothing")) {
+                // If user not found
+                Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Grabbing searched user from database
+            mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
                 if (it.exists()) {
                     val foundFriend = it.getValue(User::class.java)
 
@@ -71,18 +102,19 @@ class FriendRequest : AppCompatActivity() {
                     }
 
                     // If friend request was already sent before
-                    if (foundFriend?.friendRequests?.contains(FriendR(currentUser.uid, foundFriend.uid, true)) == true) {
+                    if (foundFriend.friendRequests.contains(FriendR(currentUser.uid, foundFriend.uid, true))) {
 
                         Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
 
                     } else {
 
                         // Adding the request to both user's request list
-                        foundFriend?.friendRequests?.add(FriendR(currentUser.uid, foundFriend.uid, true))
-                        currentUser.friendRequests.add(FriendR(currentUser.uid, foundFriend?.uid, false))
+                        foundFriend.friendRequests.add(FriendR(currentUser.uid, foundFriend.uid, true))
+                        currentUser.friendRequests.add(FriendR(currentUser.uid,
+                            foundFriend.uid, false))
 
                         // Uploading friend requests to database of both parties
-                        foundFriend?.uid?.let { ffuid -> mDbRef.child(ffuid).child("friendRequests")
+                        foundFriend.uid?.let { ffuid -> mDbRef.child(ffuid).child("friendRequests")
                             .setValue(foundFriend.friendRequests)}
                         currentUser.uid?.let { cuuid -> mDbRef.child(cuuid).child("friendRequests")
                             .setValue(currentUser.friendRequests)}
@@ -92,7 +124,7 @@ class FriendRequest : AppCompatActivity() {
 
             } .addOnFailureListener {
                 // If user not found
-                Toast.makeText(this, "User Not Found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
             }
 
 

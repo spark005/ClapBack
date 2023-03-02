@@ -22,4 +22,9 @@ class User {
         this.friendlist = friendlist
         this.friendRequests = friendRequests
     }
+
+    override fun toString(): String {
+        println(this.name)
+        return super.toString()
+    }
 }
