@@ -66,6 +66,12 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             startActivity(intent)
         }
 
+        requests.setOnClickListener {
+            val intent = Intent(this, FriendRequest::class.java)
+            startActivity(intent)
+        }
+    }
+
     }
 
 
