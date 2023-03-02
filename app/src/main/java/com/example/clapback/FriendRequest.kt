@@ -110,9 +110,17 @@ class FriendRequest : AppCompatActivity() {
 
         val currentUserUID = mAuth.currentUser?.uid
         if (currentUserUID != null) {
-            mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
-                currentUser = it.getValue(User::class.java)!!
-            }
+            mDbRef.child("user").child(currentUserUID).addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    currentUser = snapshot.getValue(User::class.java)!!
+                    Log.d("CURRENT USER", currentUser.toString())
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         } else {
             // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
             Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
