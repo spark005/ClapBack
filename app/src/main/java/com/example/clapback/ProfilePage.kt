@@ -72,9 +72,6 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
     }
 
-    }
-
-
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)
@@ -127,6 +124,4 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         val intent = Intent(this, Time::class.java)
         startActivity(intent)
     }
-
-
 }
