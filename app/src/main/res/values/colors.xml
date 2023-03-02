@@ -10,4 +10,6 @@
     <color name="blue">#85A3D3</color>
     <color name="salmon">#D59F9D</color>
     <color name="grey">#d6d7d7</color>
+    <color name="red"></color>
+    <color name='link'>#0000EE</color>
 </resources>
