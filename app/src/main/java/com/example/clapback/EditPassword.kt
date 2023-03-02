@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.widget.Button
@@ -47,6 +48,12 @@ class EditPassword : AppCompatActivity() {
                 //mAuth.confirmPasswordReset()
                 //something here
             }
+        }
+
+        cancel.setOnClickListener() {
+            //val intent = Intent(this, Settings::class.java)
+            finish()
+            //startActivity(intent)
         }
 
     }

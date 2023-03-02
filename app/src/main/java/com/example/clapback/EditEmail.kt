@@ -25,5 +25,11 @@ class EditEmail : AppCompatActivity() {
         newEmail = findViewById(R.id.email)
         cancel = findViewById(R.id.cancel)
 
+        cancel.setOnClickListener() {
+            //val intent = Intent(this, Settings::class.java)
+            finish()
+            //startActivity(intent)
+        }
+
     }
 }
