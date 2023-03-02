@@ -119,7 +119,7 @@ class ChatActivity : AppCompatActivity() {
             }
 
             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            //notificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
 
         //TODO using firebase database will have to change
