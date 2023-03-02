@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -41,6 +42,9 @@ class ChatActivity : AppCompatActivity() {
         "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
     private val contentType = "application/json"
 
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(this.applicationContext)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -130,19 +134,41 @@ class ChatActivity : AppCompatActivity() {
 
             notificationManager.notify(1234, builder.build())
 
+            //todo excuse me wat
+            FirebaseMessaging.getInstance().subscribeToTopic("/topics/Notification")
             val notification = JSONObject()
             val notifcationBody = JSONObject()
+            val topic = "/topics/Notification"
 
-            /*try {
+            try {
                 notifcationBody.put("title", "Enter_title")
-                notifcationBody.put("message", )   //Enter your notification message
+                notifcationBody.put("message", message)   //Enter your notification message
                 notification.put("to", topic)
                 notification.put("data", notifcationBody)
             } catch (e: JSONException) {
 
-            }*/
+            }
 
-            //sendNotification(notification)
+            sendNotification(notification)
         }
+    }
+
+    private fun sendNotification(notification: JSONObject) {
+        val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
+            Response.Listener<JSONObject> {
+
+            },
+            Response.ErrorListener {
+
+            }) {
+
+            override fun getHeaders(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["Authorization"] = serverKey
+                params["Content-Type"] = contentType
+                return params
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
     }
 }
