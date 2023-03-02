@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class RequestAdapter(val context: Context, var userList: ArrayList<User>, var isPending: Boolean?= false):
+class RequestAdapter(val context: Context, var userList: ArrayList<User>):
     RecyclerView.Adapter<RequestAdapter.RequestViewHolder>() {
 
     lateinit var mAuth: FirebaseAuth
@@ -25,11 +25,6 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>, var is
         val view: View = LayoutInflater.from(context).inflate(R.layout.request_layout, parent, false)
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
-        mDbRef.child("user").child(mAuth.currentUser!!.uid).get().addOnSuccessListener {
-            currentUser = it.getValue(User::class.java)!!
-        }.addOnFailureListener {
-            Log.e("Error", "Couldn't find user")
-        }
         return RequestViewHolder(view)
     }
 
@@ -46,7 +41,12 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>, var is
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
         val sender = userList[position]
-        userList.remove(sender)
+
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).get().addOnSuccessListener {
+            currentUser = it.getValue(User::class.java)!!
+        }.addOnFailureListener {
+            Log.e("Error", "Couldn't find user")
+        }
 
         holder.textName.text = sender.name
 
@@ -65,10 +65,12 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>, var is
 
         holder.declineBtn.setOnClickListener {
             deleteRequests(sender)
-            notifyDataSetChanged()
 
             mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
             mDbRef.child("user").child(sender.uid!!).setValue(sender)
+
+            userList.remove(sender)
+            notifyDataSetChanged()
         }
     }
 

@@ -38,17 +38,6 @@ class FriendRequest : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        val currentUserUID = mAuth.currentUser?.uid
-        if (currentUserUID != null) {
-            mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
-                currentUser = it.getValue(User::class.java)!!
-            }
-        } else {
-            // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
-            Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
-            println(currentUser.toString())
-        }
-
         userList = ArrayList()
         userPendingList = ArrayList()
         adapter = RequestAdapter(this, userList)
@@ -66,7 +55,6 @@ class FriendRequest : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d("DEBUG", snapshot.toString())
                 userList.clear()
-                userPendingList.clear()
                 for(postSnapshot in snapshot.children) {
                     if (postSnapshot.exists()) {
                         val currentRequest = postSnapshot.getValue(FriendR::class.java)
@@ -75,18 +63,9 @@ class FriendRequest : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     val targetUser = it.getValue(User::class.java)
                                     Log.d("Target User", targetUser?.name!!)
-                                    userList.add(targetUser!!)
+                                    userList.add(targetUser)
                                     adapter.notifyDataSetChanged()
-                                }.addOnFailureListener {
-                                    Log.e("ERROR", "Couldn't find User")
-                                }
-                        } else {
-                            mDbRef.child("user").child(currentRequest?.recipient!!).get()
-                                .addOnSuccessListener {
-                                    val targetUser = it.getValue(User::class.java)
-                                    Log.d("Target User", targetUser?.name!!)
-                                    userPendingList.add(targetUser!!)
-                                    pendingAdapter.notifyDataSetChanged()
+                                    Log.d("DEBUG", userList.toString())
                                 }.addOnFailureListener {
                                     Log.e("ERROR", "Couldn't find User")
                                 }
@@ -100,25 +79,45 @@ class FriendRequest : AppCompatActivity() {
                 Log.e("ERROR", error.toString())
             }
         })
-//        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.d("DEBUG", snapshot.toString())
-//                userPendingList.clear()
-//                for(postSnapshot in snapshot.children) {
-//                    if (postSnapshot.exists()) {
-//                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
-//                        if (currentRequest?.ifResponse == false) {
-//
-//                        }
-//                    }
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//                Log.e("ERROR", error.toString())
-//            }
-//        })
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("DEBUG", snapshot.toString())
+                userPendingList.clear()
+                for(postSnapshot in snapshot.children) {
+                    if (postSnapshot.exists()) {
+                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
+                        if (currentRequest?.ifResponse == false) {
+                            mDbRef.child("user").child(currentRequest?.recipient!!).get()
+                                .addOnSuccessListener {
+                                    val targetUser = it.getValue(User::class.java)
+                                    Log.d("Target User", targetUser?.name!!)
+                                    userPendingList.add(targetUser)
+                                    pendingAdapter.notifyDataSetChanged()
+                                    Log.d("DEBUG", userPendingList.toString())
+                                }.addOnFailureListener {
+                                    Log.e("ERROR", "Couldn't find User")
+                                }
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+                Log.e("ERROR", error.toString())
+            }
+        })
+
+        val currentUserUID = mAuth.currentUser?.uid
+        if (currentUserUID != null) {
+            mDbRef.child("user").child(currentUserUID).get().addOnSuccessListener {
+                currentUser = it.getValue(User::class.java)!!
+            }
+        } else {
+            // If this occurs, BIG ERROR HAS OCCURRED PLEASE FIX
+            Toast.makeText(this, "**CANNOT FIND CURRENT USER**", Toast.LENGTH_SHORT).show()
+            println(currentUser.toString())
+        }
 
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
@@ -130,6 +129,7 @@ class FriendRequest : AppCompatActivity() {
             }
 
             val searchedEmail = usernameField.text.toString()
+            usernameField.text.clear()
             var searchUID = "Nothing"
 
             // Linearly traversing users to see if a user exists with the given email
@@ -199,10 +199,5 @@ class FriendRequest : AppCompatActivity() {
             // If user not found
             Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    // Create List of Received Friend Requests
-    private fun addUsersToList(userList: ArrayList<User>, adapter: RequestAdapter, isPending: Boolean?=false){
-
     }
 }

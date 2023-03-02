@@ -25,11 +25,6 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
         val view: View = LayoutInflater.from(context).inflate(R.layout.request_layout, parent, false)
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
-        mDbRef.child("user").child(mAuth.currentUser!!.uid).get().addOnSuccessListener {
-            currentUser = it.getValue(User::class.java)!!
-        }.addOnFailureListener {
-            Log.e("Error", "Couldn't find user")
-        }
         return PendingViewHolder(view)
     }
 
@@ -46,7 +41,12 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
 
     override fun onBindViewHolder(holder: PendingViewHolder, position: Int) {
         val recipient = pendingList[position]
-        pendingList.remove(recipient)
+
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).get().addOnSuccessListener {
+            currentUser = it.getValue(User::class.java)!!
+        }.addOnFailureListener {
+            Log.e("Error", "Couldn't find user")
+        }
 
         holder.textName.text = recipient.name
 
@@ -55,10 +55,12 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
 
         holder.cancelRequest.setOnClickListener {
             deleteRequests(recipient)
-            notifyDataSetChanged()
 
             mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
             mDbRef.child("user").child(recipient.uid!!).setValue(recipient)
+
+            pendingList.remove(recipient)
+            notifyDataSetChanged()
         }
     }
 
