@@ -24,7 +24,7 @@ class FriendRequest : AppCompatActivity() {
     private lateinit var userList: ArrayList<User>
     private lateinit var userPendingList: ArrayList<User>
     private lateinit var adapter: RequestAdapter
-    private lateinit var pendingAdapter: RequestAdapter
+    private lateinit var pendingAdapter: PendingAdapter
     private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ class FriendRequest : AppCompatActivity() {
         userList = ArrayList()
         userPendingList = ArrayList()
         adapter = RequestAdapter(this, userList)
-        pendingAdapter = RequestAdapter(this, userPendingList, true)
+        pendingAdapter = PendingAdapter(this, userPendingList)
 
         requestRecyclerView = findViewById(R.id.userRequestRecyclerView)
         pendingRecyclerView = findViewById(R.id.userPendingRequest)
@@ -62,12 +62,63 @@ class FriendRequest : AppCompatActivity() {
         pendingRecyclerView.layoutManager = LinearLayoutManager(this)
         pendingRecyclerView.adapter = pendingAdapter
 
-        addUsersToList(userList, adapter)
-        addUsersToList(userPendingList, pendingAdapter, true)
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("DEBUG", snapshot.toString())
+                userList.clear()
+                userPendingList.clear()
+                for(postSnapshot in snapshot.children) {
+                    if (postSnapshot.exists()) {
+                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
+                        if (currentRequest?.ifResponse == true) {
+                            mDbRef.child("user").child(currentRequest?.sender!!).get()
+                                .addOnSuccessListener {
+                                    val targetUser = it.getValue(User::class.java)
+                                    Log.d("Target User", targetUser?.name!!)
+                                    userList.add(targetUser!!)
+                                    adapter.notifyDataSetChanged()
+                                }.addOnFailureListener {
+                                    Log.e("ERROR", "Couldn't find User")
+                                }
+                        } else {
+                            mDbRef.child("user").child(currentRequest?.recipient!!).get()
+                                .addOnSuccessListener {
+                                    val targetUser = it.getValue(User::class.java)
+                                    Log.d("Target User", targetUser?.name!!)
+                                    userPendingList.add(targetUser!!)
+                                    pendingAdapter.notifyDataSetChanged()
+                                }.addOnFailureListener {
+                                    Log.e("ERROR", "Couldn't find User")
+                                }
+                        }
+                    }
+                }
+            }
 
-        // TODO placeholder user info
-
-
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+                Log.e("ERROR", error.toString())
+            }
+        })
+//        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                Log.d("DEBUG", snapshot.toString())
+//                userPendingList.clear()
+//                for(postSnapshot in snapshot.children) {
+//                    if (postSnapshot.exists()) {
+//                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
+//                        if (currentRequest?.ifResponse == false) {
+//
+//                        }
+//                    }
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//                Log.e("ERROR", error.toString())
+//            }
+//        })
 
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
@@ -152,38 +203,6 @@ class FriendRequest : AppCompatActivity() {
 
     // Create List of Received Friend Requests
     private fun addUsersToList(userList: ArrayList<User>, adapter: RequestAdapter, isPending: Boolean?=false){
-        mDbRef.child("user").child(mAuth.currentUser!!.uid).child("friendRequests").addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("DEBUG", snapshot.toString())
-                userList.clear()
-                for(postSnapshot in snapshot.children) {
-                    if (postSnapshot.exists()) {
-                        val currentRequest = postSnapshot.getValue(FriendR::class.java)
-                        var user: String
-                        if (!isPending!!) {
-                            user = currentRequest?.sender!!
-                        } else {
-                            user = currentRequest?.recipient!!
-                        }
-                        if (currentRequest?.ifResponse == !isPending!!) {
-                            mDbRef.child("user").child(user).get()
-                                .addOnSuccessListener {
-                                    val targetUser = it.getValue(User::class.java)
-                                    Log.d("Target User", targetUser?.name!!)
-                                    userList.add(targetUser!!)
-                                    adapter.notifyDataSetChanged()
-                                }.addOnFailureListener {
-                                    Log.e("ERROR", "Couldn't find User")
-                                }
-                        }
-                    }
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-                Log.e("ERROR", error.toString())
-            }
-        })
     }
 }

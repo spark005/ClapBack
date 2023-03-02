@@ -12,7 +12,7 @@ class FriendR {
 
     constructor(){}
 
-    constructor(sender: String?, recipient: String?, ifResponse: Boolean?=false) {
+    constructor(sender: String?, recipient: String?, ifResponse: Boolean) {
         this.sender = sender
         this.recipient = recipient
         this.ifResponse = ifResponse

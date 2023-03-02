@@ -14,14 +14,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class RequestAdapter(val context: Context, var userList: ArrayList<User>, var isPending: Boolean?= false):
-    RecyclerView.Adapter<RequestAdapter.RequestViewHolder>() {
+class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
+    RecyclerView.Adapter<PendingAdapter.PendingViewHolder>() {
 
     lateinit var mAuth: FirebaseAuth
     lateinit var mDbRef: DatabaseReference
     lateinit var currentUser: User
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.request_layout, parent, false)
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
@@ -30,63 +30,52 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>, var is
         }.addOnFailureListener {
             Log.e("Error", "Couldn't find user")
         }
-        return RequestViewHolder(view)
+        return PendingViewHolder(view)
     }
 
-    class RequestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PendingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textName = itemView.findViewById<TextView>(R.id.user_name)
         val acceptBtn = itemView.findViewById<Button>(R.id.accept)
         val declineBtn = itemView.findViewById<Button>(R.id.decline)
-        val friendAccepted = itemView.findViewById<TextView>(R.id.friend_accepted)
+        val cancelRequest = itemView.findViewById<Button>(R.id.cancel_request)
     }
 
     override fun getItemCount(): Int {
-        return userList.size
+        return pendingList.size
     }
 
-    override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
-        val sender = userList[position]
-        userList.remove(sender)
+    override fun onBindViewHolder(holder: PendingViewHolder, position: Int) {
+        val recipient = pendingList[position]
+        pendingList.remove(recipient)
 
-        holder.textName.text = sender.name
+        holder.textName.text = recipient.name
 
-        holder.acceptBtn.setOnClickListener {
-            deleteRequests(sender)
+        removeBtns(holder)
+        holder.cancelRequest.visibility = VISIBLE
 
-            sender.friendlist.add(currentUser.uid!!)
-            currentUser.friendlist.add(sender.uid!!)
-
-            mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
-            mDbRef.child("user").child(sender.uid!!).setValue(sender)
-
-            removeBtns(holder)
-            holder.friendAccepted.visibility = VISIBLE
-        }
-
-        holder.declineBtn.setOnClickListener {
-            deleteRequests(sender)
+        holder.cancelRequest.setOnClickListener {
+            deleteRequests(recipient)
             notifyDataSetChanged()
 
             mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
-            mDbRef.child("user").child(sender.uid!!).setValue(sender)
+            mDbRef.child("user").child(recipient.uid!!).setValue(recipient)
         }
     }
 
-    private fun removeBtns(holder: RequestViewHolder){
+    private fun removeBtns(holder: PendingViewHolder){
         holder.acceptBtn.visibility = INVISIBLE
         holder.declineBtn.visibility = INVISIBLE
     }
 
     private fun deleteRequests(user: User) {
-        // user is sender
         for (request in user.friendRequests) {
-            if ((request.recipient == currentUser.uid) && (request.sender == user.uid) && (request.ifResponse == false)) {
+            if ((request.recipient == user.uid) && (request.sender == currentUser.uid) && (request.ifResponse == true)) {
                 user.friendRequests.remove(request)
                 break
             }
         }
         for (request in currentUser.friendRequests) {
-            if ((request.recipient == currentUser.uid) && (request.sender == user.uid) && (request.ifResponse == true)) {
+            if ((request.recipient == user.uid) && (request.sender == currentUser.uid) && (request.ifResponse == false)) {
                 currentUser.friendRequests.remove(request)
                 break
             }
