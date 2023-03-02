@@ -3,6 +3,7 @@ package com.example.clapback
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 
+private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
@@ -102,6 +105,7 @@ class ChatActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 image = result.data?.data!!
             }
+
         }
 
 
@@ -115,7 +119,7 @@ class ChatActivity : AppCompatActivity() {
             }
 
             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            //notificationManager.createNotificationChannel(channel)
         }
 
         //TODO using firebase database will have to change
@@ -144,10 +148,32 @@ class ChatActivity : AppCompatActivity() {
         }
 
         selectImageButton.setOnClickListener() {
-            val intent = Intent(Intent.ACTION_PICK)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            intent.action = Intent.ACTION_OPEN_DOCUMENT
             getPic.launch(intent)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && data != null && data.data != null) {
+
+            val messageObject = Message(data.data, FirebaseAuth.getInstance().currentUser?.uid)
+            Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+                .setValue(messageObject).addOnSuccessListener {
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                        .setValue(messageObject).addOnSuccessListener {
+                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()
+                        }
+                }
+
         }
     }
 }
