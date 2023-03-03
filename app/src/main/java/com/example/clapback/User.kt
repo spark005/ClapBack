@@ -6,8 +6,13 @@ class User {
     var name: String? = null
     var email: String? = null
     var uid: String? = null
-    var desc: String? = null
+    var bio: String? = null
     var image: Uri? = null
+
+    var fmovie: String? = null
+    var fmusic: String? = null
+    var fbook: String? = null
+
     var streak: Int? = 1
     var friendlist = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()
