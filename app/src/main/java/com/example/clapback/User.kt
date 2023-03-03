@@ -6,12 +6,12 @@ class User {
     var name: String? = null
     var email: String? = null
     var uid: String? = null
-    var bio: String? = null
+    var bio: String? = ""
     var image: Uri? = null
 
-    var fmovie: String? = null
-    var fmusic: String? = null
-    var fbook: String? = null
+    var fmovie: String? = ""
+    var fmusic: String? = ""
+    var fbook: String? = ""
 
     var streak: Int? = 1
     var friendlist = ArrayList<String>()
