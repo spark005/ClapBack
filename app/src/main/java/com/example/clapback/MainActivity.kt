@@ -22,7 +22,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 class MainActivity : AppCompatActivity(), OnSwipeListener {
 
     private lateinit var userRecyclerView: RecyclerView
-    private lateinit var userList: ArrayList<User>
+    lateinit var userList: ArrayList<User>
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
@@ -55,28 +55,37 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
-        // Going into user node of realtime database
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        val currentUserUID = mAuth.currentUser?.uid
+        var currentUser = User()
 
-                userList.clear()
-                for(postSnapshot in snapshot.children) {
+        mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
+            currentUser = it.getValue(User::class.java)!!
 
-                    val currentUser = postSnapshot.getValue(User::class.java)
+            // Going into user node of realtime database
+            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-                    if (mAuth.currentUser?.uid != currentUser?.uid) {
-                        userList.add(currentUser!!)
+                    userList.clear()
+                    for(postSnapshot in snapshot.children) {
+
+                        val traversedUser = postSnapshot.getValue(User::class.java)
+
+                        if (currentUser.uid != traversedUser?.uid
+                            && currentUser.friendlist.contains(traversedUser?.uid)) {
+                            userList.add(traversedUser!!)
+                        }
+
                     }
-
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
+        }
+
         searchView = findViewById(R.id.searchView)
         searchView.clearFocus()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

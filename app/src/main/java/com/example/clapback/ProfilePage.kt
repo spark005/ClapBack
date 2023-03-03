@@ -14,6 +14,8 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
@@ -29,7 +31,13 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
+    private lateinit var mDbRef: DatabaseReference
 
+    // Username's set parameters on profile page
+    private lateinit var userBio: TextView
+    private lateinit var username: TextView
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_profile_page)
@@ -47,8 +55,35 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         edit = findViewById(R.id.edit)
         image = findViewById(R.id.profile_image)
 
+        // Text fields on user profile page
+        userBio = findViewById(R.id.name)
+        username = findViewById(R.id.username)
+
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
+
+
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+
+
+
+        // Setting the profile picture's username and Bio fields
+        if (profileUid != null) {
+            mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
+                val currentUser = it.getValue(User::class.java)
+
+                if (!currentUser?.bio.equals("")) {
+                    userBio.setText(currentUser?.bio).toString()
+                } else {
+                    userBio.setText("Bio").toString()
+                }
+
+                username.setText(currentUser?.name).toString()
+            }
+        }
+
+
+
 
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {

@@ -33,6 +33,11 @@ class EditMainProfile : AppCompatActivity() {
     private lateinit var image: CircleImageView
     private lateinit var newPic: Uri
 
+    // Fave variables in user description
+    private lateinit var fmovie:EditText
+    private lateinit var fmusic:EditText
+    private lateinit var fbook:EditText
+
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
     
@@ -49,7 +54,13 @@ class EditMainProfile : AppCompatActivity() {
         name = findViewById(R.id.name)
         username = findViewById(R.id.username)
         bio = findViewById(R.id.bio)
+
+        fmovie = findViewById(R.id.movie)
+        fmusic = findViewById(R.id.music)
+        fbook = findViewById(R.id.book)
+
         image = findViewById(R.id.profile_image)
+
 
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
@@ -90,23 +101,67 @@ class EditMainProfile : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        username.setText(mAuth.currentUser!!.displayName)
 
-        cancel.setOnClickListener() {
-            val intent = Intent(this, ProfilePage::class.java)
-            finish()
-            startActivity(intent)
-        }
-        confirm.setOnClickListener() {
-            val newName = username.text.toString()
-            changeNameOfUser(newName)
-            val intent = Intent(this, ProfilePage::class.java)
-            finish()
-            startActivity(intent)
+        // Setting the profile's initial fields up
+        if (profileUid != null) {
+            mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
+                val currentUser = it.getValue(User::class.java)
+
+                username.setHint(currentUser?.name).toString()
+
+
+                if (!currentUser?.bio.equals("")) {
+                    bio.setHint(currentUser?.bio).toString()
+                } else {
+                    bio.setHint("Current Bio").toString()
+                }
+
+                if (!currentUser?.fmovie.equals("")) {
+                    fmovie.setHint(currentUser?.fmovie).toString()
+                } else {
+                    fmovie.setHint("**Favorite Movie**").toString()
+                }
+
+                if (!currentUser?.fmusic.equals("")) {
+                    fmusic.setHint(currentUser?.fmusic).toString()
+                } else {
+                    fmusic.setHint("**Favorite Song**").toString()
+                }
+
+                if (!currentUser?.fbook.equals("")) {
+                    fbook.setHint(currentUser?.fbook).toString()
+                } else {
+                    fbook.setHint("**Favorite Book**").toString()
+                }
+
+
+
+
+                cancel.setOnClickListener() {
+                    val intent = Intent(this, ProfilePage::class.java)
+                    finish()
+                    startActivity(intent)
+                }
+                confirm.setOnClickListener() {
+
+                    // Setting user's attributes to inputted strings and saving that info
+                    currentUser?.bio = bio.text.toString()
+                    currentUser?.fmovie = fmovie.text.toString()
+                    currentUser?.fmusic = fmusic.text.toString()
+                    currentUser?.fbook = fbook.text.toString()
+                    addUserInfo(currentUser!!)
+                    val intent = Intent(this, ProfilePage::class.java)
+                    finish()
+                    startActivity(intent)
+                }
+            }
         }
     }
 
-    private fun changeNameOfUser(name:String) {
+
+    // Not needed Function
+
+    /*private fun changeNameOfUser(name:String) {
         mDbRef = FirebaseDatabase.getInstance().getReference()
         mDbRef.child("user").child(mAuth.currentUser!!.uid).child("name").setValue(name)
             .addOnSuccessListener {
@@ -117,8 +172,16 @@ class EditMainProfile : AppCompatActivity() {
                 val toast = Toast.makeText(applicationContext, "Failed to change name", Toast.LENGTH_SHORT)
                 toast.show()
             }
+    }*/
+
+    // Adding user to database
+    private fun addUserInfo(user: User) {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+        user.uid?.let { mDbRef.child("user").child(it).setValue(user) }
     }
 
+
+    // This has something to do with the picture or something idk
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
         val ei: ExifInterface = ExifInterface(image_absolute_path);
         val orientation: Int =
