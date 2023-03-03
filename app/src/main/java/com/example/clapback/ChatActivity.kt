@@ -92,6 +92,25 @@ class ChatActivity : AppCompatActivity() {
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        fun notific() {
+            var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("You got a message")
+                .setContentText("Do you want to view it?")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+            notificationManager.notify(1234, builder.build())
+        }
+
         // logic for adding data to recyclerView
         mDbRef.child("chats").child(senderRoom!!).child("messages")
             .addValueEventListener(object: ValueEventListener {
@@ -106,7 +125,9 @@ class ChatActivity : AppCompatActivity() {
 
                     }
                     messageAdapter.notifyDataSetChanged()
+                    notific()
                 }
+
 
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
@@ -129,14 +150,6 @@ class ChatActivity : AppCompatActivity() {
         you should execute this code as soon as your app starts.
         It's safe to call this repeatedly because creating an existing notification channel performs no operation.*/
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-
-            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
 
         //TODO using firebase database will have to change
         // adding the message to database
@@ -152,15 +165,14 @@ class ChatActivity : AppCompatActivity() {
                 }
             messageBox.setText("")
 
-
-
-            var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            /*var builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo)
-                .setContentTitle("YOU sent a message")
-                .setContentText(message)
+                .setContentTitle("You got a message")
+                .setContentText("Do you want to view it?")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-            notificationManager.notify(1234, builder.build())
+            notificationManager.notify(1234, builder.build())*/
+
 
             //todo excuse me wat
             FirebaseMessaging.getInstance().subscribeToTopic("/topics/Notification")
@@ -217,6 +229,7 @@ class ChatActivity : AppCompatActivity() {
                 }
         }
     }
+
 
     /*private fun sendNotification(notification: JSONObject) {
         val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,

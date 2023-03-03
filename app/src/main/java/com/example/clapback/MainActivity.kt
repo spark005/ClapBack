@@ -33,17 +33,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            // Log and toast
-            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
-        })
+        FirebaseMessaging.getInstance().subscribeToTopic("HiddenMessages")
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
