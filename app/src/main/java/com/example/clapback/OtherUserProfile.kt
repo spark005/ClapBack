@@ -1,42 +1,41 @@
 package com.example.clapback
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
-import android.os.Build
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
+import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 
-class UserAdapter (val context: Context, var userList: ArrayList<User>):
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class OtherUserProfile: AppCompatActivity() {
 
-    private var filteredList: ArrayList<User> = ArrayList()
+    private lateinit var mDbRef: DatabaseReference
 
+    private lateinit var username: TextView
+    private lateinit var description: TextView
+    private lateinit var image: CircleImageView
 
-    //TODO Figure out what a recycler view is and what this code does
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
-        return UserViewHolder(view)
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.otherusers_profile_page)
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        val currentUser = userList[position]
-        val storage = FirebaseStorage.getInstance().reference.child("profilePic/${currentUser.uid}")
+        username = findViewById(R.id.other_username)
+        description = findViewById(R.id.description)
+        image = findViewById(R.id.other_profile_image)
 
+        val otherUserUid = intent.getStringExtra("uid")
+        val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
 
-        holder.textName.text = currentUser.name
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =
@@ -44,49 +43,25 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
                     BitmapFactory.decodeFile(pic.absolutePath),
                     pic.absolutePath
                 )
-
-            holder.image.setImageBitmap(bitmap)
+            image.setImageBitmap(bitmap)
 
         }.addOnFailureListener{
-            holder.image.setImageResource(R.drawable.mongle)
+            image.setImageResource(R.drawable.pfp)
         }
 
-        holder.image.setOnClickListener{
-            val intent = Intent(context, OtherUserProfile::class.java)
-            intent.putExtra("uid", currentUser.uid)
+        var otherUser = User()
+        mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
+            otherUser = it.getValue(User::class.java)!!
+            username.text = otherUser.name
 
-            context.startActivity(intent)
+            if (otherUser.desc == null) {
+                description.text = "No Description"
+            } else {
+                description.text = otherUser.desc
+            }
+        }.addOnFailureListener {
+            Log.e("ERROR", it.toString())
         }
-
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
-
-            intent.putExtra("name", currentUser.name)
-            intent.putExtra("uid", currentUser.uid)
-
-
-
-            context.startActivity(intent)
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return userList.size
-    }
-
-    class  UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById<TextView>(R.id.txt_name)
-        val image = itemView.findViewById<ImageButton>(R.id.imageButton)
-    }
-
-    fun setFilteredList(filteredList: ArrayList<User>) {
-        this.filteredList = filteredList
-        userList = filteredList
-        notifyDataSetChanged()
-    }
-
-    fun getFilteredList(): ArrayList<User> {
-        return filteredList
     }
 
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
@@ -130,6 +105,4 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
         matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
     }
-
 }
-

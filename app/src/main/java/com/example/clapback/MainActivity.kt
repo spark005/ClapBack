@@ -48,31 +48,32 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
         mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
             currentUser = it.getValue(User::class.java)!!
+
+            // Going into user node of realtime database
+            mDbRef.child("user").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    userList.clear()
+                    for(postSnapshot in snapshot.children) {
+
+                        val traversedUser = postSnapshot.getValue(User::class.java)
+
+                        if (currentUser.uid != traversedUser?.uid
+                            && currentUser.friendlist.contains(traversedUser?.uid)) {
+                            userList.add(traversedUser!!)
+                        }
+
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
 
-        // Going into user node of realtime database
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                userList.clear()
-                for(postSnapshot in snapshot.children) {
-
-                    val traversedUser = postSnapshot.getValue(User::class.java)
-
-                    if (currentUser.uid != traversedUser?.uid
-                        && currentUser.friendlist.contains(traversedUser?.uid)) {
-                        userList.add(traversedUser!!)
-                    }
-
-                }
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
         searchView = findViewById(R.id.searchView)
         searchView.clearFocus()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
