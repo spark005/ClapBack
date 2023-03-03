@@ -42,9 +42,9 @@ class ChatActivity : AppCompatActivity() {
         "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
     private val contentType = "application/json"
 
-    private val requestQueue: RequestQueue by lazy {
+    /*private val requestQueue: RequestQueue by lazy {
         Volley.newRequestQueue(this.applicationContext)
-    }
+    }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -149,11 +149,11 @@ class ChatActivity : AppCompatActivity() {
 
             }
 
-            sendNotification(notification)
+            //sendNotification(notification)
         }
     }
 
-    private fun sendNotification(notification: JSONObject) {
+    /*private fun sendNotification(notification: JSONObject) {
         val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
             Response.Listener<JSONObject> {
 
@@ -170,5 +170,5 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         requestQueue.add(jsonObjectRequest)
-    }
+    }*/
 }

@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     package="com.example.clapback">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -11,13 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack">
         <service
-            android:name=".DtDNotifications"
+            android:name=".MyFirebaseMessagingService"
             android:enabled="false"
-            android:exported="false"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
 
@@ -60,7 +60,7 @@
             android:exported="true" />
         <activity
             android:name=".Login"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
