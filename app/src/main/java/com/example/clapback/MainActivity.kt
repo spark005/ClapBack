@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
     private lateinit var mDbRef: DatabaseReference
     private lateinit var detector: GestureDetectorCompat
     private lateinit var searchView: SearchView
+    private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         userRecyclerView.adapter = adapter
 
         val currentUserUID = mAuth.currentUser?.uid
-        var currentUser = User()
 
         mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
             currentUser = it.getValue(User::class.java)!!
@@ -130,10 +130,11 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
                     userList.clear()
                     for(postSnapshot in snapshot.children) {
 
-                        val currentUser = postSnapshot.getValue(User::class.java)
+                        val traversedUser = postSnapshot.getValue(User::class.java)
 
-                        if (mAuth.currentUser?.uid != currentUser?.uid) {
-                            userList.add(currentUser!!)
+                        if (currentUser.uid != traversedUser?.uid
+                            && currentUser.friendlist.contains(traversedUser?.uid)) {
+                            userList.add(traversedUser!!)
                         }
 
                     }
