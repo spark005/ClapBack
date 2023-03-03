@@ -54,10 +54,10 @@ class OtherUserProfile: AppCompatActivity() {
             otherUser = it.getValue(User::class.java)!!
             username.text = otherUser.name
 
-            if (otherUser.desc == null) {
+            if (otherUser.bio == null) {
                 description.text = "No Description"
             } else {
-                description.text = otherUser.desc
+                description.text = otherUser.bio
             }
         }.addOnFailureListener {
             Log.e("ERROR", it.toString())
