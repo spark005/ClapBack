@@ -149,6 +149,7 @@ class EditMainProfile : AppCompatActivity() {
                     currentUser?.fmovie = fmovie.text.toString()
                     currentUser?.fmusic = fmusic.text.toString()
                     currentUser?.fbook = fbook.text.toString()
+                    currentUser?.name = username.text.toString()
                     addUserInfo(currentUser!!)
                     val intent = Intent(this, ProfilePage::class.java)
                     finish()
