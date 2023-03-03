@@ -1,6 +1,10 @@
 package com.example.clapback
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.Image
 import android.net.Uri
 import android.view.LayoutInflater
@@ -10,6 +14,8 @@ import android.widget.TextView
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -56,15 +62,37 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
             }
             ReceiveImgViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveImgViewHolder
-                var uri = Uri.parse(currentMessage.image)
-                try {
-                    holder.receiveImgMessage.setImageURI(uri)
-                } catch (e : java.lang.Exception) {
-                    holder.receiveImgMessage.setImageResource(R.drawable.select_image)
+                val storage = FirebaseStorage.getInstance().reference.child("attachments/${currentMessage.messageId}")
+                val pic = File.createTempFile("attachment", "jpg")
+                storage.getFile(pic).addOnSuccessListener {
+                    val bitmap: Bitmap =
+                        modifyOrientation(
+                            BitmapFactory.decodeFile(pic.absolutePath),
+                            pic.absolutePath
+                        )
+                    holder.receiveImgMessage.setImageBitmap(bitmap)
                 }
+
+
+                //var uri = Uri.parse(currentMessage.image)
+                //try {
+                //    holder.receiveImgMessage.setImageURI(uri)
+                //} catch (e : java.lang.Exception) {
+                //    holder.receiveImgMessage.setImageResource(R.drawable.select_image)
+                //}
             }
             SentImgViewHolder::class.java -> {
                 val viewHolder = holder as SentImgViewHolder
+                /*val storage = FirebaseStorage.getInstance().reference.child("attachments/${currentMessage.messageId}")
+                val pic = File.createTempFile("attachment", "jpg")
+                storage.getFile(pic).addOnSuccessListener {
+                    val bitmap: Bitmap =
+                        modifyOrientation(
+                            BitmapFactory.decodeFile(pic.absolutePath),
+                            pic.absolutePath
+                        )
+                    holder.sentImgMessage.setImageBitmap(bitmap)
+                }*/
                 var uri = Uri.parse(currentMessage.image)
                 try {
                     holder.sentImgMessage.setImageURI(uri)
@@ -73,6 +101,48 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
                 }
             }
         }
+    }
+
+    private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
+        val ei: ExifInterface = ExifInterface(image_absolute_path);
+        val orientation: Int =
+            ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> {
+                return rotate(bitmap, 90f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_180 -> {
+                return rotate(bitmap, 180f)
+            }
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                return rotate(bitmap, 270f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> {
+                return rotate(bitmap, 270f)
+            }
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> {
+                return flip(bitmap, true, vertical = false)
+            }
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                return flip(bitmap, false, vertical = true)
+            }
+            else -> {
+                return bitmap
+            }
+        }
+    }
+
+    private fun rotate(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+    private fun flip(bitmap: Bitmap, horizontal: Boolean, vertical: Boolean): Bitmap {
+        val matrix = Matrix()
+        matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
     }
 
     override fun getItemViewType(position: Int): Int {

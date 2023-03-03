@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import java.time.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -16,14 +17,19 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import org.json.JSONException
 import org.json.JSONObject
+import java.security.Timestamp
+import java.time.format.DateTimeFormatterBuilder
+import kotlin.system.measureTimeMillis
 
 private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
@@ -131,9 +137,9 @@ class ChatActivity : AppCompatActivity() {
         //TODO using firebase database will have to change
         // adding the message to database
         sendButton.setOnClickListener() {
-
+            val timestamp:String? = System.currentTimeMillis().toString()
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
+            val messageObject = Message(message, senderUid, timestamp)
 
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -176,14 +182,21 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && data != null && data.data != null) {
+
+            val timestamp:String? = System.currentTimeMillis().toString()
             val contentResolver = applicationContext.contentResolver
             val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
             contentResolver.takePersistableUriPermission(data.data!!, takeFlags)
-            val messageObject = Message(data.data, FirebaseAuth.getInstance().currentUser?.uid)
+            val messageObject = Message(data.data, FirebaseAuth.getInstance().currentUser?.uid, timestamp)
+            val messageId = messageObject.messageId
+            val store = FirebaseStorage.getInstance().getReference("attachments/$messageId")
+            store.putFile(data.data!!)
+
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -195,7 +208,6 @@ class ChatActivity : AppCompatActivity() {
                             Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()
                         }
                 }
-
         }
     }
 }
