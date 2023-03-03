@@ -73,7 +73,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
                 val currentUser = it.getValue(User::class.java)
 
                 if (!currentUser?.bio.equals("")) {
-                    userBio.setText(currentUser?.bio).toString()
+                    userBio.setText(currentUser?.bio + "|" + currentUser?.fmovie + "|" +
+                            currentUser?.fmusic + "|" + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
                 }
