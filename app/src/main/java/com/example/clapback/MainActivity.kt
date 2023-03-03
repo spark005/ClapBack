@@ -34,13 +34,6 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         setContentView(R.layout.activity_main)
 
         FirebaseMessaging.getInstance().subscribeToTopic("HiddenMessages")
-            .addOnCompleteListener { task ->
-            var msg = "yes"
-            if (!task.isSuccessful) {
-                msg = "no"
-            }
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        }
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
