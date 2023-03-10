@@ -165,6 +165,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
     override fun onSwipeRight() {
         val intent = Intent(this, Time::class.java)
+        this.overridePendingTransition(R.anim.swipe_screen_right,
+            R.anim.swipe_screen_left)
         startActivity(intent)
     }
 
