@@ -8,6 +8,7 @@ class User {
     var uid: String? = null
     var bio: String? = ""
     var image: Uri? = null
+    var nickname: String? = null
 
     var fmovie: String? = ""
     var fmusic: String? = ""
