@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -8,10 +9,13 @@ import android.media.ExifInterface
 import android.media.Image
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -100,6 +104,31 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
                     holder.sentImgMessage.setImageResource(R.drawable.select_image)
                 }
             }
+        }
+
+        holder.itemView.setOnClickListener {
+            val popup = PopupMenu(context, holder.itemView)
+            popup.inflate(R.menu.reactions)
+
+            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                when (item!!.itemId) {
+                    R.id.heart -> {
+
+                    }
+                    R.id.question -> {
+
+                    }
+                    R.id.laugh -> {
+
+                    }
+                }
+
+                true
+            })
+
+            popup.show()
+
         }
     }
 

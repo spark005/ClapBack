@@ -11,10 +11,7 @@ import android.os.Build
 import java.time.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -73,11 +70,9 @@ class ChatActivity : AppCompatActivity() {
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-
         senderRoom = receiverUID + senderUid
         receiverRoom = senderUid + receiverUID
-
-
+        val mList = null
 
         supportActionBar?.title = name
 
@@ -135,7 +130,6 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-
         val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
 
@@ -144,11 +138,6 @@ class ChatActivity : AppCompatActivity() {
             }
 
         }
-
-
-/* TODO Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
-        you should execute this code as soon as your app starts.
-        It's safe to call this repeatedly because creating an existing notification channel performs no operation.*/
 
 
         //TODO using firebase database will have to change
@@ -199,6 +188,8 @@ class ChatActivity : AppCompatActivity() {
             intent.action = Intent.ACTION_OPEN_DOCUMENT
             getPic.launch(intent)
         }
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
