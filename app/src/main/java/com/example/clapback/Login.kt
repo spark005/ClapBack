@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.content.Intent
+import android.icu.text.DateFormat.DAY
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
@@ -12,6 +13,12 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.lang.Long.parseLong
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.Instant.now
+import java.time.LocalDate
+import java.util.*
 
 class Login : AppCompatActivity() {
 
@@ -82,7 +89,13 @@ class Login : AppCompatActivity() {
     private fun incrementStreak(uid: String) {
         mDbRef = FirebaseDatabase.getInstance().getReference()
         mDbRef.child("user").child(uid).get().addOnSuccessListener {
-            if (it.exists()) {
+            val lastSignIn = mAuth.currentUser?.metadata?.lastSignInTimestamp
+            val now = System.currentTimeMillis()
+            val lastDate = getDateTime(lastSignIn!! + 3600*1000*24)
+            val currentDate = getDateTime(now)
+//            Log.d("DEBUG", lastDate!!)
+//            Log.d("DEBUG", currentDate!!)
+            if (it.exists() && (lastDate == currentDate)) {
                 val user = it.getValue(User::class.java)
                 var streak = user?.streak!!
                 streak += 1
@@ -91,6 +104,16 @@ class Login : AppCompatActivity() {
             }
         }.addOnFailureListener {
             Log.e("STREAK ERROR", "Could not increment streak!")
+        }
+    }
+
+    private fun getDateTime(s: Long): String? {
+        try {
+            val sdf = SimpleDateFormat("MM/dd/yyyy")
+            val netDate = Date(s)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            return e.toString()
         }
     }
 

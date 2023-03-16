@@ -73,7 +73,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
                 val currentUser = it.getValue(User::class.java)
 
                 if (!currentUser?.bio.equals("")) {
-                    userBio.setText(currentUser?.bio).toString()
+                    userBio.setText(currentUser?.bio + "|" + currentUser?.fmovie + "|" +
+                            currentUser?.fmusic + "|" + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
                 }
@@ -165,6 +166,14 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     override fun onSwipeRight() {
         val intent = Intent(this, Time::class.java)
         startActivity(intent)
+        this.overridePendingTransition(R.anim.swipe_screen_right,
+            R.anim.swipe_screen_left)
+    }
+
+    override fun finish() {
+        super.finish()
+        this.overridePendingTransition(R.anim.swipe_screen_left,
+            R.anim.swipe_screen_right)
     }
 
 
