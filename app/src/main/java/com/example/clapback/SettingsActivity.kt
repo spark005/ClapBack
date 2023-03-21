@@ -2,15 +2,15 @@ package com.example.clapback
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 
 private const val TITLE_TAG = "Settings"
 
-class SettingsActivity : AppCompatActivity(),
+abstract class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
@@ -76,9 +76,10 @@ class SettingsActivity : AppCompatActivity(),
             val email: Preference? = findPreference("cemail_header")
             val emailIntent = Intent(context, EditEmail::class.java)
             email?.setIntent(emailIntent)
+
+            val delete: Preference? = findPreference("delete_header")
         }
     }
-
     class MessagesFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.messages_preferences, rootKey)
@@ -91,3 +92,4 @@ class SettingsActivity : AppCompatActivity(),
         }
     }
 }
+
