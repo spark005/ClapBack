@@ -14,6 +14,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
@@ -21,6 +23,7 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private var filteredList: ArrayList<User> = ArrayList()
+
 
 
     //TODO Figure out what a recycler view is and what this code does
@@ -32,11 +35,33 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
 
+        var mDbRef = FirebaseDatabase.getInstance().getReference()
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
         val currentUser = userList[position]
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/${currentUser.uid}")
 
 
-        holder.textName.text = currentUser.name
+
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(currentUser.uid!!).child("nickname")
+
+        nickName.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val nickName = task.result?.value as? String
+                if (nickName.isNullOrEmpty()) {
+                    holder.textName.text = currentUser.name
+                } else {
+                    holder.textName.text = nickName
+                }
+            }
+        }
+
+      /*  if (nickName == "") {
+            holder.textName.text = currentUser.name
+        } else {
+            holder.textName.text = nickName
+        }*/
+       // holder.textName.text = currentUser.name
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =
