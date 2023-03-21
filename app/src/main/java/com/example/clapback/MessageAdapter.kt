@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -107,28 +108,33 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
         }
 
         holder.itemView.setOnClickListener {
-            val popup = PopupMenu(context, holder.itemView)
-            popup.inflate(R.menu.reactions)
+            when (holder.javaClass) {
+                ReceiveViewHolder::class.java -> {
+                    val viewHolder = holder as ReceiveViewHolder
+                    val reaction = holder.itemView.findViewById<RelativeLayout>(R.id.rMessage)
+                    reaction.setVisibility(View.VISIBLE)
+                    val popup = PopupMenu(context, holder.itemView)
+                    popup.inflate(R.menu.reactions)
 
-            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+                    popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
-                when (item!!.itemId) {
-                    R.id.heart -> {
+                        when (item!!.itemId) {
+                            R.id.heart -> {
+                                notifyDataSetChanged()
+                            }
+                            R.id.question -> {
+                                notifyDataSetChanged()
+                            }
+                            R.id.laugh -> {
+                                notifyDataSetChanged()
+                            }
+                        }
 
-                    }
-                    R.id.question -> {
-
-                    }
-                    R.id.laugh -> {
-
-                    }
+                        true
+                    })
+                    popup.show()
                 }
-
-                true
-            })
-
-            popup.show()
-
+            }
         }
     }
 
@@ -202,7 +208,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_received_message)
-
     }
 
     class SentImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

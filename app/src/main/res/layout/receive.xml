@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/rMessage"
         android:layout_width="wrap_content"
         android:background="@drawable/edit_background"
         android:layout_marginLeft="5dp"
@@ -17,6 +18,24 @@
             android:text="This is receive message"
             android:padding="10dp"
             android:textSize="18sp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:background="@drawable/edit_background"
+        android:layout_toRightOf="@id/rMessage"
+        android:layout_marginLeft="-15dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="zoo wee mama"
+            android:textSize="18sp"
+            />
     </RelativeLayout>
 
 </RelativeLayout>
