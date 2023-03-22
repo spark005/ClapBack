@@ -76,8 +76,6 @@ abstract class SettingsActivity : AppCompatActivity(),
             val email: Preference? = findPreference("cemail_header")
             val emailIntent = Intent(context, EditEmail::class.java)
             email?.setIntent(emailIntent)
-
-            val delete: Preference? = findPreference("delete_header")
         }
     }
     class MessagesFragment : PreferenceFragmentCompat() {
