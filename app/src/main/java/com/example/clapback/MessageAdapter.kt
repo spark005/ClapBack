@@ -19,10 +19,14 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
-class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
+class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
+                     val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
+                     val messageKeys: ArrayList<String?>):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -64,6 +68,10 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder
                 holder.receiveMessage.text = currentMessage.message
+                if (currentMessage.reaction != null) {
+                    val reaction = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
+                    reaction.setVisibility(View.VISIBLE)
+                }
             }
             ReceiveImgViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveImgViewHolder
@@ -111,21 +119,24 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
             when (holder.javaClass) {
                 ReceiveViewHolder::class.java -> {
                     val viewHolder = holder as ReceiveViewHolder
-                    val reaction = holder.itemView.findViewById<RelativeLayout>(R.id.rMessage)
-                    reaction.setVisibility(View.VISIBLE)
+                    val key = messageKeys[position]
                     val popup = PopupMenu(context, holder.itemView)
                     popup.inflate(R.menu.reactions)
+
 
                     popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
                         when (item!!.itemId) {
                             R.id.heart -> {
+                                currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
                                 notifyDataSetChanged()
                             }
                             R.id.question -> {
+                                currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
                                 notifyDataSetChanged()
                             }
                             R.id.laugh -> {
+                                currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
                                 notifyDataSetChanged()
                             }
                         }

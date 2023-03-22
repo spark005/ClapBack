@@ -37,6 +37,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var sendButton: ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
+    private lateinit var messageKeys: ArrayList<String?>
     private lateinit var  mDbRef: DatabaseReference
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
@@ -82,7 +83,8 @@ class ChatActivity : AppCompatActivity() {
         selectImageButton = findViewById(R.id.chooseImage)
         sendButton = findViewById(R.id.sentButton)
         messageList = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList)
+        messageKeys = ArrayList()
+        messageAdapter = MessageAdapter(this, messageList, mDbRef, senderRoom, receiverRoom, messageKeys)
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter
@@ -116,7 +118,10 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
 
                         val message = postSnapshot.getValue(Message::class.java)
+                        messageKeys.add(postSnapshot.key)
+
                         messageList.add(message!!)
+
 
                     }
                     messageAdapter.notifyDataSetChanged()

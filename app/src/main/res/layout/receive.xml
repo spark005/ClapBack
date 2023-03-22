@@ -19,7 +19,9 @@
             android:padding="10dp"
             android:textSize="18sp"/>
     </RelativeLayout>
+
     <RelativeLayout
+        android:id="@+id/reactionBox"
         android:layout_width="wrap_content"
         android:background="@drawable/edit_background"
         android:layout_toRightOf="@id/rMessage"
