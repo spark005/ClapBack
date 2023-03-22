@@ -26,11 +26,15 @@ open class Message {
     }
 
     fun setReaction(reactionId: Int?, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
-        this.reaction = reactionId
+        if (reactionId == this.reaction) {
+            this.reaction = null
+        } else {
+            this.reaction = reactionId
+        }
         mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reaction")
-            .setValue(reactionId).addOnSuccessListener {
+            .setValue(this.reaction).addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reaction")
-                    .setValue(reactionId)
+                    .setValue(this.reaction)
             }
     }
 }
