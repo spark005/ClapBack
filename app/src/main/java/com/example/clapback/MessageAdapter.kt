@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -64,6 +65,17 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
             SentViewHolder::class.java -> {
                 val viewHolder = holder as SentViewHolder
                 holder.sentMessage.text = currentMessage.message
+                if (currentMessage.reply != null) {
+                    val loca = IntArray(2)
+                    holder.itemView.getLocationOnScreen(loca)
+                    val top = loca[0]
+                    val left = loca[1]
+                    val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
+
+                    rbox.setVisibility(View.VISIBLE)
+                    rbox.top = top + 15
+                    rbox.left = left - 15
+                }
             }
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder
@@ -135,30 +147,47 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 ReceiveViewHolder::class.java -> {
                     val viewHolder = holder as ReceiveViewHolder
                     val key = messageKeys[position]
-                    val popup = PopupMenu(context, holder.itemView)
-                    popup.inflate(R.menu.reactions)
-
-
-                    popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+                    val firstPopup = PopupMenu(context, holder.itemView)
+                    firstPopup.inflate(R.menu.r_or_r)
+                    firstPopup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
                         when (item!!.itemId) {
-                            R.id.heart -> {
-                                currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
-                                notifyDataSetChanged()
+                            R.id.reply -> {
+                                //currentMessage.setReply(holder.receiveMessage.text.toString(), mDbRef, senderRoom, receiverRoom, key.toString())
+                                //notifyDataSetChanged()
                             }
-                            R.id.question -> {
-                                currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
-                                notifyDataSetChanged()
-                            }
-                            R.id.laugh -> {
-                                currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
-                                notifyDataSetChanged()
+                            R.id.react -> {
+                                val popup = PopupMenu(context, holder.itemView)
+                                popup.inflate(R.menu.reactions)
+
+
+                                popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                                    when (item!!.itemId) {
+                                        R.id.heart -> {
+                                            currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.question -> {
+                                            currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.laugh -> {
+                                            currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                    }
+
+                                    true
+                                })
+                                popup.show()
                             }
                         }
 
                         true
                     })
-                    popup.show()
+                    firstPopup.show()
+
                 }
             }
         }
