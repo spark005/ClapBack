@@ -33,6 +33,12 @@
             app:title="Change Email" >
 
         </Preference>
+
+        <Preference
+            app:key="delete_header"
+            app:title="Delete Account">
+
+        </Preference>
     </PreferenceCategory>
 
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -94,6 +95,11 @@ class OtherUserProfile: AppCompatActivity() {
 
     //Display the changed nickname only to that user // if the nickname is empty then display as friend's name else display as changed nickname
     private fun changeNickname(nickName: String) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val friendUid = intent.getStringExtra("uid")
+
+        //Save the name under current user -> friend list -> friend uid -> nickname
+        mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(friendUid!!).child("nickname").setValue(nickName)
 
     }
 

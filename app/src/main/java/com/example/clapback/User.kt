@@ -4,6 +4,7 @@ import android.net.Uri
 
 class User {
     var name: String? = null
+    var originalName: String? = null
     var email: String? = null
     var uid: String? = null
     var bio: String? = ""
@@ -23,6 +24,7 @@ class User {
     constructor(name: String?, email: String?, uid: String?, friendlist: ArrayList<String> ,
                 friendRequests: ArrayList<FriendR>) {
         this.name = name
+        this.originalName = name
         this.email = email
         this.uid = uid
         this.friendlist = friendlist

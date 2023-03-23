@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    // commented out to_do("not yet implemented")
                 }
 
             })
