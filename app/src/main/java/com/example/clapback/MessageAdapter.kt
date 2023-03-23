@@ -1,29 +1,26 @@
 package com.example.clapback
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
-import android.media.Image
 import android.net.Uri
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.RelativeLayout
-import android.widget.Toast
-import androidx.core.view.marginTop
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
+
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                      val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
@@ -66,15 +63,19 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 val viewHolder = holder as SentViewHolder
                 holder.sentMessage.text = currentMessage.message
                 if (currentMessage.reply != null) {
-                    val loca = IntArray(2)
-                    holder.itemView.getLocationOnScreen(loca)
-                    val top = loca[0]
-                    val left = loca[1]
                     val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
-
                     rbox.setVisibility(View.VISIBLE)
+
+                    /*val sbox = holder.itemView.findViewById<TextView>(R.id.txt_sent_message)
+                    //val height = displayMetrics.heightPixels
+
+                    val loca = IntArray(2)
+                    sbox.getLocationOnScreen(loca)
+                    val top = loca[0]
+                    val left =  sbox.width
+
                     rbox.top = top + 15
-                    rbox.left = left - 15
+                    rbox.left = left - 15*/
                 }
             }
             ReceiveViewHolder::class.java -> {
