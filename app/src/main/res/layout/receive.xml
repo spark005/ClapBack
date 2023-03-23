@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
+        android:id="@+id/rMessage"
         android:layout_width="wrap_content"
         android:background="@drawable/edit_background"
         android:layout_marginLeft="5dp"
@@ -17,6 +19,25 @@
             android:text="This is receive message"
             android:padding="10dp"
             android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reactionBox"
+        android:layout_width="wrap_content"
+        android:background="@color/salmon"
+        android:layout_toRightOf="@id/rMessage"
+        android:layout_marginLeft="-15dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/reaction"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:textSize="18sp"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

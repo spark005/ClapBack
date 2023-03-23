@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -8,16 +9,25 @@ import android.media.ExifInterface
 import android.media.Image
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.RelativeLayout
+import android.widget.Toast
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
-class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
+class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
+                     val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
+                     val messageKeys: ArrayList<String?>):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -55,10 +65,40 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
             SentViewHolder::class.java -> {
                 val viewHolder = holder as SentViewHolder
                 holder.sentMessage.text = currentMessage.message
+                if (currentMessage.reply != null) {
+                    val loca = IntArray(2)
+                    holder.itemView.getLocationOnScreen(loca)
+                    val top = loca[0]
+                    val left = loca[1]
+                    val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
+
+                    rbox.setVisibility(View.VISIBLE)
+                    rbox.top = top + 15
+                    rbox.left = left - 15
+                }
             }
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder
                 holder.receiveMessage.text = currentMessage.message
+                val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
+                if (currentMessage.reaction != null) {
+                    reactionBox.setVisibility(View.VISIBLE)
+                    val reaction = holder.itemView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.reaction)
+
+                    when(currentMessage.reaction) {
+                        1 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                        2 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                        3 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                    }
+                } else {
+                    reactionBox.setVisibility(View.GONE)
+                }
             }
             ReceiveImgViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveImgViewHolder
@@ -98,6 +138,56 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
                     holder.sentImgMessage.setImageURI(uri)
                 } catch (e : java.lang.Exception) {
                     holder.sentImgMessage.setImageResource(R.drawable.select_image)
+                }
+            }
+        }
+
+        holder.itemView.setOnClickListener {
+            when (holder.javaClass) {
+                ReceiveViewHolder::class.java -> {
+                    val viewHolder = holder as ReceiveViewHolder
+                    val key = messageKeys[position]
+                    val firstPopup = PopupMenu(context, holder.itemView)
+                    firstPopup.inflate(R.menu.r_or_r)
+                    firstPopup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                        when (item!!.itemId) {
+                            R.id.reply -> {
+                                //currentMessage.setReply(holder.receiveMessage.text.toString(), mDbRef, senderRoom, receiverRoom, key.toString())
+                                //notifyDataSetChanged()
+                            }
+                            R.id.react -> {
+                                val popup = PopupMenu(context, holder.itemView)
+                                popup.inflate(R.menu.reactions)
+
+
+                                popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                                    when (item!!.itemId) {
+                                        R.id.heart -> {
+                                            currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.question -> {
+                                            currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.laugh -> {
+                                            currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                    }
+
+                                    true
+                                })
+                                popup.show()
+                            }
+                        }
+
+                        true
+                    })
+                    firstPopup.show()
+
                 }
             }
         }
@@ -173,7 +263,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_received_message)
-
     }
 
     class SentImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
