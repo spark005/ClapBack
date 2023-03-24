@@ -10,7 +10,7 @@ open class Message {
     var messageId: String? = null
     var reaction: Int? = null
     var reply: String? = null
-    //var isImage: Boolean? = null
+    var deleted: Boolean? = null
 
     constructor(){}
 
@@ -18,12 +18,14 @@ open class Message {
         this.message = message
         this.senderId = senderId
         this.messageId = senderId + time
+        deleted = false;
     }
 
     constructor(image: Uri?, senderId: String?, time: String?) {
         this.image = image.toString()
         this.senderId = senderId
         this.messageId = senderId + time
+        deleted = false;
     }
 
     fun setReaction(reactionId: Int?, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
@@ -46,6 +48,18 @@ open class Message {
             .setValue(this.reply).addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reply")
                     .setValue(this.reply)
+            }
+    }
+
+    fun editMessage(mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+
+    }
+
+    fun delMessage(mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("message")
+            .setValue("This message has been deleted.").addOnSuccessListener {
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("message")
+                    .setValue("This message has been deleted.")
             }
     }
 }
