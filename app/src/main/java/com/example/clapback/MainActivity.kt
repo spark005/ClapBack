@@ -213,8 +213,8 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
     override fun onSwipeLeft() {
         val intent = Intent(this, Time::class.java)
         startActivity(intent)
-        this.overridePendingTransition(R.anim.swipe_screen_left,
-            R.anim.swipe_screen_right)
+        this.overridePendingTransition(R.anim.swipe_screen_right2,
+            R.anim.swipe_screen_left2)
     }
 
     override fun finish() {
