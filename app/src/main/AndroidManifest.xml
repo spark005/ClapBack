@@ -30,6 +30,9 @@
             android:name=".Time"
             android:exported="true" />
         <activity
+            android:name=".ForgotPassword"
+            android:exported="true" />
+        <activity
             android:name=".EditProfile"
             android:exported="false" />
         <activity
