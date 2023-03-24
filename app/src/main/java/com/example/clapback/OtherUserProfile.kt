@@ -23,6 +23,7 @@ import java.io.File
 class OtherUserProfile: AppCompatActivity() {
 
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     private lateinit var username: TextView
     private lateinit var description: TextView
@@ -36,6 +37,7 @@ class OtherUserProfile: AppCompatActivity() {
         setContentView(R.layout.otherusers_profile_page)
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
 
         username = findViewById(R.id.other_username)
         description = findViewById(R.id.description)
@@ -79,8 +81,8 @@ class OtherUserProfile: AppCompatActivity() {
             }
             //username.text = otherUser.name
 
-            if (otherUser.bio == null) {
-                description.text = "No Description"
+            if (otherUser.bio == "") {
+                description.text = getString(R.string.default_bio)
             } else {
                 description.text = otherUser.bio
             }

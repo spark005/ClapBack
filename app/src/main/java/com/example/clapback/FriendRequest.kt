@@ -76,7 +76,6 @@ class FriendRequest : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 // commented out to_do("not yet implemented")
-                TODO("Not yet implemented")
                 Log.e("ERROR", error.toString())
             }
         })
@@ -105,7 +104,6 @@ class FriendRequest : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
                 Log.e("ERROR", error.toString())
             }
         })
@@ -120,7 +118,6 @@ class FriendRequest : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     // commented out to_do("not yet implemented")
-                    TODO("Not yet implemented")
                 }
 
             })
