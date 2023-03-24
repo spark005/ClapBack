@@ -76,17 +76,17 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
                 if (currentMessage.reaction != null) {
                     reactionBox.setVisibility(View.VISIBLE)
-                    val reaction = holder.itemView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.reaction)
+                    val reaction = holder.itemView.findViewById<ImageView>(R.id.reaction)
 
                     when(currentMessage.reaction) {
                         1 -> {
                             reaction.setImageResource(R.drawable.rheart)
                         }
                         2 -> {
-                            reaction.setImageResource(R.drawable.rheart)
+                            reaction.setImageResource(R.drawable.rquest)
                         }
                         3 -> {
-                            reaction.setImageResource(R.drawable.rheart)
+                            reaction.setImageResource(R.drawable.rnelson)
                         }
                     }
                 } else {

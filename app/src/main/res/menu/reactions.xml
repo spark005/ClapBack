@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/heart"
-        android:title="3" />
+        android:title="&lt;3" />
     <item
         android:id="@+id/question"
         android:title="\?" />
