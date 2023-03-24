@@ -180,7 +180,29 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         true
                     })
                     firstPopup.show()
+                }
+                SentViewHolder::class.java -> {
+                    val viewHolder = holder as SentViewHolder
+                    val key = messageKeys[position]
+                    val popup = PopupMenu(context, holder.itemView)
+                    popup.inflate(R.menu.edit_or_del_msg)
+                    popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+                        when (item!!.itemId) {
+                            R.id.edit_msg -> {
 
+                                currentMessage.editMessage(mDbRef, senderRoom, receiverRoom, key!!)
+                                notifyDataSetChanged()
+                            }
+
+                            R.id.delete_msg -> {
+                                currentMessage.delMessage(mDbRef, senderRoom, receiverRoom, key!!)
+                                notifyDataSetChanged()
+                            }
+                            else -> {}
+                        }
+                        true
+                    })
+                    if (!currentMessage.deleted!!) popup.show()
                 }
             }
         }
