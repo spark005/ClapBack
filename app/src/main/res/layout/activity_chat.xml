@@ -14,6 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:id="@+id/replying"
+        android:layout_above="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/replyingTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Replying to:"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_alignParentBottom="true"
@@ -22,6 +42,7 @@
         android:orientation="horizontal"
         android:layout_marginBottom="5dp"
         android:weightSum="100">
+
 
         <ImageView
             android:id="@+id/chooseImage"

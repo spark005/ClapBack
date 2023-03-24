@@ -24,7 +24,7 @@ import java.io.File
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                      val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
-                     val messageKeys: ArrayList<String?>):
+                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -65,17 +65,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 if (currentMessage.reply != null) {
                     val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
                     rbox.setVisibility(View.VISIBLE)
-
-                    /*val sbox = holder.itemView.findViewById<TextView>(R.id.txt_sent_message)
-                    //val height = displayMetrics.heightPixels
-
-                    val loca = IntArray(2)
-                    sbox.getLocationOnScreen(loca)
-                    val top = loca[0]
-                    val left =  sbox.width
-
-                    rbox.top = top + 15
-                    rbox.left = left - 15*/
                 }
             }
             ReceiveViewHolder::class.java -> {
@@ -154,8 +143,8 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                         when (item!!.itemId) {
                             R.id.reply -> {
-                                //currentMessage.setReply(holder.receiveMessage.text.toString(), mDbRef, senderRoom, receiverRoom, key.toString())
-                                //notifyDataSetChanged()
+                                repto.findViewById<TextView>(R.id.replyingTo).text = holder.receiveMessage.text
+                                repto.visibility = View.VISIBLE
                             }
                             R.id.react -> {
                                 val popup = PopupMenu(context, holder.itemView)
