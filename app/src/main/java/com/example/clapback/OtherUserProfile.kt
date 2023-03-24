@@ -47,6 +47,9 @@ class OtherUserProfile: AppCompatActivity() {
         val otherUserUid = intent.getStringExtra("uid")
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
 
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(otherUserUid!!).child("nickname")
+
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =
@@ -63,7 +66,18 @@ class OtherUserProfile: AppCompatActivity() {
         var otherUser = User()
         mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
             otherUser = it.getValue(User::class.java)!!
-            username.text = otherUser.name
+
+            nickName.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val nickName = task.result?.value as? String
+                    if (!nickName.isNullOrEmpty()) {
+                        username.text = nickName
+                    } else {
+                        username.text = otherUser.name
+                    }
+                }
+            }
+            //username.text = otherUser.name
 
             if (otherUser.bio == null) {
                 description.text = "No Description"
@@ -75,13 +89,13 @@ class OtherUserProfile: AppCompatActivity() {
         }
 
         saveBtn.setOnClickListener {
-            val nickName = nickname.text.toString()
+            val nickNameGet = nickname.text.toString()
 
-            if (nickName == "") {
-                //If the nickname is empty, then change back to friend's name?
-                Toast.makeText(this@OtherUserProfile, "Nickname is empty", Toast.LENGTH_SHORT).show()
+            if (nickNameGet == "") {
+                //If the nickname is empty, then change back to friend's name
+                changeNickname(otherUser.name.toString())
             } else {
-                changeNickname(nickName)
+                changeNickname(nickNameGet)
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

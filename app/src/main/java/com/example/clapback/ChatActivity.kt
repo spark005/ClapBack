@@ -63,6 +63,13 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        var mDbRef = FirebaseDatabase.getInstance().getReference()
+
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val friendUid = intent.getStringExtra("uid")
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(friendUid!!).child("nickname")
+
+
         val name = intent.getStringExtra("name")
         val receiverUID = intent.getStringExtra("uid")
 
@@ -75,7 +82,18 @@ class ChatActivity : AppCompatActivity() {
         receiverRoom = senderUid + receiverUID
         val mList = null
 
-        supportActionBar?.title = name
+        nickName.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val nickName = task.result?.value as? String
+                if (nickName.isNullOrEmpty()) {
+                    supportActionBar?.title = name
+                } else {
+                    supportActionBar?.title = nickName
+                }
+            }
+        }
+
+        //supportActionBar?.title = name
 
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
@@ -131,6 +149,7 @@ class ChatActivity : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     // commented out to_do("not yet implemented")
+                    TODO("Not yet implemented")
                 }
 
             })

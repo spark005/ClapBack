@@ -67,6 +67,7 @@ class SignUp : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     // commented out to_do("not yet implemented")
+                    TODO("Not yet implemented")
                 }
             })
             if (email == "" || password == "" || name == "") {
