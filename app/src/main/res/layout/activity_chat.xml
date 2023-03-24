@@ -24,12 +24,23 @@
         >
 
         <TextView
-            android:id="@+id/replyingTo"
+            android:id="@+id/repHead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:text="Replying to:"
             android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/replyingTo"
+            android:layout_toEndOf="@id/repHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Replying to:"
+            android:layout_marginLeft="5dp"
             android:layout_centerVertical="true"
             />
 

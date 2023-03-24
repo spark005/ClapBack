@@ -146,7 +146,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                         when (item!!.itemId) {
                             R.id.reply -> {
-                                repto.findViewById<TextView>(R.id.replyingTo).text = "Replying to: " + holder.receiveMessage.text
+                                repto.findViewById<TextView>(R.id.replyingTo).text = holder.receiveMessage.text
                                 repto.visibility = View.VISIBLE
                             }
                             R.id.react -> {

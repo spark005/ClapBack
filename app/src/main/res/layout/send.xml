@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:background="@drawable/reply_mess"
         android:layout_marginLeft="-25dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/sentMessage"
         android:visibility="gone">
