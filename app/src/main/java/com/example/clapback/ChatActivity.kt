@@ -203,6 +203,10 @@ class ChatActivity : AppCompatActivity() {
             getPic.launch(intent)
         }
 
+        findViewById<ImageView>(R.id.cancelReply).setOnClickListener(){
+            findViewById<RelativeLayout>(R.id.replying).visibility = View.GONE
+        }
+
 
     }
 
