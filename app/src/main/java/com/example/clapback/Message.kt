@@ -60,6 +60,13 @@ open class Message {
             .setValue("This message has been deleted.").addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("message")
                     .setValue("This message has been deleted.")
+            }.addOnSuccessListener {
+                mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("deleted")
+                    .setValue(true).addOnSuccessListener {
+                        mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("deleted")
+                            .setValue(true)
+                    }
             }
+
     }
 }

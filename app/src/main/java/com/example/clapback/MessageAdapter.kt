@@ -198,10 +198,11 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                 currentMessage.delMessage(mDbRef, senderRoom, receiverRoom, key!!)
                                 notifyDataSetChanged()
                             }
+                            else -> {}
                         }
                         true
                     })
-                    popup.show()
+                    if (!currentMessage.deleted!!) popup.show()
                 }
             }
         }
