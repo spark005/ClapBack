@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
 
-        //TODO figure out what this does
         userList = ArrayList()
         adapter = UserAdapter(this, userList)
 
