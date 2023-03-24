@@ -124,8 +124,7 @@ class Time : AppCompatActivity() {
     private fun onSwipeLeft() {
         val intent = Intent(this, ProfilePage::class.java)
         startActivity(intent)
-        this.overridePendingTransition(R.anim.swipe_screen_left,
-            R.anim.swipe_screen_right)
+        this.overridePendingTransition(R.anim.swipe_screen_right2, R.anim.swipe_screen_left2)
     }
 
     private fun onSwipeRight() {

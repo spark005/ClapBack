@@ -6,8 +6,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import android.content.DialogInterface
+import android.util.Log
+import android.widget.Button
+import android.widget.Toast
+import com.example.clapback.R.layout.delete_button
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 private const val TITLE_TAG = "Settings"
+private lateinit var confirm: Button
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -89,5 +98,66 @@ class SettingsActivity : AppCompatActivity(),
             setPreferencesFromResource(R.xml.sync_preferences, rootKey)
         }
     }
+
+    //THIS DOESNT WORK UGHGDHGSKGSJGDSJKHG
+    class DeleteFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            val button: Preference? = findPreference(getString(R.string.delete_header)) //this is null idk y
+            button?.onPreferenceClickListener =
+                Preference.OnPreferenceClickListener {
+                    val dialogBuilder = android.app.AlertDialog.Builder(requireContext())
+                    dialogBuilder.setMessage("Do you want to Delete your account ? This action is irreversible")
+                        // if the dialog is cancelable
+                        .setCancelable(false)
+                        // positive button text and action
+                        .setPositiveButton("Proceed", DialogInterface.OnClickListener {
+                                dialog, id -> finish()
+                        })
+                        // negative button text and action
+                        .setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                                dialog, id -> dialog.cancel()
+                        })
+
+                    true
+                }
+        }
+        private fun finish() {
+            TODO("Not yet implemented, THis is where I think u put code to delete Luke")
+
+
+            //TODO, create way for user to re-input their credentials for reauthentication
+
+            val user = Firebase.auth.currentUser!!
+
+            // Get auth credentials from the user for re-authentication. The example below shows
+            // email and password credentials but there are multiple possible providers,
+            // such as GoogleAuthProvider or FacebookAuthProvider.
+
+            val credential = EmailAuthProvider
+                .getCredential("user@example.com", "password1234")
+
+            // Prompt the user to re-provide their sign-in credentials
+            user.reauthenticate(credential)
+                .addOnCompleteListener { Log.d("This is a Tag", "User re-authenticated.") }
+
+
+            // TODO logic for logout, Luke needs to finish when page is done
+            /*mAuth.signOut()
+            val intent = Intent(this@MainActivity, Login::class.java)
+            finish()
+            startActivity(intent)
+            return true*/
+
+            // Code for account deletion
+            user.delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("This is a Tag", "User account deleted.")
+                    }
+                }
+
+        }
+    }
+
 }
 

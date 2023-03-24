@@ -35,10 +35,12 @@
         </Preference>
 
         <Preference
-            app:key="delete_header"
-            app:title="Delete Account">
-
-        </Preference>
+            app:fragment="com.example.clapback.SettingsActivity$DeleteFragment"
+            app:key="@string/delete_header"
+            app:title="Delete Account"
+            app:selectable="true"
+            app:widgetLayout="@layout/delete_button"
+            ></Preference>
     </PreferenceCategory>
 
 

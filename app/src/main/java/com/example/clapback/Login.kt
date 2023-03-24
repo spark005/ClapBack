@@ -28,6 +28,7 @@ class Login : AppCompatActivity() {
     private lateinit var editPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnSignUp: TextView
+    private lateinit var forgot : TextView
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
@@ -46,6 +47,7 @@ class Login : AppCompatActivity() {
         editPassword = findViewById(R.id.edit_password)
         btnLogin = findViewById(R.id.login_button)
         btnSignUp = findViewById(R.id.signup_link)
+        forgot = findViewById(R.id.forgot_password)
 
         editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
 
@@ -54,7 +56,10 @@ class Login : AppCompatActivity() {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
         }
-
+        forgot.setOnClickListener {
+            val intent = Intent(this, ForgotPassword::class.java)
+            startActivity(intent)
+        }
         btnLogin.setOnClickListener {
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
