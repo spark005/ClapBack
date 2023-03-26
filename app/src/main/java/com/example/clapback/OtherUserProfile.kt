@@ -31,6 +31,7 @@ class OtherUserProfile: AppCompatActivity() {
     private lateinit var nickname: EditText
     private lateinit var saveBtn: Button
     private lateinit var cancelBtn: Button
+    private lateinit var reportBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,7 @@ class OtherUserProfile: AppCompatActivity() {
         nickname = findViewById(R.id.change_nickname)
         saveBtn = findViewById(R.id.save_btn)
         cancelBtn = findViewById(R.id.cancel_btn)
+        reportBtn = findViewById(R.id.report_btn)
 
         val otherUserUid = intent.getStringExtra("uid")
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
@@ -105,6 +107,13 @@ class OtherUserProfile: AppCompatActivity() {
 
         cancelBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        reportBtn.setOnClickListener {
+            val intent = Intent(this, Report::class.java).apply {
+                putExtra("uid", otherUserUid)
+            }
             startActivity(intent)
         }
     }
