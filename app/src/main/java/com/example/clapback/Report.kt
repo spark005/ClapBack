@@ -1,7 +1,12 @@
 package com.example.clapback
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -46,7 +51,7 @@ class Report: AppCompatActivity() {
                 val message = reportTxt.text.toString()
                 val messageObject = Message(message, senderUid, timestamp)
 
-                mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+                /*mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                     .setValue(messageObject).addOnSuccessListener {
                         mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
                             .setValue(messageObject)
@@ -56,11 +61,27 @@ class Report: AppCompatActivity() {
                     this@Report,
                     "Your report has been sent successfully!",
                     Toast.LENGTH_SHORT
-                ).show()
-                val intent = Intent(this, OtherUserProfile::class.java).apply {
+                ).show()*/
+
+                // TODO email functionality
+                val email = Intent(Intent.ACTION_SEND)
+                email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("swimmerchrist7@gmail.com"))
+                email.putExtra(Intent.EXTRA_SUBJECT, "Report")
+                email.putExtra(Intent.EXTRA_TEXT, message)
+
+                //need this to prompts email client only
+
+                //need this to prompts email client only
+                email.type = "message/rfc822"
+
+                startActivity(Intent.createChooser(email, "Choose an Email client :"))
+
+                //val address = arrayOf<String>("swimmerchrist7@gmail.com", "lawsonluke.business@gmail.com")
+                //composeEmail(address, "report", messageObject.toString())
+                /*val intent = Intent(this, OtherUserProfile::class.java).apply {
                     putExtra("uid", otherUserUid)
                 }
-                startActivity(intent)
+                startActivity(intent)*/
             }
         }
         cancelReportBtn.setOnClickListener {
@@ -70,4 +91,21 @@ class Report: AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    /*@SuppressLint("QueryPermissionsNeeded")
+    private fun composeEmail(addresses: Array<String>, subject: String?, messageObject: String?) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            intent.data = Uri.parse("mailto:") // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_TEXT, messageObject)
+            intent.putExtra(Intent.EXTRA_EMAIL, addresses)
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        }
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            Toast.makeText(this@Report, "Failed to send report", Toast.LENGTH_SHORT).show()
+        }
+    }*/
+
+
 }
