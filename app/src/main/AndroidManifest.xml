@@ -27,6 +27,8 @@
             android:exported="true"
             android:label="Settings" />
         <activity
+            android:name=".Settings"/>
+        <activity
             android:name=".Time"
             android:exported="true" />
         <activity
