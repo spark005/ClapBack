@@ -64,6 +64,13 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        var mDbRef = FirebaseDatabase.getInstance().getReference()
+
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val friendUid = intent.getStringExtra("uid")
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(friendUid!!).child("nickname")
+
+
         val name = intent.getStringExtra("name")
         val receiverUID = intent.getStringExtra("uid")
 
@@ -76,7 +83,16 @@ class ChatActivity : AppCompatActivity() {
         receiverRoom = senderUid + receiverUID
         val mList = null
 
-        supportActionBar?.title = name
+        nickName.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val nickName = task.result?.value as? String
+                if (nickName.isNullOrEmpty()) {
+                    supportActionBar?.title = name
+                } else {
+                    supportActionBar?.title = nickName
+                }
+            }
+        }
 
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
@@ -212,7 +228,7 @@ class ChatActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && data != null && data.data != null) {
 

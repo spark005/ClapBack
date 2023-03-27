@@ -27,6 +27,8 @@
             android:exported="true"
             android:label="Settings" />
         <activity
+            android:name=".Settings"/>
+        <activity
             android:name=".Time"
             android:exported="true" />
         <activity
@@ -64,6 +66,9 @@
             android:exported="true" />
         <activity
             android:name=".OtherUserProfile"
+            android:exported="true" />
+        <activity
+            android:name=".Report"
             android:exported="true" />
         <activity
             android:name=".Login"

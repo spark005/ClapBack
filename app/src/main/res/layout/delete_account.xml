@@ -5,36 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="296dp"
-        android:layout_height="101dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        app:srcCompat="@drawable/lock" />
 
     <TextView
         android:id="@+id/textView16"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Trouble with logging in?"
+        android:text="Delete Account"
         android:textAlignment="center"
-        android:layout_alignStart="@+id/imageView5"
-        android:layout_alignEnd="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/imageView5" />
+        android:textSize="40dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Enter your email address and we'll send you a link to get back into your account."
+        android:text="Enter your current password to confirm cancellation of your account"
         android:textAlignment="center"
-        android:layout_alignStart="@+id/imageView5"
-        android:layout_alignEnd="@+id/imageView5"
+        android:layout_alignStart="@+id/textView16"
+        android:layout_alignEnd="@+id/textView16"
         android:textColor="@color/black"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/textView16"  />
@@ -44,13 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:layout_below="@+id/textView17"
-        android:layout_alignStart="@+id/imageView5"
-        android:layout_alignEnd="@+id/imageView5"
+        android:layout_alignStart="@+id/textView16"
+        android:layout_alignEnd="@+id/textView16"
         android:layout_marginTop="15dp"
         android:background="@drawable/edit_background"
         android:ems="10"
-        android:hint="Email Address"
-        android:inputType="textEmailAddress"
+        android:hint="Password"
+        android:inputType="textPassword"
         android:paddingLeft="15dp"
         android:textColor="@color/black" />
 
@@ -59,11 +50,11 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_below="@+id/EmailAddress"
-        android:layout_alignStart="@+id/imageView5"
-        android:layout_alignEnd="@+id/imageView5"
+        android:layout_alignStart="@+id/textView16"
+        android:layout_alignEnd="@+id/textView16"
         android:layout_marginTop="10dp"
         android:background="@drawable/btn_background"
-        android:text="send"
+        android:text="confirm delete"
         android:textColor="@color/white" />
 
     <TextView
@@ -72,10 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        android:text="Back to Login"
+        android:text="Cancel"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/send_button"
 
         />

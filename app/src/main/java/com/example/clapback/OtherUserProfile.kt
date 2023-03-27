@@ -23,6 +23,7 @@ import java.io.File
 class OtherUserProfile: AppCompatActivity() {
 
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     private lateinit var username: TextView
     private lateinit var description: TextView
@@ -30,12 +31,14 @@ class OtherUserProfile: AppCompatActivity() {
     private lateinit var nickname: EditText
     private lateinit var saveBtn: Button
     private lateinit var cancelBtn: Button
+    private lateinit var reportBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.otherusers_profile_page)
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
 
         username = findViewById(R.id.other_username)
         description = findViewById(R.id.description)
@@ -43,9 +46,13 @@ class OtherUserProfile: AppCompatActivity() {
         nickname = findViewById(R.id.change_nickname)
         saveBtn = findViewById(R.id.save_btn)
         cancelBtn = findViewById(R.id.cancel_btn)
+        reportBtn = findViewById(R.id.report_btn)
 
         val otherUserUid = intent.getStringExtra("uid")
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
+
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(otherUserUid!!).child("nickname")
 
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
@@ -63,10 +70,21 @@ class OtherUserProfile: AppCompatActivity() {
         var otherUser = User()
         mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
             otherUser = it.getValue(User::class.java)!!
-            username.text = otherUser.name
 
-            if (otherUser.bio == null) {
-                description.text = "No Description"
+            nickName.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val nickName = task.result?.value as? String
+                    if (!nickName.isNullOrEmpty()) {
+                        username.text = nickName
+                    } else {
+                        username.text = otherUser.name
+                    }
+                }
+            }
+            //username.text = otherUser.name
+
+            if (otherUser.bio == "") {
+                description.text = getString(R.string.default_bio)
             } else {
                 description.text = otherUser.bio
             }
@@ -75,13 +93,13 @@ class OtherUserProfile: AppCompatActivity() {
         }
 
         saveBtn.setOnClickListener {
-            val nickName = nickname.text.toString()
+            val nickNameGet = nickname.text.toString()
 
-            if (nickName == "") {
-                //If the nickname is empty, then change back to friend's name?
-                Toast.makeText(this@OtherUserProfile, "Nickname is empty", Toast.LENGTH_SHORT).show()
+            if (nickNameGet == "") {
+                //If the nickname is empty, then change back to friend's name
+                changeNickname(otherUser.name.toString())
             } else {
-                changeNickname(nickName)
+                changeNickname(nickNameGet)
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -89,6 +107,13 @@ class OtherUserProfile: AppCompatActivity() {
 
         cancelBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        reportBtn.setOnClickListener {
+            val intent = Intent(this, Report::class.java).apply {
+                putExtra("uid", otherUserUid)
+            }
             startActivity(intent)
         }
     }

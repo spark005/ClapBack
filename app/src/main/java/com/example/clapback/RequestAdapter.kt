@@ -11,8 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class RequestAdapter(val context: Context, var userList: ArrayList<User>):
     RecyclerView.Adapter<RequestAdapter.RequestViewHolder>() {
@@ -56,8 +55,14 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
             sender.friendlist.add(currentUser.uid!!)
             currentUser.friendlist.add(sender.uid!!)
 
-            mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
-            mDbRef.child("user").child(sender.uid!!).setValue(sender)
+            currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                .setValue(currentUser.friendRequests) }
+            currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendlist")
+                .setValue(currentUser.friendlist) }
+            sender.uid?.let { sduid -> mDbRef.child("user").child(sduid).child("friendRequests")
+                .setValue(sender.friendRequests) }
+            sender.uid?.let { sduid -> mDbRef.child("user").child(sduid).child("friendlist")
+                .setValue(sender.friendlist) }
 
             removeBtns(holder)
             holder.friendAccepted.visibility = VISIBLE
@@ -66,8 +71,10 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
         holder.declineBtn.setOnClickListener {
             deleteRequests(sender)
 
-            mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
-            mDbRef.child("user").child(sender.uid!!).setValue(sender)
+            currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                .setValue(currentUser.friendRequests) }
+            sender.uid?.let { sduid -> mDbRef.child("user").child(sduid).child("friendRequests")
+                .setValue(sender.friendRequests) }
 
             userList.remove(sender)
             notifyDataSetChanged()

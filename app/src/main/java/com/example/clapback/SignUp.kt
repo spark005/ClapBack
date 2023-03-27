@@ -63,6 +63,7 @@ class SignUp : AppCompatActivity() {
                             exist = true
                         }
                     }
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {

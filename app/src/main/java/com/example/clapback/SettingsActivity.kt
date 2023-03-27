@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -102,24 +103,26 @@ class SettingsActivity : AppCompatActivity(),
     //THIS DOESNT WORK UGHGDHGSKGSJGDSJKHG
     class DeleteFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            val button: Preference? = findPreference(getString(R.string.delete_header)) //this is null idk y
-            button?.onPreferenceClickListener =
-                Preference.OnPreferenceClickListener {
-                    val dialogBuilder = android.app.AlertDialog.Builder(requireContext())
-                    dialogBuilder.setMessage("Do you want to Delete your account ? This action is irreversible")
-                        // if the dialog is cancelable
-                        .setCancelable(false)
-                        // positive button text and action
-                        .setPositiveButton("Proceed", DialogInterface.OnClickListener {
-                                dialog, id -> finish()
-                        })
-                        // negative button text and action
-                        .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                                dialog, id -> dialog.cancel()
-                        })
+            //setPreferencesFromResource(R.xml.delete_preferences, rootKey)
 
-                    true
-                }
+            //val button: Preference? = findPreference(getString(R.string.delete_header)) //this is null idk y
+            //button?.onPreferenceClickListener =
+                //Preference.OnPreferenceClickListener {
+                    //val dialogBuilder = android.app.AlertDialog.Builder(requireContext())
+                    //dialogBuilder.setMessage("Do you want to Delete your account ? This action is irreversible")
+                        // if the dialog is cancelable
+                        //.setCancelable(false)
+                        // positive button text and action
+                        //.setPositiveButton("Proceed", DialogInterface.OnClickListener {
+                                //dialog, id -> finish()
+                        //})
+                        // negative button text and action
+                        //.setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                                //dialog, id -> dialog.cancel()
+                        //})
+
+                    //true
+                //}
         }
         private fun finish() {
             TODO("Not yet implemented, THis is where I think u put code to delete Luke")

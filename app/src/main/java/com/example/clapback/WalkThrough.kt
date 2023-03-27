@@ -16,8 +16,6 @@ import androidx.core.view.GestureDetectorCompat
 
 class WalkThrough : AppCompatActivity() {
 
-  //  private lateinit var walkThrough_1: RelativeLayout
-  //  private lateinit var walkThrough_2: RelativeLayout
     private lateinit var detector: GestureDetectorCompat
     private lateinit var btn_next: Button
     private lateinit var btn_next_1: Button

@@ -56,8 +56,10 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
         holder.cancelRequest.setOnClickListener {
             deleteRequests(recipient)
 
-            mDbRef.child("user").child(mAuth.currentUser?.uid!!).setValue(currentUser)
-            mDbRef.child("user").child(recipient.uid!!).setValue(recipient)
+            currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                .setValue(currentUser.friendRequests) }
+            recipient.uid?.let { rpuid -> mDbRef.child("user").child(rpuid).child("friendRequests")
+                .setValue(recipient.friendRequests) }
 
             pendingList.remove(recipient)
             notifyDataSetChanged()

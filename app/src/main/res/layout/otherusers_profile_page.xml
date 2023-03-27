@@ -25,8 +25,8 @@
     <TextView
         android:id="@+id/other_username"
         android:textSize="25dp"
-        android:layout_width="126dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="140dp"
         android:layout_marginEnd="145dp"
@@ -38,8 +38,8 @@
 
     <TextView
         android:id="@+id/description"
-        android:layout_width="391dp"
-        android:layout_height="67dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginStart="101dp"
         android:layout_marginEnd="101dp"
@@ -76,6 +76,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empty nickname recovers original name"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.861"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_nickname" />
+
+
     <Button
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
@@ -102,6 +113,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/save_btn"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/report_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/red_btn_background"
+        android:text="Report"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_btn"
         android:textAlignment="center"/>
 
 
