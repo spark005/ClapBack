@@ -78,10 +78,10 @@ class Report: AppCompatActivity() {
 
                 //val address = arrayOf<String>("swimmerchrist7@gmail.com", "lawsonluke.business@gmail.com")
                 //composeEmail(address, "report", messageObject.toString())
-                /*val intent = Intent(this, OtherUserProfile::class.java).apply {
+                val intent = Intent(this, OtherUserProfile::class.java).apply {
                     putExtra("uid", otherUserUid)
                 }
-                startActivity(intent)*/
+                startActivity(intent)
             }
         }
         cancelReportBtn.setOnClickListener {
