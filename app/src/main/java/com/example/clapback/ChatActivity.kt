@@ -93,8 +93,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-        //supportActionBar?.title = name
-
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -149,7 +147,6 @@ class ChatActivity : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     // commented out to_do("not yet implemented")
-                    TODO("Not yet implemented")
                 }
 
             })
