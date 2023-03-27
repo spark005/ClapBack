@@ -37,6 +37,22 @@
         app:layout_constraintTop_toBottomOf="@+id/other_profile_image" />
 
     <TextView
+        android:id="@+id/social"
+        android:textSize="25dp"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginEnd="145dp"
+        android:text="(social media)"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/other_username" />
+
+    <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +65,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/other_username" />
+        app:layout_constraintTop_toBottomOf="@+id/social" />
 
     <TextView
         android:layout_width="wrap_content"
