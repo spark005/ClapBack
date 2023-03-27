@@ -14,6 +14,7 @@ class User {
     var fmovie: String? = ""
     var fmusic: String? = ""
     var fbook: String? = ""
+    var social: String? = ""
 
     var streak: Int? = 1
     var friendlist = ArrayList<String>()

@@ -37,9 +37,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     // Username's set parameters on profile page
     private lateinit var userBio: TextView
     private lateinit var username: TextView
-    private lateinit var fMovie: TextView
-    private lateinit var fMusic: TextView
-    private lateinit var fBook: TextView
+    private lateinit var socialMedia: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,9 +60,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Text fields on user profile page
         userBio = findViewById(R.id.name)
         username = findViewById(R.id.username)
-        fMovie = findViewById(R.id.movie)
-        fMusic = findViewById(R.id.music)
-        fBook = findViewById(R.id.book)
+        socialMedia = findViewById(R.id.social)
 
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
@@ -83,8 +79,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
                     userBio.setText("Bio").toString()
                 }
 
-                if (!currentUser?.fmovie.equals("")) {
-
+                if (!currentUser?.social.equals("")) {
+                    socialMedia.setText(currentUser?.social).toString()
+                } else {
+                    socialMedia.setText("(No social media)").toString()
                 }
 
                 username.setText(currentUser?.name).toString()
