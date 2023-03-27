@@ -29,7 +29,7 @@ class Report: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.report_page)
 
-       // val receiverUID = "BjhDxngcjdgpGA5CCzvE7Gdp35q2"
+        val receiverUID = "BjhDxngcjdgpGA5CCzvE7Gdp35q2"
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
@@ -51,7 +51,7 @@ class Report: AppCompatActivity() {
                 val message = reportTxt.text.toString()
                 val messageObject = Message(message, senderUid, timestamp)
 
-                /*mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+                mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                     .setValue(messageObject).addOnSuccessListener {
                         mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
                             .setValue(messageObject)
@@ -61,10 +61,10 @@ class Report: AppCompatActivity() {
                     this@Report,
                     "Your report has been sent successfully!",
                     Toast.LENGTH_SHORT
-                ).show()*/
+                ).show()
 
                 // TODO email functionality
-                val email = Intent(Intent.ACTION_SEND)
+                /*val email = Intent(Intent.ACTION_SEND)
                 email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("swimmerchrist7@gmail.com"))
                 email.putExtra(Intent.EXTRA_SUBJECT, "Report")
                 email.putExtra(Intent.EXTRA_TEXT, message)
@@ -74,7 +74,7 @@ class Report: AppCompatActivity() {
                 //need this to prompts email client only
                 email.type = "message/rfc822"
 
-                startActivity(Intent.createChooser(email, "Choose an Email client :"))
+                startActivity(Intent.createChooser(email, "Choose an Email client :"))*/
 
                 //val address = arrayOf<String>("swimmerchrist7@gmail.com", "lawsonluke.business@gmail.com")
                 //composeEmail(address, "report", messageObject.toString())
