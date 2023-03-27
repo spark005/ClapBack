@@ -51,8 +51,12 @@ open class Message {
             }
     }
 
-    fun editMessage(mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
-
+    fun editMessage(newMessage: String, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("message")
+            .setValue(newMessage).addOnSuccessListener {
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("message")
+                    .setValue(newMessage)
+            }
     }
 
     fun delMessage(mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {

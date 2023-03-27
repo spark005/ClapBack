@@ -26,6 +26,17 @@
             android:padding="10dp"
             android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/edited_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_sent_message"
+            android:layout_alignRight="@id/txt_sent_message"
+            android:text="(edited)"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+
     </RelativeLayout>
 
     <RelativeLayout

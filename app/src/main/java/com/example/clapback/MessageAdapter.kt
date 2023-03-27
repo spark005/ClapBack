@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,14 +8,13 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -189,9 +189,33 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                     popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
                         when (item!!.itemId) {
                             R.id.edit_msg -> {
+                                val builder = AlertDialog.Builder(this.context)
+                                val layoutInflater = LayoutInflater.from(this.context).inflate(R.layout.edit_message, null)
+                                val editText = layoutInflater.findViewById<EditText>(R.id.edit_message_text)
+                                var newMessage = ""
+                                with(builder) {
+                                    setTitle("Edit your message:")
+                                    var oldMessage = ""
+                                    mDbRef.child("chats").child(senderRoom!!).child("messages")
+                                            .child(key!!).child("message").get().addOnSuccessListener {
+                                                oldMessage = "${it.value}"
+                                                Log.i("firebase", "Got value ${it.value}")
+                                                editText.setText(oldMessage)
+                                        }
 
-                                currentMessage.editMessage(mDbRef, senderRoom, receiverRoom, key!!)
-                                notifyDataSetChanged()
+                                    setPositiveButton("Done") {dialog, which ->
+                                        newMessage = editText.text.toString()
+                                        Log.d("edit", newMessage)
+                                        currentMessage.editMessage(newMessage, mDbRef, senderRoom, receiverRoom, key!!)
+                                        holder.itemView.visibility = VISIBLE
+                                        notifyDataSetChanged()
+                                    }
+                                    setNegativeButton("Cancel"){dialog, which ->
+                                        Log.d("Main", "Canceled")
+                                    }
+                                    setView(layoutInflater)
+                                    show()
+                                }
                             }
 
                             R.id.delete_msg -> {
