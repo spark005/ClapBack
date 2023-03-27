@@ -58,12 +58,6 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
             }
         }
 
-      /*  if (nickName == "") {
-            holder.textName.text = currentUser.name
-        } else {
-            holder.textName.text = nickName
-        }*/
-       // holder.textName.text = currentUser.name
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =

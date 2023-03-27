@@ -62,7 +62,10 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
                         val traversedUser = postSnapshot.getValue(User::class.java)
 
-                        if (currentUser.uid != traversedUser?.uid
+                        //If the UID is admin's uid, do not clear the userList
+                        if(currentUser.uid == "BjhDxngcjdgpGA5CCzvE7Gdp35q2") {
+                            userList.add(traversedUser!!)
+                        } else if (currentUser.uid != traversedUser?.uid
                             && currentUser.friendlist.contains(traversedUser?.uid)) {
                             userList.add(traversedUser!!)
                         }
@@ -134,7 +137,9 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
                         val traversedUser = postSnapshot.getValue(User::class.java)
 
-                        if (currentUser.uid != traversedUser?.uid
+                        if(currentUser.uid == "BjhDxngcjdgpGA5CCzvE7Gdp35q2" && traversedUser?.uid != "BjhDxngcjdgpGA5CCzvE7Gdp35q2") {
+                            userList.add(traversedUser!!)
+                        } else if (currentUser.uid != traversedUser?.uid
                             && currentUser.friendlist.contains(traversedUser?.uid)) {
                             userList.add(traversedUser!!)
                         }
@@ -147,7 +152,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    //Commented out
                 }
 
             })
