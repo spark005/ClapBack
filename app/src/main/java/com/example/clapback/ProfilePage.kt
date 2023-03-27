@@ -100,7 +100,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
 
         settings.setOnClickListener() {
-            val intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(this, Settings::class.java)
             startActivity(intent)
         }
 
