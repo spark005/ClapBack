@@ -33,6 +33,7 @@
             android:layout_below="@id/txt_sent_message"
             android:layout_alignRight="@id/txt_sent_message"
             android:text="(edited)"
+            android:paddingRight="20dp"
             android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="10dp" />

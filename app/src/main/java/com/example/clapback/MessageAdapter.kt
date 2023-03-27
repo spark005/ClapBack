@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.*
@@ -205,9 +206,9 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                                     setPositiveButton("Done") {dialog, which ->
                                         newMessage = editText.text.toString()
-                                        Log.d("edit", newMessage)
+                                        Log.d("edit", viewHolder.itemId.toString())
                                         currentMessage.editMessage(newMessage, mDbRef, senderRoom, receiverRoom, key!!)
-                                        holder.itemView.visibility = VISIBLE
+                                        holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
                                         notifyDataSetChanged()
                                     }
                                     setNegativeButton("Cancel"){dialog, which ->
@@ -220,6 +221,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                             R.id.delete_msg -> {
                                 currentMessage.delMessage(mDbRef, senderRoom, receiverRoom, key!!)
+                                holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = GONE
                                 notifyDataSetChanged()
                             }
                             else -> {}
