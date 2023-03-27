@@ -75,7 +75,7 @@ class OtherUserProfile: AppCompatActivity() {
                 if (task.isSuccessful) {
                     val nickName = task.result?.value as? String
                     if (!nickName.isNullOrEmpty()) {
-                        username.text = nickName
+                        username.text = nickName + " ("+ otherUser.name +")"
                     } else {
                         username.text = otherUser.name
                     }

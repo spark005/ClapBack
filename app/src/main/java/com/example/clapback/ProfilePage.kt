@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.*
@@ -36,6 +37,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     // Username's set parameters on profile page
     private lateinit var userBio: TextView
     private lateinit var username: TextView
+    private lateinit var fMovie: TextView
+    private lateinit var fMusic: TextView
+    private lateinit var fBook: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +62,14 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Text fields on user profile page
         userBio = findViewById(R.id.name)
         username = findViewById(R.id.username)
+        fMovie = findViewById(R.id.movie)
+        fMusic = findViewById(R.id.music)
+        fBook = findViewById(R.id.book)
 
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
 
-
         mDbRef = FirebaseDatabase.getInstance().getReference()
-
-
 
         // Setting the profile picture's username and Bio fields
         if (profileUid != null) {
@@ -73,18 +77,19 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
                 val currentUser = it.getValue(User::class.java)
 
                 if (!currentUser?.bio.equals("")) {
-                    userBio.setText(currentUser?.bio + "|" + currentUser?.fmovie + "|" +
-                            currentUser?.fmusic + "|" + currentUser?.fbook).toString()
+                    userBio.setText(currentUser?.bio + " | " + currentUser?.fmovie + " | " +
+                            currentUser?.fmusic + " | " + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
+                }
+
+                if (!currentUser?.fmovie.equals("")) {
+
                 }
 
                 username.setText(currentUser?.name).toString()
             }
         }
-
-
-
 
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {

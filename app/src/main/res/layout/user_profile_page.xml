@@ -11,9 +11,9 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="53dp"
-        android:layout_marginEnd="141dp"
-        android:layout_marginBottom="547dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="600dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,6 +44,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/movie"
+        android:layout_width="391dp"
+        android:layout_height="25dp"
+        android:text="Favorite Movie: "
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/music"
+        android:layout_width="391dp"
+        android:layout_height="25dp"
+        android:text="Favorite Music: "
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/movie" />
+
+    <TextView
+        android:id="@+id/book"
+        android:layout_width="391dp"
+        android:layout_height="25dp"
+        android:text="Favorite Book: "
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/music" />
 
     <LinearLayout
         android:layout_width="409dp"
@@ -287,7 +323,7 @@
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintEnd_toEndOf="@id/username"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/book" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
