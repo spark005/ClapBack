@@ -89,6 +89,7 @@ class FriendRequest : AppCompatActivity() {
                         }
                     }
                 }
+                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -219,22 +220,27 @@ class FriendRequest : AppCompatActivity() {
                 currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
                     .setValue(currentUser.friendRequests)}
 
-                val topic = "/topics/" + foundFriend.uid.toString()
+                if (foundFriend.notifications!!) {
+                    val topic = "/topics/" + foundFriend.uid.toString()
 
-                val notification = JSONObject()
-                val notificationBody = JSONObject()
+                    val notification = JSONObject()
+                    val notificationBody = JSONObject()
 
-                try {
-                    notificationBody.put("title", "You have a Friend Request!")
-                    notificationBody.put("message", currentUser.name+" has just sent you a friend request!")
-                    notification.put("to", topic)
-                    notification.put("data", notificationBody)
-                    Log.e("TAG", "try")
-                } catch (e: JSONException) {
-                    Log.e("TAG", "onSend: "+ e.message)
+                    try {
+                        notificationBody.put("title", "You have a Friend Request!")
+                        notificationBody.put(
+                            "message",
+                            currentUser.name + " has just sent you a friend request!"
+                        )
+                        notification.put("to", topic)
+                        notification.put("data", notificationBody)
+                        Log.e("TAG", "try")
+                    } catch (e: JSONException) {
+                        Log.e("TAG", "onSend: " + e.message)
+                    }
+
+                    sendNotification(notification)
                 }
-
-                sendNotification(notification)
             }
 
         } .addOnFailureListener {

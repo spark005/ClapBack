@@ -82,22 +82,27 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
             removeBtns(holder)
             holder.friendAccepted.visibility = VISIBLE
 
-            val topic = "/topics/" + sender.uid.toString()
+            if (sender.notifications!!) {
+                val topic = "/topics/" + sender.uid.toString()
 
-            val notification = JSONObject()
-            val notificationBody = JSONObject()
+                val notification = JSONObject()
+                val notificationBody = JSONObject()
 
-            try {
-                notificationBody.put("title", "Friend Request Accepted!")
-                notificationBody.put("message", currentUser.name+" has accepted your friend request!")
-                notification.put("to", topic)
-                notification.put("data", notificationBody)
-                Log.e("TAG", "try")
-            } catch (e: JSONException) {
-                Log.e("TAG", "onSend: "+ e.message)
+                try {
+                    notificationBody.put("title", "Friend Request Accepted!")
+                    notificationBody.put(
+                        "message",
+                        currentUser.name + " has accepted your friend request!"
+                    )
+                    notification.put("to", topic)
+                    notification.put("data", notificationBody)
+                    Log.e("TAG", "try")
+                } catch (e: JSONException) {
+                    Log.e("TAG", "onSend: " + e.message)
+                }
+
+                sendNotification(notification)
             }
-
-            sendNotification(notification)
         }
 
         holder.declineBtn.setOnClickListener {
