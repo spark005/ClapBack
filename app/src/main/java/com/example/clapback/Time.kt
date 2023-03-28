@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
 
 class Time : AppCompatActivity() {
@@ -32,6 +33,7 @@ class Time : AppCompatActivity() {
         supportActionBar?.hide()
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + mAuth.currentUser!!.uid)
 
         streak = findViewById(R.id.streak)
         currentTimeTextView = findViewById(R.id.remaining_time)
