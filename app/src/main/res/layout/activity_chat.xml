@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
     <ProgressBar
         android:id="@+id/typingIndicator"
         style="?android:attr/progressBarStyleHorizontal"
@@ -36,6 +37,46 @@
         android:layout_marginTop="-31dp"
         android:visibility="invisible" />
 
+    <RelativeLayout
+        android:id="@+id/replying"
+        android:layout_above="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:id="@+id/repHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Replying to:"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/replyingTo"
+            android:layout_toEndOf="@id/repHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Replying to:"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/cancelReply"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/xreply"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_alignParentBottom="true"
@@ -44,6 +85,7 @@
         android:orientation="horizontal"
         android:layout_marginBottom="5dp"
         android:weightSum="100">
+
 
         <ImageView
             android:id="@+id/chooseImage"

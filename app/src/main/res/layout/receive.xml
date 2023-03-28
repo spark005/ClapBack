@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/reaction"
             android:layout_width="50dp"
             android:layout_height="50dp"

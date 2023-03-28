@@ -11,11 +11,12 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:layout_height="wrap_content"
         android:layout_below="@id/replyMessage"
+        android:layout_height="wrap_content"
         >
 
-        <!--android:layout_below="@id/replyMessage"-->
+        <!--android:layout_below="@id/replyMessage"
+        android:layout_above="@+id/sentMessage"-->
         <TextView
             android:id="@+id/txt_sent_message"
             android:layout_width="wrap_content"
@@ -25,23 +26,35 @@
             android:padding="10dp"
             android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/edited_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_sent_message"
+            android:layout_alignRight="@id/txt_sent_message"
+            android:text="(edited)"
+            android:paddingRight="20dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/replyMessage"
         android:layout_width="wrap_content"
-        android:background="@drawable/edit_background"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
+        android:background="@drawable/reply_mess"
+        android:layout_marginLeft="-25dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@id/sentMessage"
         android:visibility="gone">
         <TextView
             android:id="@+id/repMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:textColor="@color/grey"
             android:text="reply"
             android:textSize="18sp" />
     </RelativeLayout>

@@ -1,33 +1,31 @@
 package com.example.clapback
 
+import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
-import android.media.Image
 import android.net.Uri
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.RelativeLayout
-import android.widget.Toast
-import androidx.core.view.marginTop
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
+
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                      val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
-                     val messageKeys: ArrayList<String?>):
+                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -66,15 +64,11 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 val viewHolder = holder as SentViewHolder
                 holder.sentMessage.text = currentMessage.message
                 if (currentMessage.reply != null) {
-                    val loca = IntArray(2)
-                    holder.itemView.getLocationOnScreen(loca)
-                    val top = loca[0]
-                    val left = loca[1]
                     val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
+                    val rtext = holder.itemView.findViewById<TextView>(R.id.repMessage)
 
+                    rtext.text = currentMessage.reply
                     rbox.setVisibility(View.VISIBLE)
-                    rbox.top = top + 15
-                    rbox.left = left - 15
                 }
             }
             ReceiveViewHolder::class.java -> {
@@ -83,17 +77,17 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
                 if (currentMessage.reaction != null) {
                     reactionBox.setVisibility(View.VISIBLE)
-                    val reaction = holder.itemView.findViewById<de.hdodenhof.circleimageview.CircleImageView>(R.id.reaction)
+                    val reaction = holder.itemView.findViewById<ImageView>(R.id.reaction)
 
                     when(currentMessage.reaction) {
                         1 -> {
                             reaction.setImageResource(R.drawable.rheart)
                         }
                         2 -> {
-                            reaction.setImageResource(R.drawable.rheart)
+                            reaction.setImageResource(R.drawable.rquest)
                         }
                         3 -> {
-                            reaction.setImageResource(R.drawable.rheart)
+                            reaction.setImageResource(R.drawable.rnelson)
                         }
                     }
                 } else {
@@ -153,8 +147,8 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                         when (item!!.itemId) {
                             R.id.reply -> {
-                                //currentMessage.setReply(holder.receiveMessage.text.toString(), mDbRef, senderRoom, receiverRoom, key.toString())
-                                //notifyDataSetChanged()
+                                repto.findViewById<TextView>(R.id.replyingTo).text = holder.receiveMessage.text
+                                repto.visibility = View.VISIBLE
                             }
                             R.id.react -> {
                                 val popup = PopupMenu(context, holder.itemView)
@@ -187,7 +181,54 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         true
                     })
                     firstPopup.show()
+                }
+                SentViewHolder::class.java -> {
+                    val viewHolder = holder as SentViewHolder
+                    val key = messageKeys[position]
+                    val popup = PopupMenu(context, holder.itemView)
+                    popup.inflate(R.menu.edit_or_del_msg)
+                    popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+                        when (item!!.itemId) {
+                            R.id.edit_msg -> {
+                                val builder = AlertDialog.Builder(this.context)
+                                val layoutInflater = LayoutInflater.from(this.context).inflate(R.layout.edit_message, null)
+                                val editText = layoutInflater.findViewById<EditText>(R.id.edit_message_text)
+                                var newMessage = ""
+                                with(builder) {
+                                    setTitle("Edit your message:")
+                                    var oldMessage = ""
+                                    mDbRef.child("chats").child(senderRoom!!).child("messages")
+                                            .child(key!!).child("message").get().addOnSuccessListener {
+                                                oldMessage = "${it.value}"
+                                                Log.i("firebase", "Got value ${it.value}")
+                                                editText.setText(oldMessage)
+                                        }
 
+                                    setPositiveButton("Done") {dialog, which ->
+                                        newMessage = editText.text.toString()
+                                        Log.d("edit", viewHolder.itemId.toString())
+                                        currentMessage.editMessage(newMessage, mDbRef, senderRoom, receiverRoom, key!!)
+                                        holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
+                                        notifyDataSetChanged()
+                                    }
+                                    setNegativeButton("Cancel"){dialog, which ->
+                                        Log.d("Main", "Canceled")
+                                    }
+                                    setView(layoutInflater)
+                                    show()
+                                }
+                            }
+
+                            R.id.delete_msg -> {
+                                currentMessage.delMessage(mDbRef, senderRoom, receiverRoom, key!!)
+                                holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = GONE
+                                notifyDataSetChanged()
+                            }
+                            else -> {}
+                        }
+                        true
+                    })
+                    if (!currentMessage.deleted!!) popup.show()
                 }
             }
         }
