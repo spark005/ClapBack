@@ -3,7 +3,6 @@ package com.example.clapback
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +10,9 @@ import android.os.Build
 import java.time.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,16 +20,13 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
-import java.security.Timestamp
-import java.time.format.DateTimeFormatterBuilder
-import kotlin.system.measureTimeMillis
 
 private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
@@ -43,6 +42,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var selectImageButton: ImageView
     private lateinit var image: Uri
+    private lateinit var typingIndicator: View
+    private lateinit var typingText: TextView
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -82,6 +83,9 @@ class ChatActivity : AppCompatActivity() {
         receiverRoom = senderUid + receiverUID
         val mList = null
 
+        var typingRef = mDbRef.child("chats").child(receiverRoom!!).child("senderTyping")
+        var userRef = mDbRef.child("chats").child(senderRoom!!).child("senderTyping")
+
         nickName.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val nickName = task.result?.value as? String
@@ -93,7 +97,8 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-
+        typingText = findViewById(R.id.typing_text)
+        typingIndicator = findViewById(R.id.typingIndicator)
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
         selectImageButton = findViewById(R.id.chooseImage)
@@ -104,6 +109,37 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter
+
+
+        messageBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                if (s.isNotEmpty()) {
+                    typingRef.setValue(true)
+                } else {
+                    typingRef.setValue(false)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        val receiverTypingListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val receiverTyping = snapshot.value as? Boolean
+                if (receiverTyping == true) {
+                    addTypingIndicator()
+                } else {
+                    removeTypingIndicator()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        }
+
+        userRef.addValueEventListener(receiverTypingListener)
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
@@ -211,6 +247,19 @@ class ChatActivity : AppCompatActivity() {
         }
 
 
+    }
+    private fun addTypingIndicator() {
+            runOnUiThread {
+                typingIndicator.visibility = View.VISIBLE
+                typingText.visibility = View.VISIBLE
+            }
+    }
+
+    private fun removeTypingIndicator() {
+        runOnUiThread {
+            typingIndicator.visibility = View.INVISIBLE
+            typingText.visibility = View.INVISIBLE
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
