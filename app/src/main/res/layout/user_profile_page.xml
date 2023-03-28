@@ -11,9 +11,9 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="53dp"
-        android:layout_marginEnd="141dp"
-        android:layout_marginBottom="547dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="600dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
     <TextView
         android:id="@+id/name"
         android:layout_width="391dp"
-        android:layout_height="25dp"
+        android:layout_height="50dp"
         android:text="Bio"
         android:textAlignment="center"
         android:textSize="20dp"
@@ -44,6 +44,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/social"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:layout_width="391dp"
+        android:layout_height="25dp"
+        android:text="(No social media)"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <LinearLayout
         android:layout_width="409dp"
@@ -98,6 +112,7 @@
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:id="@+id/notifications"
+                android:onClick="notificationsPopup"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -287,7 +302,7 @@
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintEnd_toEndOf="@id/username"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/social" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

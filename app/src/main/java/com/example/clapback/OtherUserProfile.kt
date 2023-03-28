@@ -27,6 +27,7 @@ class OtherUserProfile: AppCompatActivity() {
 
     private lateinit var username: TextView
     private lateinit var description: TextView
+    private lateinit var social: TextView
     private lateinit var image: CircleImageView
     private lateinit var nickname: EditText
     private lateinit var saveBtn: Button
@@ -42,6 +43,7 @@ class OtherUserProfile: AppCompatActivity() {
 
         username = findViewById(R.id.other_username)
         description = findViewById(R.id.description)
+        social = findViewById(R.id.social)
         image = findViewById(R.id.other_profile_image)
         nickname = findViewById(R.id.change_nickname)
         saveBtn = findViewById(R.id.save_btn)
@@ -75,18 +77,24 @@ class OtherUserProfile: AppCompatActivity() {
                 if (task.isSuccessful) {
                     val nickName = task.result?.value as? String
                     if (!nickName.isNullOrEmpty()) {
-                        username.text = nickName
+                        username.text = nickName + " ("+ otherUser.name +")"
                     } else {
                         username.text = otherUser.name
                     }
                 }
             }
-            //username.text = otherUser.name
 
             if (otherUser.bio == "") {
                 description.text = getString(R.string.default_bio)
             } else {
-                description.text = otherUser.bio
+                description.setText(otherUser.bio + " | " + otherUser.fmovie + " | " +
+                        otherUser.fmusic + " | " + otherUser.fbook).toString()
+            }
+
+            if (otherUser.social == "") {
+                social.text = "No Social Media"
+            } else {
+                social.text = otherUser.social
             }
         }.addOnFailureListener {
             Log.e("ERROR", it.toString())

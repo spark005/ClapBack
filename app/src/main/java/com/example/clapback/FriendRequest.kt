@@ -1,7 +1,9 @@
 package com.example.clapback
 
+import android.app.Notification
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -9,10 +11,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
+import org.json.JSONException
+import org.json.JSONObject
 
 class FriendRequest : AppCompatActivity() {
+
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(this.applicationContext)
+    }
+
+    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private val serverKey = "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
+    private val contentType = "application/json"
 
     private lateinit var sendRequestBtn: Button
     private lateinit var usernameField: EditText
@@ -72,6 +89,7 @@ class FriendRequest : AppCompatActivity() {
                         }
                     }
                 }
+                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -202,11 +220,54 @@ class FriendRequest : AppCompatActivity() {
                 currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
                     .setValue(currentUser.friendRequests)}
 
+                if (foundFriend.notifications!!) {
+                    val topic = "/topics/" + foundFriend.uid.toString()
+
+                    val notification = JSONObject()
+                    val notificationBody = JSONObject()
+
+                    try {
+                        notificationBody.put("title", "You have a Friend Request!")
+                        notificationBody.put(
+                            "message",
+                            currentUser.name + " has just sent you a friend request!"
+                        )
+                        notification.put("to", topic)
+                        notification.put("data", notificationBody)
+                        Log.e("TAG", "try")
+                    } catch (e: JSONException) {
+                        Log.e("TAG", "onSend: " + e.message)
+                    }
+
+                    sendNotification(notification)
+                }
             }
 
         } .addOnFailureListener {
             // If user not found
             Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun sendNotification(notification: JSONObject) {
+        Log.e("TAG", "sendNotification")
+        val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
+            Response.Listener<JSONObject> { response ->
+                Log.i("TAG", "onResponse: $response")
+            },
+            Response.ErrorListener {
+                Toast.makeText(this@FriendRequest, "Request error", Toast.LENGTH_LONG).show()
+                Log.i("TAG", "onErrorResponse: Didn't work")
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["Authorization"] = serverKey
+                params["Content-Type"] = contentType
+                return params
+            }
+        }
+
+        requestQueue.add(jsonObjectRequest)
     }
 }

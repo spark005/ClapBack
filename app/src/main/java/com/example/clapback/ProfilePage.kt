@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -8,9 +9,13 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -32,10 +37,14 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var notificationToggle: Switch
 
     // Username's set parameters on profile page
     private lateinit var userBio: TextView
     private lateinit var username: TextView
+    private lateinit var socialMedia: TextView
+
+    private lateinit var profileUid: String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +67,12 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Text fields on user profile page
         userBio = findViewById(R.id.name)
         username = findViewById(R.id.username)
+        socialMedia = findViewById(R.id.social)
 
-        val profileUid = FirebaseAuth.getInstance().currentUser?.uid
+        profileUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
 
-
         mDbRef = FirebaseDatabase.getInstance().getReference()
-
-
 
         // Setting the profile picture's username and Bio fields
         if (profileUid != null) {
@@ -73,18 +80,21 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
                 val currentUser = it.getValue(User::class.java)
 
                 if (!currentUser?.bio.equals("")) {
-                    userBio.setText(currentUser?.bio + "|" + currentUser?.fmovie + "|" +
-                            currentUser?.fmusic + "|" + currentUser?.fbook).toString()
+                    userBio.setText(currentUser?.bio + " | " + currentUser?.fmovie + " | " +
+                            currentUser?.fmusic + " | " + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
+                }
+
+                if (!currentUser?.social.equals("")) {
+                    socialMedia.setText(currentUser?.social).toString()
+                } else {
+                    socialMedia.setText("(No social media)").toString()
                 }
 
                 username.setText(currentUser?.name).toString()
             }
         }
-
-
-
 
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
@@ -115,6 +125,28 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
     }
 
+    fun notificationsPopup(view: View){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+
+        with(builder) {
+            setTitle("Notifications")
+            val dialogLayout = inflater.inflate(R.layout.notifications_switch, null)
+            notificationToggle = dialogLayout.findViewById<Switch>(R.id.toggle_notifications)
+            mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
+                val currentUser = it.getValue(User::class.java)
+                notificationToggle.isChecked = currentUser?.notifications!!
+            }
+            setView(dialogLayout)
+            setPositiveButton("OK") { dialogInterface, i -> setNotifications(dialogInterface, i) }
+            show()
+        }
+    }
+
+    private fun setNotifications(dialogInterface: DialogInterface, i: Int) {
+        Log.d("Debug", notificationToggle.isChecked.toString())
+        mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggle.isChecked)
+    }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)

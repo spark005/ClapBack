@@ -37,6 +37,7 @@ class EditMainProfile : AppCompatActivity() {
     private lateinit var fmovie:EditText
     private lateinit var fmusic:EditText
     private lateinit var fbook:EditText
+    private lateinit var social:EditText
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
@@ -58,6 +59,7 @@ class EditMainProfile : AppCompatActivity() {
         fmovie = findViewById(R.id.movie)
         fmusic = findViewById(R.id.music)
         fbook = findViewById(R.id.book)
+        social = findViewById(R.id.socialMedia)
 
         image = findViewById(R.id.profile_image)
 
@@ -134,7 +136,11 @@ class EditMainProfile : AppCompatActivity() {
                     fbook.setHint("**Favorite Book**").toString()
                 }
 
-
+                if (!currentUser?.social.equals("")) {
+                    social.setText(currentUser?.social).toString()
+                } else {
+                    social.setHint("**Social Media**").toString()
+                }
 
 
                 cancel.setOnClickListener() {
@@ -150,6 +156,7 @@ class EditMainProfile : AppCompatActivity() {
                     currentUser?.fmusic = fmusic.text.toString()
                     currentUser?.fbook = fbook.text.toString()
                     currentUser?.name = username.text.toString()
+                    currentUser?.social = social.text.toString()
                     addUserInfo(currentUser!!)
                     val intent = Intent(this, ProfilePage::class.java)
                     finish()

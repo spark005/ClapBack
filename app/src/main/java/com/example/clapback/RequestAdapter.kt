@@ -9,12 +9,27 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import org.json.JSONException
+import org.json.JSONObject
 
 class RequestAdapter(val context: Context, var userList: ArrayList<User>):
     RecyclerView.Adapter<RequestAdapter.RequestViewHolder>() {
+
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(context)
+    }
+
+    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private val serverKey = "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
+    private val contentType = "application/json"
 
     lateinit var mAuth: FirebaseAuth
     lateinit var mDbRef: DatabaseReference
@@ -66,6 +81,28 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
 
             removeBtns(holder)
             holder.friendAccepted.visibility = VISIBLE
+
+            if (sender.notifications!!) {
+                val topic = "/topics/" + sender.uid.toString()
+
+                val notification = JSONObject()
+                val notificationBody = JSONObject()
+
+                try {
+                    notificationBody.put("title", "Friend Request Accepted!")
+                    notificationBody.put(
+                        "message",
+                        currentUser.name + " has accepted your friend request!"
+                    )
+                    notification.put("to", topic)
+                    notification.put("data", notificationBody)
+                    Log.e("TAG", "try")
+                } catch (e: JSONException) {
+                    Log.e("TAG", "onSend: " + e.message)
+                }
+
+                sendNotification(notification)
+            }
         }
 
         holder.declineBtn.setOnClickListener {
@@ -102,4 +139,25 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
         }
     }
 
+    private fun sendNotification(notification: JSONObject) {
+        Log.e("TAG", "sendNotification")
+        val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
+            Response.Listener<JSONObject> { response ->
+                Log.i("TAG", "onResponse: $response")
+            },
+            Response.ErrorListener {
+                Toast.makeText(context, "Request error", Toast.LENGTH_LONG).show()
+                Log.i("TAG", "onErrorResponse: Didn't work")
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["Authorization"] = serverKey
+                params["Content-Type"] = contentType
+                return params
+            }
+        }
+
+        requestQueue.add(jsonObjectRequest)
+    }
 }
