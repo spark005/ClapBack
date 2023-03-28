@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -33,11 +34,13 @@ class OtherUserProfile: AppCompatActivity() {
     private lateinit var saveBtn: Button
     private lateinit var cancelBtn: Button
     private lateinit var reportBtn: Button
+    private lateinit var removeFriend: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.otherusers_profile_page)
 
+        supportActionBar?.hide()
         mDbRef = FirebaseDatabase.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
 
@@ -49,6 +52,7 @@ class OtherUserProfile: AppCompatActivity() {
         saveBtn = findViewById(R.id.save_btn)
         cancelBtn = findViewById(R.id.cancel_btn)
         reportBtn = findViewById(R.id.report_btn)
+        removeFriend = findViewById(R.id.remove_friend)
 
         val otherUserUid = intent.getStringExtra("uid")
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
@@ -123,6 +127,27 @@ class OtherUserProfile: AppCompatActivity() {
                 putExtra("uid", otherUserUid)
             }
             startActivity(intent)
+        }
+
+        removeFriend.setOnClickListener {
+            val friendName = otherUser.name.toString()
+            var currentUser = User()
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Are you sure you want to remove $friendName as a friend?")
+                .setCancelable(false)
+                .setPositiveButton("Remove") { dialog, id ->
+                    // Delete selected note from database
+                    otherUser.friendlist.remove(currentUserUid)
+                    currentUser.friendlist.remove(otherUserUid)
+                    finish()
+                    TODO("This doesnt work i think lol")
+                }
+                .setNegativeButton("Cancel") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
         }
     }
 
