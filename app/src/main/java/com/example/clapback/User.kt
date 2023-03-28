@@ -17,6 +17,7 @@ class User {
     var social: String? = ""
 
     var streak: Int? = 1
+    var notifications: Boolean? = true
     var friendlist = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()
 
