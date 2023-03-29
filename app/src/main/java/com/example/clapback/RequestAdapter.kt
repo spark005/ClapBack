@@ -139,7 +139,7 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
 
                 // Writing blocked users to database
                 currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("blockedUsers")
-                    .setValue(sender.blockedUsers) }
+                    .setValue(currentUser.blockedUsers) }
 
                 sender.uid?.let { sduid -> mDbRef.child("user").child(sduid).child("friendRequests")
                     .setValue(sender.friendRequests) }
