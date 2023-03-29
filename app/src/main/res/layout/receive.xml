@@ -6,6 +6,7 @@
 
     <RelativeLayout
         android:id="@+id/rMessage"
+        android:layout_below="@id/replyMessageR"
         android:layout_width="wrap_content"
         android:background="@drawable/edit_background"
         android:layout_marginLeft="5dp"
@@ -49,6 +50,25 @@
             android:padding="10dp"
             android:textSize="18sp"
             />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/replyMessageR"
+        android:layout_width="wrap_content"
+        android:background="@drawable/reply_mess"
+        android:layout_marginRight="-25dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/rMessage"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/repMessageR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/grey"
+            android:text="reply"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </RelativeLayout>

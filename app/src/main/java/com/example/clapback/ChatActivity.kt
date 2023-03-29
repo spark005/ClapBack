@@ -246,7 +246,7 @@ class ChatActivity : AppCompatActivity() {
 
             }
 
-            sendNotification(notification)
+            //sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {
@@ -293,9 +293,9 @@ class ChatActivity : AppCompatActivity() {
             store.putFile(data.data!!)
 
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject).addOnSuccessListener {
                             Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
                         }
