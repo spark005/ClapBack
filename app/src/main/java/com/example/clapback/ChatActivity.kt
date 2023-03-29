@@ -31,6 +31,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
@@ -180,7 +187,16 @@ class ChatActivity : AppCompatActivity() {
 
 
                     }
+
+                    if(!(messageList[messageList.size - 1].senderId.equals(currentUserUid)) && messageList[messageList.size - 1].time == null) {
+                        val sdf = SimpleDateFormat("hh:mm")
+                        val time = sdf.format(Date())
+
+                        messageList[messageList.size - 1].setTime(time, mDbRef, senderRoom, receiverRoom, messageKeys[messageKeys.size - 1].toString())
+                    }
+
                     messageAdapter.notifyDataSetChanged()
+
                     //notific()
                 }
 
@@ -246,7 +262,7 @@ class ChatActivity : AppCompatActivity() {
 
             }
 
-            //sendNotification(notification)
+            sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {
