@@ -11,10 +11,10 @@
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Account"
-        android:textAlignment="center"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
+        android:text="Delete Account"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="40dp"
         android:textStyle="bold" />
@@ -23,16 +23,16 @@
         android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Enter your current password to confirm cancellation of your account"
-        android:textAlignment="center"
+        android:layout_below="@+id/textView16"
         android:layout_alignStart="@+id/textView16"
         android:layout_alignEnd="@+id/textView16"
-        android:textColor="@color/black"
         android:layout_marginTop="15dp"
-        android:layout_below="@+id/textView16"  />
+        android:text="Enter your current password to confirm cancellation of your account"
+        android:textAlignment="center"
+        android:textColor="@color/black" />
 
     <EditText
-        android:id="@+id/EmailAddress"
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:layout_below="@+id/textView17"
@@ -47,10 +47,10 @@
         android:textColor="@color/black" />
 
     <Button
-        android:id="@+id/send_button"
+        android:id="@+id/confirm_delete"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:layout_below="@+id/EmailAddress"
+        android:layout_below="@+id/password"
         android:layout_alignStart="@+id/textView16"
         android:layout_alignEnd="@+id/textView16"
         android:layout_marginTop="10dp"
@@ -59,17 +59,15 @@
         android:textColor="@color/white" />
 
     <TextView
-        android:id="@+id/back_to_login"
+        android:id="@+id/cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/confirm_delete"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:clickable="true"
         android:text="Cancel"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/send_button"
-
-        />
+        android:textColor="@color/black" />
 
 </RelativeLayout>
