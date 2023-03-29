@@ -32,7 +32,7 @@ class DeleteAccount : AppCompatActivity() {
         setContentView(R.layout.delete_account)
 
 
-        // TODO this whole class is washsed, delete later
+        // TODO Luke, this whole class is washed, delete later
 
 
         // Setting buttons
