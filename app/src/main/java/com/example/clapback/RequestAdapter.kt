@@ -1,6 +1,8 @@
 package com.example.clapback
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +48,7 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
         val textName = itemView.findViewById<TextView>(R.id.user_name)
         val acceptBtn = itemView.findViewById<Button>(R.id.accept)
         val declineBtn = itemView.findViewById<Button>(R.id.decline)
+        val blockBtn = itemView.findViewById<Button>(R.id.block)
         val friendAccepted = itemView.findViewById<TextView>(R.id.friend_accepted)
     }
 
@@ -115,6 +118,46 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
 
             userList.remove(sender)
             notifyDataSetChanged()
+        }
+
+
+        // For when a user blocks a request by a user
+        holder.blockBtn.setOnClickListener {
+            val warning = AlertDialog.Builder(context)
+            warning.setTitle("Blocking User")
+            warning.setMessage("Are you sure you want to block ${sender.name}?")
+
+            // If the user chose yes on the warning popup, delete request
+            warning.setPositiveButton("Yes") { dialog, which ->
+
+                deleteRequests(sender)
+
+                currentUser.blockedUsers.add(sender.uid.toString())
+
+                currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                    .setValue(currentUser.friendRequests) }
+
+                // Writing blocked users to database
+                currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("blockedUsers")
+                    .setValue(sender.blockedUsers) }
+
+                sender.uid?.let { sduid -> mDbRef.child("user").child(sduid).child("friendRequests")
+                    .setValue(sender.friendRequests) }
+
+                userList.remove(sender)
+                notifyDataSetChanged()
+
+                // Confirmation of deletion
+                Toast.makeText(context, "${sender.name} blocked", Toast.LENGTH_SHORT).show()
+
+            }
+
+            // Warning popup if no
+            warning.setNegativeButton("No") { dialog, which ->
+                return@setNegativeButton
+            }
+            warning.show()
+
         }
     }
 

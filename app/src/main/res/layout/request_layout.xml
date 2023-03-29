@@ -38,6 +38,21 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2.5dp"
+        android:layout_marginStart="2.5dp"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginEnd="2.5dp"
+        android:layout_marginBottom="2.5dp"
+        android:layout_toLeftOf="@id/accept"
+        android:background="@drawable/red_btn_background"
+        android:padding="10dp"
+        android:text="Block"
+        android:textColor="@color/white" />
     <Button
         android:id="@+id/accept"
         android:layout_width="wrap_content"
