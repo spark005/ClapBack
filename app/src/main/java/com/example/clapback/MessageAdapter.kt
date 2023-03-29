@@ -66,6 +66,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                 if (currentMessage.edited!!) {
                     holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
                 }
+
                 if (currentMessage.reply != null) {
                     val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
                     val rtext = holder.itemView.findViewById<TextView>(R.id.repMessage)
@@ -73,12 +74,40 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                     rtext.text = currentMessage.reply
                     rbox.setVisibility(View.VISIBLE)
                 }
+
+                val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBoxS)
+                if (currentMessage.reaction != null) {
+                    reactionBox.setVisibility(View.VISIBLE)
+                    val reaction = holder.itemView.findViewById<ImageView>(R.id.reactionS)
+
+                    when(currentMessage.reaction) {
+                        1 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                        2 -> {
+                            reaction.setImageResource(R.drawable.rquest)
+                        }
+                        3 -> {
+                            reaction.setImageResource(R.drawable.rnelson)
+                        }
+                    }
+                } else {
+                    reactionBox.setVisibility(View.GONE)
+                }
+
             }
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder
                 holder.receiveMessage.text = currentMessage.message
                 if (currentMessage.edited!!) {
                     holder.itemView.findViewById<TextView>(R.id.edited_indicator_r).visibility = VISIBLE
+                }
+                if (currentMessage.reply != null) {
+                    val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessageR)
+                    val rtext = holder.itemView.findViewById<TextView>(R.id.repMessageR)
+
+                    rtext.text = currentMessage.reply
+                    rbox.setVisibility(View.VISIBLE)
                 }
                 val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
                 if (currentMessage.reaction != null) {
