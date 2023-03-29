@@ -211,9 +211,9 @@ class ChatActivity : AppCompatActivity() {
 
             replier.visibility = View.GONE
 
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject)
                 }
             messageBox.setText("")

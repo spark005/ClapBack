@@ -11,6 +11,7 @@ open class Message {
     var reaction: Int? = null
     var reply: String? = null
     var deleted: Boolean? = null
+    var edited: Boolean? = null
 
     constructor(){}
 
@@ -19,6 +20,7 @@ open class Message {
         this.senderId = senderId
         this.messageId = senderId + time
         deleted = false;
+        edited = false;
     }
 
     constructor(image: Uri?, senderId: String?, time: String?) {
