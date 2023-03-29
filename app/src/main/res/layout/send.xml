@@ -59,5 +59,23 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/reactionBoxS"
+        android:layout_width="wrap_content"
+        android:background="@color/salmon"
+        android:layout_toLeftOf="@id/sentMessage"
+        android:layout_marginRight="-15dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/reactionS"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseMessaging.getInstance().subscribeToTopic("HiddenMessages")
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/Notification")
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()

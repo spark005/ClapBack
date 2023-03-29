@@ -63,6 +63,10 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
             SentViewHolder::class.java -> {
                 val viewHolder = holder as SentViewHolder
                 holder.sentMessage.text = currentMessage.message
+                if (currentMessage.edited!!) {
+                    holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
+                }
+
                 if (currentMessage.reply != null) {
                     val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessage)
                     val rtext = holder.itemView.findViewById<TextView>(R.id.repMessage)
@@ -70,10 +74,41 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                     rtext.text = currentMessage.reply
                     rbox.setVisibility(View.VISIBLE)
                 }
+
+                val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBoxS)
+                if (currentMessage.reaction != null) {
+                    reactionBox.setVisibility(View.VISIBLE)
+                    val reaction = holder.itemView.findViewById<ImageView>(R.id.reactionS)
+
+                    when(currentMessage.reaction) {
+                        1 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                        2 -> {
+                            reaction.setImageResource(R.drawable.rquest)
+                        }
+                        3 -> {
+                            reaction.setImageResource(R.drawable.rnelson)
+                        }
+                    }
+                } else {
+                    reactionBox.setVisibility(View.GONE)
+                }
+
             }
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder
                 holder.receiveMessage.text = currentMessage.message
+                if (currentMessage.edited!!) {
+                    holder.itemView.findViewById<TextView>(R.id.edited_indicator_r).visibility = VISIBLE
+                }
+                if (currentMessage.reply != null) {
+                    val rbox = holder.itemView.findViewById<RelativeLayout>(R.id.replyMessageR)
+                    val rtext = holder.itemView.findViewById<TextView>(R.id.repMessageR)
+
+                    rtext.text = currentMessage.reply
+                    rbox.setVisibility(View.VISIBLE)
+                }
                 val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBox)
                 if (currentMessage.reaction != null) {
                     reactionBox.setVisibility(View.VISIBLE)
@@ -140,7 +175,8 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
             when (holder.javaClass) {
                 ReceiveViewHolder::class.java -> {
                     val viewHolder = holder as ReceiveViewHolder
-                    val key = messageKeys[position]
+                    //val key = messageKeys[position]
+                    val key = currentMessage.messageId
                     val firstPopup = PopupMenu(context, holder.itemView)
                     firstPopup.inflate(R.menu.r_or_r)
                     firstPopup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
@@ -180,11 +216,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                         true
                     })
-                    firstPopup.show()
+                    if (!currentMessage.deleted!!) firstPopup.show()
                 }
                 SentViewHolder::class.java -> {
                     val viewHolder = holder as SentViewHolder
-                    val key = messageKeys[position]
+                    //val key = messageKeys[position]
+                    val key = currentMessage.messageId
                     val popup = PopupMenu(context, holder.itemView)
                     popup.inflate(R.menu.edit_or_del_msg)
                     popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
@@ -208,7 +245,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                         newMessage = editText.text.toString()
                                         Log.d("edit", viewHolder.itemId.toString())
                                         currentMessage.editMessage(newMessage, mDbRef, senderRoom, receiverRoom, key!!)
-                                        holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
+                                        //holder.itemView.findViewById<TextView>(R.id.edited_indicator).visibility = VISIBLE
+                                        mDbRef.child("chats").child(senderRoom!!).child("messages")
+                                            .child(key!!).child("edited").setValue(true).addOnSuccessListener {
+                                                mDbRef.child("chats").child(receiverRoom!!).child("messages")
+                                                    .child(key!!).child("edited").setValue(true)
+                                            }
                                         notifyDataSetChanged()
                                     }
                                     setNegativeButton("Cancel"){dialog, which ->

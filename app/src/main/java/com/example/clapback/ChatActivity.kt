@@ -20,6 +20,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -57,9 +61,9 @@ class ChatActivity : AppCompatActivity() {
         "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
     private val contentType = "application/json"
 
-    /*private val requestQueue: RequestQueue by lazy {
+    private val requestQueue: RequestQueue by lazy {
         Volley.newRequestQueue(this.applicationContext)
-    }*/
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -177,7 +181,7 @@ class ChatActivity : AppCompatActivity() {
 
                     }
                     messageAdapter.notifyDataSetChanged()
-                    notific()
+                    //notific()
                 }
 
 
@@ -211,9 +215,9 @@ class ChatActivity : AppCompatActivity() {
 
             replier.visibility = View.GONE
 
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject)
                 }
             messageBox.setText("")
@@ -229,7 +233,6 @@ class ChatActivity : AppCompatActivity() {
 
 
             //todo excuse me wat
-            FirebaseMessaging.getInstance().subscribeToTopic("/topics/Notification")
             val notification = JSONObject()
             val notifcationBody = JSONObject()
             val topic = "/topics/Notification"
@@ -290,9 +293,9 @@ class ChatActivity : AppCompatActivity() {
             store.putFile(data.data!!)
 
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
-            mDbRef.child("chats").child(senderRoom!!).child("messages").push()
+            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject).addOnSuccessListener {
                             Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
                         }
@@ -304,13 +307,13 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-    /*private fun sendNotification(notification: JSONObject) {
+    private fun sendNotification(notification: JSONObject) {
         val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
             Response.Listener<JSONObject> {
 
             },
             Response.ErrorListener {
-
+                Toast.makeText(this@ChatActivity, "Request error", Toast.LENGTH_LONG).show()
             }) {
 
             override fun getHeaders(): Map<String, String> {
@@ -321,5 +324,5 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         requestQueue.add(jsonObjectRequest)
-    }*/
+    }
 }

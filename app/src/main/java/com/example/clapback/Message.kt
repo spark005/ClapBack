@@ -11,20 +11,22 @@ open class Message {
     var reaction: Int? = null
     var reply: String? = null
     var deleted: Boolean? = null
+    var edited: Boolean? = null
 
     constructor(){}
 
     constructor(message: String?, senderId: String?, time: String?) {
         this.message = message
         this.senderId = senderId
-        this.messageId = senderId + time
+        this.messageId = time + senderId
         deleted = false;
+        edited = false;
     }
 
     constructor(image: Uri?, senderId: String?, time: String?) {
         this.image = image.toString()
         this.senderId = senderId
-        this.messageId = senderId + time
+        this.messageId = time + senderId
         deleted = false;
     }
 
