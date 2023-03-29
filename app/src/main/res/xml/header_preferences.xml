@@ -39,7 +39,6 @@
             app:key="@string/delete_header"
             app:title="Delete Account"
             app:selectable="true"
-            app:widgetLayout="@layout/delete_button"
             ></Preference>
     </PreferenceCategory>
 

@@ -19,6 +19,17 @@
             android:text="This is receive message"
             android:padding="10dp"
             android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/edited_indicator_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_received_message"
+            android:layout_alignLeft="@id/txt_received_message"
+            android:text="(edited)"
+            android:paddingLeft="20dp"
+            android:visibility="gone"
+            android:textSize="10dp" />
     </RelativeLayout>
 
     <RelativeLayout

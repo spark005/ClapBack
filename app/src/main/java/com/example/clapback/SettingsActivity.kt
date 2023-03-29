@@ -11,7 +11,6 @@ import android.content.DialogInterface
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import com.example.clapback.R.layout.delete_button
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
