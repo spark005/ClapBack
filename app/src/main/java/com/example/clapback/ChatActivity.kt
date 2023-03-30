@@ -248,10 +248,10 @@ class ChatActivity : AppCompatActivity() {
             notificationManager.notify(1234, builder.build())*/
 
 
-            //todo excuse me wat
+            
             val notification = JSONObject()
             val notifcationBody = JSONObject()
-            val topic = "/topics/Notification"
+            val topic = "/topics/" + receiverUID
 
             try {
                 notifcationBody.put("title", "Enter_title")

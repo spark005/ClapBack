@@ -18,6 +18,8 @@ class User {
 
     var streak: Int? = 1
     var notifications: Boolean? = true
+    var messNotifs: Boolean? = true
+    var frNotifs: Boolean? = true
     var friendlist = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()
 
