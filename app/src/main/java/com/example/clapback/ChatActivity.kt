@@ -248,21 +248,32 @@ class ChatActivity : AppCompatActivity() {
             notificationManager.notify(1234, builder.build())*/
 
 
-            
-            val notification = JSONObject()
-            val notifcationBody = JSONObject()
-            val topic = "/topics/" + receiverUID
+            mDbRef.child("user").child(receiverUID.toString()).get().addOnSuccessListener{
+                val foundFriend = it.getValue(User::class.java)
 
-            try {
-                notifcationBody.put("title", "Enter_title")
-                notifcationBody.put("message", message)   //Enter your notification message
-                notification.put("to", topic)
-                notification.put("data", notifcationBody)
-            } catch (e: JSONException) {
+                //this if statement is just to assure the ide that yes, found friend exists
+                if (!(foundFriend == null)) {
+                    if (foundFriend.notifications!! && foundFriend.messNotifs!!) {
+                        val notification = JSONObject()
+                        val notifcationBody = JSONObject()
+                        val topic = "/topics/" + receiverUID
 
+                        try {
+                            notifcationBody.put("title", "Enter_title")
+                            notifcationBody.put(
+                                "message",
+                                message
+                            )   //Enter your notification message
+                            notification.put("to", topic)
+                            notification.put("data", notifcationBody)
+                        } catch (e: JSONException) {
+
+                        }
+
+                        sendNotification(notification)
+                    }
+                }
             }
-
-            sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {

@@ -220,7 +220,7 @@ class FriendRequest : AppCompatActivity() {
                 currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
                     .setValue(currentUser.friendRequests)}
 
-                if (foundFriend.notifications!!) {
+                if (foundFriend.notifications!! && foundFriend.frNotifs!!) {
                     val topic = "/topics/" + foundFriend.uid.toString()
 
                     val notification = JSONObject()
