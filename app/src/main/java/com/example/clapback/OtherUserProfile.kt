@@ -137,10 +137,19 @@ class OtherUserProfile: AppCompatActivity() {
                 .setCancelable(false)
                 .setPositiveButton("Remove") { dialog, id ->
                     // Delete selected note from database
+
                     otherUser.friendlist.remove(currentUserUid)
                     currentUser.friendlist.remove(otherUserUid)
+                    mDbRef.child("user").child(currentUserUid).child("friendlist").setValue(currentUser.friendlist)
+                    mDbRef.child("user").child(otherUserUid).child("friendlist").setValue(otherUser.friendlist)
+                    mDbRef.child("chats").child(currentUserUid + otherUserUid).removeValue()
+                    mDbRef.child("chats").child(otherUserUid + currentUserUid).removeValue()
+
+                    Log.d("Remove F", "$currentUserUid removing $otherUserUid")
+                    val intent = Intent(this, MainActivity::class.java)
                     finish()
-                    TODO("This doesnt work i think lol")
+                    startActivity(intent)
+                    //TODO("This doesnt work i think lol")
                 }
                 .setNegativeButton("Cancel") { dialog, id ->
                     // Dismiss the dialog
