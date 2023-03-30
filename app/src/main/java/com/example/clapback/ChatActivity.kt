@@ -282,7 +282,7 @@ class ChatActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && data != null && data.data != null) {
-
+            mDbRef = FirebaseDatabase.getInstance().getReference()
             val timestamp:String? = System.currentTimeMillis().toString()
             val contentResolver = applicationContext.contentResolver
             val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
