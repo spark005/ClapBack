@@ -86,7 +86,7 @@
         android:layout_below="@id/sentMessage"
         android:layout_toRightOf="@id/sentMessage"
         android:layout_alignStart="@id/sentMessage"
-        android:visibility="visible">
+        android:visibility="gone">
         <TextView
             android:id="@+id/seen"
             android:layout_width="wrap_content"
