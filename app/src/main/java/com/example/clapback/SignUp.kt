@@ -115,7 +115,8 @@ class SignUp : AppCompatActivity() {
         // Initializing empty friendlist and request list to save into database
         val friendlist = ArrayList<String>()
         val friendRequests = ArrayList<FriendR>()
+        val blockedUsers = ArrayList<String>()
         //friendlist.add("bitneqvCvdOl4fVxGmI4KIih6I43")
-        mDbRef.child("user").child(uid).setValue(User(name, email, uid, friendlist, friendRequests))
+        mDbRef.child("user").child(uid).setValue(User(name, email, uid, friendlist, friendRequests, blockedUsers))
     }
 }

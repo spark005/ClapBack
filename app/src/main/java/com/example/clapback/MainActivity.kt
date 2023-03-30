@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
                         val traversedUser = postSnapshot.getValue(User::class.java)
 
-                        if(currentUser.uid == "BjhDxngcjdgpGA5CCzvE7Gdp35q2" && traversedUser?.uid != "BjhDxngcjdgpGA5CCzvE7Gdp35q2") {
+                        if (currentUser.uid == "BjhDxngcjdgpGA5CCzvE7Gdp35q2" && traversedUser?.uid != "BjhDxngcjdgpGA5CCzvE7Gdp35q2") {
                             userList.add(traversedUser!!)
                         } else if (currentUser.uid != traversedUser?.uid
                             && currentUser.friendlist.contains(traversedUser?.uid)) {

@@ -109,29 +109,29 @@ class EditMainProfile : AppCompatActivity() {
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                 val currentUser = it.getValue(User::class.java)
 
-                username.setHint(currentUser?.name).toString()
+                username.setText(currentUser?.name).toString()
 
 
                 if (!currentUser?.bio.equals("")) {
-                    bio.setHint(currentUser?.bio).toString()
+                    bio.setText(currentUser?.bio).toString()
                 } else {
                     bio.setHint("Current Bio").toString()
                 }
 
                 if (!currentUser?.fmovie.equals("")) {
-                    fmovie.setHint(currentUser?.fmovie).toString()
+                    fmovie.setText(currentUser?.fmovie).toString()
                 } else {
                     fmovie.setHint("**Favorite Movie**").toString()
                 }
 
                 if (!currentUser?.fmusic.equals("")) {
-                    fmusic.setHint(currentUser?.fmusic).toString()
+                    fmusic.setText(currentUser?.fmusic).toString()
                 } else {
                     fmusic.setHint("**Favorite Song**").toString()
                 }
 
                 if (!currentUser?.fbook.equals("")) {
-                    fbook.setHint(currentUser?.fbook).toString()
+                    fbook.setText(currentUser?.fbook).toString()
                 } else {
                     fbook.setHint("**Favorite Book**").toString()
                 }
