@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import java.time.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +15,7 @@ import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +23,12 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
+import java.time.*
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -284,10 +282,16 @@ class ChatActivity : AppCompatActivity() {
 
         selectImageButton.setOnClickListener() {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            intent.type = "image/*"
+            intent.type = "*/*"
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.action = Intent.ACTION_OPEN_DOCUMENT
+            intent.putExtra(
+                Intent.EXTRA_MIME_TYPES,
+                arrayOf<String>("image/jpeg", "image/png", "video/mp4", "video/quicktime")
+            )
             getPic.launch(intent)
+
         }
 
         findViewById<ImageView>(R.id.cancelReply).setOnClickListener(){
