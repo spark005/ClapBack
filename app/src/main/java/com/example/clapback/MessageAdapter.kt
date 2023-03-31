@@ -132,15 +132,27 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
             ReceiveImgViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveImgViewHolder
                 val storage = FirebaseStorage.getInstance().reference.child("attachments/${currentMessage.messageId}")
-                val pic = File.createTempFile("attachment", "jpg")
-                storage.getFile(pic).addOnSuccessListener {
-                    val bitmap: Bitmap =
-                        modifyOrientation(
-                            BitmapFactory.decodeFile(pic.absolutePath),
-                            pic.absolutePath
-                        )
-                    holder.receiveImgMessage.setImageBitmap(bitmap)
+                if (currentMessage.image!!.contains("image")) {
+                    val pic = File.createTempFile("attachment", "jpg")
+                    storage.getFile(pic).addOnSuccessListener {
+                        val bitmap: Bitmap =
+                            modifyOrientation(
+                                BitmapFactory.decodeFile(pic.absolutePath),
+                                pic.absolutePath
+                            )
+                        holder.receiveImgMessage.setImageBitmap(bitmap)
+                    }
                 }
+                else if (currentMessage.image!!.contains("video")) {
+                    val storage = FirebaseStorage.getInstance().reference.child("attachments/${currentMessage.messageId}")
+                    storage.downloadUrl.addOnSuccessListener {
+                        holder.receiveImgMessage.visibility = GONE
+                        holder.receiveVidMessage.visibility = VISIBLE
+                        holder.receiveVidMessage.setVideoURI(it)
+                        holder.receiveVidMessage.start()
+                    }
+                }
+
 
 
                 //var uri = Uri.parse(currentMessage.image)
