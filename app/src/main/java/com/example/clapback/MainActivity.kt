@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
                     }
                     if (userList.isEmpty()) {
-                        Toast.makeText(applicationContext, "You need to add friends!!", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(applicationContext, "You need to add friends!!", Toast.LENGTH_SHORT).show()
                     }
                     adapter.notifyDataSetChanged()
                 }
