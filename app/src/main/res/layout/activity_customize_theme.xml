@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CustomizeTheme"
+    android:background="@drawable/gradient_layer">
+
+    <ImageView
+        android:id="@+id/backgroundpic"
+        android:layout_width="333dp"
+        android:layout_height="318dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        />
+
+    <Button
+        android:id="@+id/selectbackground"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:text="Pick a Pic"
+        android:layout_below="@+id/backgroundpic"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/btn_background"/>
+
+    <TextView
+        android:id="@+id/text_pick_color"
+        android:layout_below="@id/selectbackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:textSize="18sp"
+        android:text="Your picked color is:" />
+    <View
+        android:id="@+id/preview_selected_color"
+        android:layout_below="@id/text_pick_color"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/pick_color_button"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
+        android:text="Pick Color"
+        android:layout_gravity="center"
+        android:layout_below="@+id/preview_selected_color"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_background"/>
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="115dp"
+        android:layout_height="40dp"
+        android:text="Confirm"
+        android:layout_gravity="center"
+        android:layout_below="@+id/pick_color_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_background"/>
+</LinearLayout>
