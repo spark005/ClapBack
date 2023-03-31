@@ -37,7 +37,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var notificationToggle: Switch
+    private lateinit var notificationToggleall: Switch
+    private lateinit var notificationTogglem: Switch
+    private lateinit var notificationTogglefr: Switch
+
 
     // Username's set parameters on profile page
     private lateinit var userBio: TextView
@@ -131,21 +134,31 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
         with(builder) {
             setTitle("Notifications")
-            val dialogLayout = inflater.inflate(R.layout.notifications_switch, null)
-            notificationToggle = dialogLayout.findViewById<Switch>(R.id.toggle_notifications)
+            val dialogLayoutall = inflater.inflate(R.layout.notifications_switch, null)
+            notificationToggleall = dialogLayoutall.findViewById<Switch>(R.id.toggle_notifications)
+
+            notificationTogglem = dialogLayoutall.findViewById<Switch>(R.id.toggle_messnotifications)
+
+            notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.frqtoggle_notifications)
+
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                 val currentUser = it.getValue(User::class.java)
-                notificationToggle.isChecked = currentUser?.notifications!!
+                notificationToggleall.isChecked = currentUser?.notifications!!
+                notificationTogglem.isChecked = currentUser?.messNotifs!!
+                notificationTogglefr.isChecked = currentUser?.frNotifs!!
             }
-            setView(dialogLayout)
+            setView(dialogLayoutall)
             setPositiveButton("OK") { dialogInterface, i -> setNotifications(dialogInterface, i) }
             show()
         }
     }
 
     private fun setNotifications(dialogInterface: DialogInterface, i: Int) {
-        Log.d("Debug", notificationToggle.isChecked.toString())
-        mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggle.isChecked)
+        Log.d("Debug", notificationToggleall.isChecked.toString())
+        mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggleall.isChecked)
+        mDbRef.child("user").child(profileUid).child("messNotifs").setValue(notificationTogglem.isChecked)
+        mDbRef.child("user").child(profileUid).child("frNotifs").setValue(notificationTogglefr.isChecked)
+
     }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)

@@ -95,6 +95,16 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                     reactionBox.setVisibility(View.GONE)
                 }
 
+                val timeBox = holder.itemView.findViewById<RelativeLayout>(R.id.time)
+                if (currentMessage.time != null && position == (messageList.size - 1)) {
+                    val seen = holder.itemView.findViewById<TextView>(R.id.seen)
+                    seen.text = "Seen " + currentMessage.time
+
+                    timeBox.visibility = View.VISIBLE
+                } else {
+                    timeBox.visibility = View.GONE
+                }
+
             }
             ReceiveViewHolder::class.java -> {
                 val viewHolder = holder as ReceiveViewHolder

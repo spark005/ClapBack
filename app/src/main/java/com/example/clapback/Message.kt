@@ -12,6 +12,7 @@ open class Message {
     var reply: String? = null
     var deleted: Boolean? = null
     var edited: Boolean? = null
+    var time: String? = null
 
     constructor(){}
 
@@ -40,6 +41,16 @@ open class Message {
             .setValue(this.reaction).addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reaction")
                     .setValue(this.reaction)
+            }
+    }
+
+    fun setTime(time: String, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+        this.time = time
+
+        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("time")
+            .setValue(this.time).addOnSuccessListener {
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("time")
+                    .setValue(this.time)
             }
     }
 
