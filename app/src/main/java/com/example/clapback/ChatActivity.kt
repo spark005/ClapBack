@@ -294,7 +294,7 @@ class ChatActivity : BaseActivity() {
                         val topic = "/topics/" + receiverUID
 
                         try {
-                            notifcationBody.put("title", "Enter_title")
+                            notifcationBody.put("title", "Message Received")
                             notifcationBody.put(
                                 "message",
                                 message
