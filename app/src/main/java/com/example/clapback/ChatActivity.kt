@@ -187,14 +187,20 @@ class ChatActivity : AppCompatActivity() {
 
 
                     }
+                    if (messageList.size != 0) {
+                        if (!(messageList[messageList.size - 1].senderId.equals(currentUserUid)) && messageList[messageList.size - 1].time == null) {
+                            val sdf = SimpleDateFormat("hh:mm")
+                            val time = sdf.format(Date())
 
-                    if(!(messageList[messageList.size - 1].senderId.equals(currentUserUid)) && messageList[messageList.size - 1].time == null) {
-                        val sdf = SimpleDateFormat("hh:mm")
-                        val time = sdf.format(Date())
-
-                        messageList[messageList.size - 1].setTime(time, mDbRef, senderRoom, receiverRoom, messageKeys[messageKeys.size - 1].toString())
+                            messageList[messageList.size - 1].setTime(
+                                time,
+                                mDbRef,
+                                senderRoom,
+                                receiverRoom,
+                                messageKeys[messageKeys.size - 1].toString()
+                            )
+                        }
                     }
-
                     messageAdapter.notifyDataSetChanged()
 
                     //notific()
