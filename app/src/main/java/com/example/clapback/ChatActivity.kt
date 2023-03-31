@@ -366,10 +366,11 @@ class ChatActivity : BaseActivity() {
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject).addOnSuccessListener {
-                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
+                            //TODO THE IMAGE TO VIDEO IS JUST FOR SPRINT 2
+                            Toast.makeText(this@ChatActivity, "Video sent", Toast.LENGTH_SHORT).show()
                         }
                         .addOnFailureListener {
-                            Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ChatActivity, "Video not sent", Toast.LENGTH_SHORT).show()
                         }
                 }
         }
