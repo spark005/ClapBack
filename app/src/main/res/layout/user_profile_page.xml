@@ -110,9 +110,9 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <!--android:onClick="notificationsPopup"-->
             <androidx.cardview.widget.CardView
                 android:id="@+id/notifications"
-                android:onClick="notificationsPopup"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -135,7 +135,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Notifications"
+                        android:text="Sponsored by Taco Bell"
                         android:textAlignment="center"
                         android:layout_gravity="center"/>
 
