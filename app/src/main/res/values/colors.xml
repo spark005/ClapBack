@@ -12,4 +12,7 @@
     <color name="salmon">#D59F9D</color>
     <color name="grey">#d6d7d7</color>
     <color name='link'>#0000EE</color>
+    <color name="colorPrimarySecond">#D5B4B4</color>
+    <color name="colorPrimaryDarkSecond">#867070</color>
+    <color name="colorAccentSecond">#F5EBEB</color>
 </resources>
