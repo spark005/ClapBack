@@ -38,10 +38,21 @@
         android:textColor="@color/white" />
 
     <Button
-        android:id="@+id/delete_account_button"
+        android:id="@+id/notifies"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/change_email_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/btn_background"
+        android:text="NOTIFICATIONS"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/delete_account_button"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notifies"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/btn_background"

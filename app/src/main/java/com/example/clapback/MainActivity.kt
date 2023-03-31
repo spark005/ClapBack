@@ -37,8 +37,6 @@ class MainActivity : BaseActivity(), OnSwipeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseMessaging.getInstance().subscribeToTopic("/topics/Notification")
-
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
@@ -52,6 +50,7 @@ class MainActivity : BaseActivity(), OnSwipeListener {
         userRecyclerView.adapter = adapter
 
         val currentUserUID = mAuth.currentUser?.uid
+        FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + currentUserUID)
 
         mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
             currentUser = it.getValue(User::class.java)!!

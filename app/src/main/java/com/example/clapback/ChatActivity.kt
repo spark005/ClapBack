@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import java.time.*
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -28,11 +30,20 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 import java.io.File
 import java.net.URI
 import java.time.*
@@ -207,7 +218,22 @@ class ChatActivity : BaseActivity() {
 
 
                     }
+                    if (messageList.size != 0) {
+                        if (!(messageList[messageList.size - 1].senderId.equals(currentUserUid)) && messageList[messageList.size - 1].time == null) {
+                            val sdf = SimpleDateFormat("hh:mm")
+                            val time = sdf.format(Date())
+
+                            messageList[messageList.size - 1].setTime(
+                                time,
+                                mDbRef,
+                                senderRoom,
+                                receiverRoom,
+                                messageKeys[messageKeys.size - 1].toString()
+                            )
+                        }
+                    }
                     messageAdapter.notifyDataSetChanged()
+
                     //notific()
                 }
 
@@ -259,21 +285,32 @@ class ChatActivity : BaseActivity() {
             notificationManager.notify(1234, builder.build())*/
 
 
-            //todo excuse me wat
-            val notification = JSONObject()
-            val notifcationBody = JSONObject()
-            val topic = "/topics/Notification"
+            mDbRef.child("user").child(receiverUID.toString()).get().addOnSuccessListener{
+                val foundFriend = it.getValue(User::class.java)
 
-            try {
-                notifcationBody.put("title", "Enter_title")
-                notifcationBody.put("message", message)   //Enter your notification message
-                notification.put("to", topic)
-                notification.put("data", notifcationBody)
-            } catch (e: JSONException) {
+                //this if statement is just to assure the ide that yes, found friend exists
+                if (!(foundFriend == null)) {
+                    if (foundFriend.notifications!! && foundFriend.messNotifs!!) {
+                        val notification = JSONObject()
+                        val notifcationBody = JSONObject()
+                        val topic = "/topics/" + receiverUID
 
+                        try {
+                            notifcationBody.put("title", "Enter_title")
+                            notifcationBody.put(
+                                "message",
+                                message
+                            )   //Enter your notification message
+                            notification.put("to", topic)
+                            notification.put("data", notifcationBody)
+                        } catch (e: JSONException) {
+
+                        }
+
+                        sendNotification(notification)
+                    }
+                }
             }
-
-            //sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {
@@ -321,14 +358,11 @@ class ChatActivity : BaseActivity() {
             store.putFile(data.data!!)
 
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
-            mDbRef.child("chats").child(senderRoom!!).child("messages")
-                .child(messageObject.messageId!!)
+            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages")
-                        .child(messageObject.messageId!!)
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject).addOnSuccessListener {
-                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
                         }
                         .addOnFailureListener {
                             Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()
