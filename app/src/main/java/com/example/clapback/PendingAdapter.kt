@@ -32,6 +32,7 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
         val textName = itemView.findViewById<TextView>(R.id.user_name)
         val acceptBtn = itemView.findViewById<Button>(R.id.accept)
         val declineBtn = itemView.findViewById<Button>(R.id.decline)
+        val blockBtn = itemView.findViewById<Button>(R.id.block)
         val cancelRequest = itemView.findViewById<Button>(R.id.cancel_request)
     }
 
@@ -69,6 +70,7 @@ class PendingAdapter(val context: Context, var pendingList: ArrayList<User>):
     private fun removeBtns(holder: PendingViewHolder){
         holder.acceptBtn.visibility = INVISIBLE
         holder.declineBtn.visibility = INVISIBLE
+        holder.blockBtn.visibility = INVISIBLE
     }
 
     private fun deleteRequests(user: User) {

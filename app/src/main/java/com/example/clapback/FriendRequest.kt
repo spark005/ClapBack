@@ -168,7 +168,6 @@ class FriendRequest : AppCompatActivity() {
 
                         if (foundFriend?.email.equals(searchedEmail)) {
                             searchUID = foundFriend!!.uid.toString()
-
                             sendRequest(searchUID)
                             break
                         }
@@ -199,6 +198,12 @@ class FriendRequest : AppCompatActivity() {
             if (foundFriend == null) {
 
                 Toast.makeText(this, "**BIG ERROR HERE FIX**", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
+
+            // Request not sent if the user blocked the sender
+            if (foundFriend.blockedUsers.contains(currentUser.uid)) {
+                Toast.makeText(this, "You were blocked by this user, request not sent", Toast.LENGTH_LONG).show()
                 return@addOnSuccessListener
             }
 

@@ -21,18 +21,20 @@ class User {
     var messNotifs: Boolean? = true
     var frNotifs: Boolean? = true
     var friendlist = ArrayList<String>()
+    var blockedUsers = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()
 
     constructor(){}
 
     constructor(name: String?, email: String?, uid: String?, friendlist: ArrayList<String> ,
-                friendRequests: ArrayList<FriendR>) {
+                friendRequests: ArrayList<FriendR>, blockedUsers: ArrayList<String>) {
         this.name = name
         this.originalName = name
         this.email = email
         this.uid = uid
         this.friendlist = friendlist
         this.friendRequests = friendRequests
+        this.blockedUsers = blockedUsers
     }
 
     override fun toString(): String {

@@ -22,7 +22,7 @@ import java.util.*
 
 class Login : AppCompatActivity() {
 
-    //TODO, figure out what lateinit var means in kotlin
+
     //Lateinit allows us to initialize a non-null variable outside constructor
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
