@@ -31,6 +31,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 private const val RC_SELECT_IMAGE = 2
 class ChatActivity : AppCompatActivity() {
@@ -180,7 +187,22 @@ class ChatActivity : AppCompatActivity() {
 
 
                     }
+                    if (messageList.size != 0) {
+                        if (!(messageList[messageList.size - 1].senderId.equals(currentUserUid)) && messageList[messageList.size - 1].time == null) {
+                            val sdf = SimpleDateFormat("hh:mm")
+                            val time = sdf.format(Date())
+
+                            messageList[messageList.size - 1].setTime(
+                                time,
+                                mDbRef,
+                                senderRoom,
+                                receiverRoom,
+                                messageKeys[messageKeys.size - 1].toString()
+                            )
+                        }
+                    }
                     messageAdapter.notifyDataSetChanged()
+
                     //notific()
                 }
 
@@ -232,21 +254,32 @@ class ChatActivity : AppCompatActivity() {
             notificationManager.notify(1234, builder.build())*/
 
 
-            //todo excuse me wat
-            val notification = JSONObject()
-            val notifcationBody = JSONObject()
-            val topic = "/topics/Notification"
+            mDbRef.child("user").child(receiverUID.toString()).get().addOnSuccessListener{
+                val foundFriend = it.getValue(User::class.java)
 
-            try {
-                notifcationBody.put("title", "Enter_title")
-                notifcationBody.put("message", message)   //Enter your notification message
-                notification.put("to", topic)
-                notification.put("data", notifcationBody)
-            } catch (e: JSONException) {
+                //this if statement is just to assure the ide that yes, found friend exists
+                if (!(foundFriend == null)) {
+                    if (foundFriend.notifications!! && foundFriend.messNotifs!!) {
+                        val notification = JSONObject()
+                        val notifcationBody = JSONObject()
+                        val topic = "/topics/" + receiverUID
 
+                        try {
+                            notifcationBody.put("title", "Enter_title")
+                            notifcationBody.put(
+                                "message",
+                                message
+                            )   //Enter your notification message
+                            notification.put("to", topic)
+                            notification.put("data", notifcationBody)
+                        } catch (e: JSONException) {
+
+                        }
+
+                        sendNotification(notification)
+                    }
+                }
             }
-
-            //sendNotification(notification)
         }
 
         selectImageButton.setOnClickListener() {

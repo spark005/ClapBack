@@ -1,22 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:padding="15dp"
-        android:text="Notifications"
-        android:layout_weight="1"/>
+    <LinearLayout
+        android:id="@+id/masternotif"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:padding="15dp"
+            android:text="All Notifications"
+            android:layout_weight="1"/>
 
-    <Switch
-        android:id="@+id/toggle_notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"/>
+        <Switch
+            android:id="@+id/toggle_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/messagenots"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/masternotif">
+
+        <TextView
+            android:id="@+id/messatitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:padding="15dp"
+            android:text="Messages"
+            android:layout_weight="1"/>
+
+        <Switch
+            android:id="@+id/toggle_messnotifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/frnots"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/messagenots">
+
+        <TextView
+            android:id="@+id/frqtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:padding="15dp"
+            android:text="Friend Requests"
+            android:layout_weight="1"/>
+
+        <Switch
+            android:id="@+id/frqtoggle_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"/>
+    </LinearLayout>
+</RelativeLayout>
+
