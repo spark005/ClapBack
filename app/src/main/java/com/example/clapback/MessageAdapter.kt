@@ -162,12 +162,30 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         )
                     holder.sentImgMessage.setImageBitmap(bitmap)
                 }*/
-                var uri = Uri.parse(currentMessage.image)
-                try {
-                    holder.sentImgMessage.setImageURI(uri)
-                } catch (e : java.lang.Exception) {
-                    holder.sentImgMessage.setImageResource(R.drawable.select_image)
+                val uri = Uri.parse(currentMessage.image)
+                if (currentMessage.image!!.contains("image")) {
+                    Log.d("Message Attachment", "Image")
+                    try {
+                        holder.sentImgMessage.setImageURI(uri)
+                        Log.d("Image Attachment", "Decoded $uri")
+                    } catch (e: java.lang.Exception) {
+                        holder.sentImgMessage.setImageResource(R.drawable.select_image)
+                        Log.d("Image Attachment", "Not")
+                    }
                 }
+                else if (currentMessage.image!!.contains("video")) {
+                    Log.d("Message Attachment", "Video")
+                    holder.sentImgMessage.visibility = GONE
+                    holder.sentVidMessage.visibility = VISIBLE
+                    try {
+                        holder.sentVidMessage.setVideoURI(uri)
+                        holder.sentVidMessage.start()
+                        Log.d("Video Attachment", "setting to $uri and " + holder.sentVidMessage.isPlaying)
+                    } catch (e: java.lang.Exception) {
+                        Log.d("Video Attachment", "it didn't")
+                    }
+                }
+
             }
         }
 
@@ -350,9 +368,10 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
     class SentImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sentImgMessage = itemView.findViewById<ImageView>(R.id.sent_image)
+        val sentVidMessage = itemView.findViewById<VideoView>(R.id.sent_video)
     }
     class ReceiveImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveImgMessage = itemView.findViewById<ImageView>(R.id.received_image)
-
+        val receiveVidMessage = itemView.findViewById<VideoView>(R.id.received_video)
     }
 }

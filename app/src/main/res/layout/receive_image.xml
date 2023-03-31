@@ -11,9 +11,23 @@
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:padding="10dp"
         android:adjustViewBounds="true"
         android:maxWidth="250dp"
         android:src="@drawable/select_image"/>
+
+    <VideoView
+        android:id="@+id/received_video"
+        android:background="@drawable/edit_background"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:adjustViewBounds="true"
+        android:maxWidth="250dp" />
 
 </RelativeLayout>
