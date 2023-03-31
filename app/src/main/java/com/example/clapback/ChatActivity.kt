@@ -5,11 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_OPEN_DOCUMENT
+import android.database.Cursor
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import java.time.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,23 +21,27 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.File
+import java.net.URI
+import java.time.*
+
 
 private const val RC_SELECT_IMAGE = 2
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity() {
 
+    private lateinit var chatLayout: RelativeLayout
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sendButton: ImageView
@@ -45,12 +52,15 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
     private lateinit var selectImageButton: ImageView
+    private lateinit var background: ImageView
     private lateinit var image: Uri
+    private lateinit var backgroundImage: Uri
     private lateinit var typingIndicator: View
     private lateinit var typingText: TextView
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
+    var backgroundPic: String? = null
 
     val CHANNEL_ID = "MESSAGE"
     val name = "Hidden Messages"
@@ -65,8 +75,25 @@ class ChatActivity : AppCompatActivity() {
         Volley.newRequestQueue(this.applicationContext)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!isCustom()) {
+            setTheme()
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+        chatLayout = findViewById(R.id.chat_layout)
+        background = findViewById(R.id.background)
+        if (isCustom()) {
+            backgroundPic = PreferenceManager.getDefaultSharedPreferences(this).getString("Background", null)
+            if (backgroundPic != null) {
+                backgroundImage = Uri.parse(backgroundPic)
+                background.setImageURI(backgroundImage)
+            }
+            val color = PreferenceManager.getDefaultSharedPreferences(this).getInt("Color", 0)
+            supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+        } else {
+            chatLayout.setBackgroundColor(getResources().getColor(getColor()))
+        }
 
         var mDbRef = FirebaseDatabase.getInstance().getReference()
 
@@ -263,6 +290,7 @@ class ChatActivity : AppCompatActivity() {
 
 
     }
+
     private fun addTypingIndicator() {
             runOnUiThread {
                 typingIndicator.visibility = View.VISIBLE
@@ -283,7 +311,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (resultCode == RESULT_OK && data != null && data.data != null) {
             mDbRef = FirebaseDatabase.getInstance().getReference()
-            val timestamp:String? = System.currentTimeMillis().toString()
+            val timestamp: String? = System.currentTimeMillis().toString()
             val contentResolver = applicationContext.contentResolver
             val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
             contentResolver.takePersistableUriPermission(data.data!!, takeFlags)
@@ -293,11 +321,14 @@ class ChatActivity : AppCompatActivity() {
             store.putFile(data.data!!)
 
             Toast.makeText(this@ChatActivity, "Sending...", Toast.LENGTH_SHORT).show()
-            mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObject.messageId!!)
+            mDbRef.child("chats").child(senderRoom!!).child("messages")
+                .child(messageObject.messageId!!)
                 .setValue(messageObject).addOnSuccessListener {
-                    mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
+                    mDbRef.child("chats").child(receiverRoom!!).child("messages")
+                        .child(messageObject.messageId!!)
                         .setValue(messageObject).addOnSuccessListener {
-                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_SHORT)
+                                .show()
                         }
                         .addOnFailureListener {
                             Toast.makeText(this@ChatActivity, "Image not sent", Toast.LENGTH_SHORT).show()

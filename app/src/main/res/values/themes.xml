@@ -14,6 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.Second" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimarySecond</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkSecond</item>
+        <item name="colorAccent">@color/colorAccentSecond</item>
+    </style>
+
     <style name="Theme.ClapBack.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
