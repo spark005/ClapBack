@@ -52,6 +52,8 @@ class Time : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val new_streak = snapshot.getValue(Integer::class.java)
                 streak.text = String.format("Streak: %d", new_streak)
+
+                //Set progress bar status to streaks
                 progressStatus = new_streak!!.toInt()
             }
 
@@ -84,16 +86,20 @@ class Time : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //whats a handler? who knows
+        //This is used to show the streak progress bar
         handler = Handler(Handler.Callback {
 
             progressBarHorizontal.progress = progressStatus
             textViewHorizontalProgress.text = "${progressStatus}/${progressBarHorizontal.max} till next reaction!"
+
+            //idk anything after this line
             handler?.sendEmptyMessageDelayed(0, 100)
 
             true
         })
-
         handler?.sendEmptyMessage(0)
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

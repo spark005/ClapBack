@@ -32,7 +32,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var settings: CardView
     private lateinit var bio: CardView
     private lateinit var requests: CardView
-    private lateinit var notifications: CardView
+    private lateinit var newReactions: CardView
     private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
@@ -62,7 +62,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         settings = findViewById(R.id.settings)
         bio = findViewById(R.id.bio)
         requests = findViewById(R.id.requests)
-        notifications = findViewById(R.id.notifications)
+        newReactions = findViewById(R.id.newReactions)
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
         edit = findViewById(R.id.edit)
         image = findViewById(R.id.profile_image)
@@ -126,40 +126,13 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             val intent = Intent(this, FriendRequest::class.java)
             startActivity(intent)
         }
-    }
 
-    fun notificationsPopup(view: View){
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-
-        with(builder) {
-            setTitle("Notifications")
-            val dialogLayoutall = inflater.inflate(R.layout.notifications_switch, null)
-            notificationToggleall = dialogLayoutall.findViewById<Switch>(R.id.toggle_notifications)
-
-            notificationTogglem = dialogLayoutall.findViewById<Switch>(R.id.toggle_messnotifications)
-
-            notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.frqtoggle_notifications)
-
-            mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
-                val currentUser = it.getValue(User::class.java)
-                notificationToggleall.isChecked = currentUser?.notifications!!
-                notificationTogglem.isChecked = currentUser?.messNotifs!!
-                notificationTogglefr.isChecked = currentUser?.frNotifs!!
-            }
-            setView(dialogLayoutall)
-            setPositiveButton("OK") { dialogInterface, i -> setNotifications(dialogInterface, i) }
-            show()
+        newReactions.setOnClickListener {
+            val intent = Intent(this, CustomReactions::class.java)
+            startActivity(intent)
         }
     }
 
-    private fun setNotifications(dialogInterface: DialogInterface, i: Int) {
-        Log.d("Debug", notificationToggleall.isChecked.toString())
-        mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggleall.isChecked)
-        mDbRef.child("user").child(profileUid).child("messNotifs").setValue(notificationTogglem.isChecked)
-        mDbRef.child("user").child(profileUid).child("frNotifs").setValue(notificationTogglefr.isChecked)
-
-    }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)

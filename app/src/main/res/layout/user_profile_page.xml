@@ -110,9 +110,8 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-            <!--android:onClick="notificationsPopup"-->
             <androidx.cardview.widget.CardView
-                android:id="@+id/notifications"
+                android:id="@+id/newReactions"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
