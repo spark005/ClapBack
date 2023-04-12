@@ -85,7 +85,7 @@ class RequestAdapter(val context: Context, var userList: ArrayList<User>):
             removeBtns(holder)
             holder.friendAccepted.visibility = VISIBLE
 
-            if (sender.notifications!!) {
+            if (sender.notifications!! && sender.frNotifs!!) {
                 val topic = "/topics/" + sender.uid.toString()
 
                 val notification = JSONObject()

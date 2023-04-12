@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +10,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.*
+import android.widget.Switch
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 
-class MainActivity : AppCompatActivity(), OnSwipeListener {
+class MainActivity : BaseActivity(), OnSwipeListener {
 
     private lateinit var userRecyclerView: RecyclerView
     lateinit var userList: ArrayList<User>
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
 
                     }
                     if (userList.isEmpty()) {
-                        Toast.makeText(applicationContext, "You need to add friends!!", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(applicationContext, "You need to add friends!!", Toast.LENGTH_SHORT).show()
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -173,6 +176,25 @@ class MainActivity : AppCompatActivity(), OnSwipeListener {
             finish()
             startActivity(intent)
             return true
+        }
+
+        if (item.itemId == R.id.themes) {
+            val items = arrayOf("Default Theme", "Warm Theme", "Customize")
+            val builder = AlertDialog.Builder(this)
+
+            with(builder) {
+                setTitle("Change Themes")
+                setItems(items) { dialog, which ->
+                    switchTheme(items[which])
+                    if (which == 2) {
+                        val intent = Intent(this@MainActivity, CustomizeTheme::class.java)
+                        finish()
+                        startActivity(intent)
+                    }
+                }
+
+                show()
+            }
         }
         return true
     }

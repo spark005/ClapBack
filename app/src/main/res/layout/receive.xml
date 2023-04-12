@@ -8,7 +8,7 @@
         android:id="@+id/rMessage"
         android:layout_below="@id/replyMessageR"
         android:layout_width="wrap_content"
-        android:background="@drawable/edit_background"
+        android:background="@drawable/btn_background_2"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_height="wrap_content">

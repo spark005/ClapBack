@@ -48,7 +48,7 @@ class Report: AppCompatActivity() {
                 Toast.makeText(this@Report, "Can't send empty report", Toast.LENGTH_SHORT).show()
             } else {
                 val timestamp: String? = System.currentTimeMillis().toString()
-                val message = reportTxt.text.toString()
+                val message = "Reported User's UID: " + otherUserUid + "\nReport: " + reportTxt.text.toString()
                 val messageObject = Message(message, senderUid, timestamp)
 
                 mDbRef.child("chats").child(senderRoom!!).child("messages").push()

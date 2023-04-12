@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 
 class OtherUserProfile: AppCompatActivity() {
@@ -131,19 +133,35 @@ class OtherUserProfile: AppCompatActivity() {
 
         removeFriend.setOnClickListener {
             val friendName = otherUser.name.toString()
-            var currentUser = User()
+            //var currentUser = User()
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Are you sure you want to remove $friendName as a friend?")
                 .setCancelable(false)
                 .setPositiveButton("Remove") { dialog, id ->
                     // Delete selected note from database
 
-                    otherUser.friendlist.remove(currentUserUid)
-                    currentUser.friendlist.remove(otherUserUid)
-                    mDbRef.child("user").child(currentUserUid).child("friendlist").setValue(currentUser.friendlist)
-                    mDbRef.child("user").child(otherUserUid).child("friendlist").setValue(otherUser.friendlist)
-                    mDbRef.child("chats").child(currentUserUid + otherUserUid).removeValue()
-                    mDbRef.child("chats").child(otherUserUid + currentUserUid).removeValue()
+                    // Current user deletion
+                    mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener {
+                        var currentUser = it.getValue(User::class.java)
+
+                        currentUser?.friendlist?.remove(otherUserUid)
+
+                        if (currentUser != null) {
+                            mDbRef.child("user").child(currentUserUid).child("friendlist").setValue(currentUser.friendlist)
+                        }
+
+                        mDbRef.child("chats").child(currentUserUid + otherUserUid).removeValue()
+                    }
+
+                    // Other user deletion
+                    mDbRef.child("user").child(otherUserUid).get().addOnSuccessListener {
+                        var otherUser = it.getValue(User::class.java)
+
+                        otherUser?.friendlist?.remove(currentUserUid)
+                        mDbRef.child("user").child(otherUserUid).child("friendlist")
+                            .setValue(otherUser?.friendlist)
+                        mDbRef.child("chats").child(otherUserUid + currentUserUid).removeValue()
+                    }
 
                     Log.d("Remove F", "$currentUserUid removing $otherUserUid")
                     val intent = Intent(this, MainActivity::class.java)
