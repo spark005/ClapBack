@@ -52,6 +52,8 @@ class MainActivity : BaseActivity(), OnSwipeListener {
         val currentUserUID = mAuth.currentUser?.uid
         FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + currentUserUID)
 
+
+        // Adding user's friends to chat/friend list
         mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
             currentUser = it.getValue(User::class.java)!!
 

@@ -152,7 +152,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/friends"
+                android:id="@+id/blocked_users"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -169,13 +169,13 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/friends"
+                        android:src="@drawable/xreply"
                         android:layout_gravity="center"
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friends"
+                        android:text="Blocked Users"
                         android:textAlignment="center"
                         android:layout_gravity="center"/>
 

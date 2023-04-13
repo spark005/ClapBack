@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_chat.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_customize_theme.xml" value="0.25" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_edit_profile.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_editmain_profile.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_forgot_password.xml" value="0.3625" />
@@ -12,6 +13,8 @@
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_main.xml" value="0.2798913043478261" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_profile_pic.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/activity_sign_up.xml" value="0.2798913043478261" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/blocked_user_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/blocked_user_list.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/delete_account.xml" value="0.264" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/otherusers_profile_page.xml" value="0.2586050724637681" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/receive.xml" value="0.23550724637681159" />
@@ -20,8 +23,8 @@
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/send_image.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/setting_layout.xml" value="0.264" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/settings_activity.xml" value="0.3625" />
-        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_layout.xml" value="0.1425925925925926" />
-        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_profile_page.xml" value="0.2586050724637681" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_layout.xml" value="0.264" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_profile_page.xml" value="0.6" />
       </map>
     </option>
   </component>
