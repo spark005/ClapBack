@@ -17,9 +17,20 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/btn_background"/>
 
+    <Button
+        android:id="@+id/saveButton"
+        android:visibility="gone"
+        android:layout_below="@id/exampleReact"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Save Reaction"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_background"/>
 
     <!-- Example message display box-->
     <RelativeLayout
+        android:id="@+id/exampleReact"
         android:layout_width="300dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/addButton"
