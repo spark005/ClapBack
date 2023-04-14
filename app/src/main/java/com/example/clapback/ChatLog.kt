@@ -1,42 +1,34 @@
 package com.example.clapback
 
-import android.app.Activity
-import android.app.DownloadManager
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.ColorDrawable
+import com.itextpdf.text.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.content.FileProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
+import com.itextpdf.text.Document
+import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfWriter
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.time.*
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ChatLog : BaseActivity() {
@@ -118,7 +110,7 @@ class ChatLog : BaseActivity() {
         val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
 
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 image = result.data?.data!!
             }
 
@@ -131,8 +123,95 @@ class ChatLog : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.chat_log_download -> {
+        when(item.itemId) {
+            R.id.chat_log_pdf -> {
+                val chatLog = StringBuilder()
+                val chatLogsRef = FirebaseDatabase.getInstance().getReference("chats/$senderRoom/messages")
+                chatLogsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val document = Document()
+                        val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+
+
+                        val fileName = "chat_log.pdf"
+                        var outputFile = File(downloadsFolder, fileName)
+
+                        var suffix = 1
+                        var newFileName = ""
+                        while (outputFile.exists()) {
+                            newFileName = "chat_log$suffix.pdf"
+                            outputFile = File(downloadsFolder, newFileName)
+                            suffix++
+                        }
+
+                        val outputStream = FileOutputStream(outputFile)
+
+                        // Create a PdfWriter to write to the output stream
+                        PdfWriter.getInstance(document, outputStream)
+
+                        // Open the document
+                        document.open()
+
+                        // Add chat log to the document
+                        //     document.add(Paragraph("Chat Log:\n"))
+
+                        // Add each message to the document
+                        var messagesProcessed = 0
+                        for (postSnapshot in snapshot.children) {
+                            val message = postSnapshot.getValue(Message::class.java)
+
+                            // Add message text to the document
+                            val sender = message?.senderId
+                            mDbRef.child("user").child(sender!!).child("name").addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                                    if (message?.image != null) {
+                                        // If message has an image, add it to the document
+                                        val bitmap = MediaStore.Images.Media.getBitmap(this@ChatLog.contentResolver, Uri.parse(message.image))
+                                        val stream = ByteArrayOutputStream()
+                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                                        val byteArray = stream.toByteArray()
+                                        val image = Image.getInstance(byteArray)
+
+                                        image.scaleToFit(50F, 50F)
+
+                                        document.add(Paragraph("${dataSnapshot.getValue(String::class.java)}: "))
+
+                                        document.add(image)
+                                    } else {
+                                        val name = dataSnapshot.getValue(String::class.java)
+                                        val newMessage = "$name: ${message?.message}\n"
+                                        val paragraph = Paragraph(newMessage)
+                                        document.add(paragraph)
+                                    }
+
+                                    // Increment the number of processed messages
+                                    messagesProcessed++
+
+                                    // Check if all messages have been processed
+                                    if (messagesProcessed == snapshot.childrenCount.toInt()) {
+                                        // Close the document after all messages have been added
+                                        document.close()
+                                        Toast.makeText(this@ChatLog, "Chat Log Downloaded", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    // handle error here
+                                }
+                            })
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle database error
+                    }
+                })
+
+                return true
+            }
+            R.id.chat_log_txt -> {
                 val chatLog = StringBuilder()
                 val chatLogsRef = FirebaseDatabase.getInstance().getReference("chats/$senderRoom/messages")
                 chatLogsRef.addValueEventListener(object : ValueEventListener {
@@ -149,7 +228,7 @@ class ChatLog : BaseActivity() {
                                     } else {
                                         newMessage = "$name: IMAGE\n"
                                     }
-                                  //  val newMessage = "$name: ${message?.message}\n"
+                                    //  val newMessage = "$name: ${message?.message}\n"
                                     chatLog.append(newMessage)
 
                                     // Check if this is the last message
@@ -168,7 +247,7 @@ class ChatLog : BaseActivity() {
 
                                         var suffix = 1
                                         while (outputFile.exists()) {
-                                            newFileName = "chat_log_$suffix.txt"
+                                            newFileName = "chat_log$suffix.txt"
                                             outputFile = File(downloadsFolder, newFileName)
                                             suffix++
                                         }
@@ -198,6 +277,7 @@ class ChatLog : BaseActivity() {
 
                 return true
             }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }

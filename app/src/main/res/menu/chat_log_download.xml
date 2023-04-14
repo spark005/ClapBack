@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/chat_log_download"
-        android:title="Download" />
+        android:id="@+id/chat_log_pdf"
+        android:title="Download pdf" />
+    <item
+        android:id="@+id/chat_log_txt"
+        android:title="Download txt" />
 </menu>
