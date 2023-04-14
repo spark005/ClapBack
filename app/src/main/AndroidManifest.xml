@@ -30,6 +30,8 @@
         <activity
             android:name=".Settings"/>
         <activity
+            android:name=".BlockedUsersPage"/>
+        <activity
             android:name=".DeleteAccount" />
         <activity
             android:name=".Time"
