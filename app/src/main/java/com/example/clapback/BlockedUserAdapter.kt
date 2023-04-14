@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -92,11 +93,26 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
 
         // When the user selects unblock user, the blocked user will be removed from the list
         holder.unblockBtn.setOnClickListener {
-            // Removing the blocked user from the removed user's list, and
-            // rewriting said data to Firebase
-            currentUser.friendlist.remove(blockedUser.uid)
-            currentUserUID.let { cuuid -> mDbRef.child("user").child(cuuid!!).child("blockedUsers")
-                .setValue(currentUser.friendRequests) }
+            val warning = AlertDialog.Builder(context)
+            warning.setTitle("Unblocking User")
+            warning.setMessage("Are you sure you want to unblock ${blockedUser.name}?")
+
+            // Warning popup if the user really wants to unblock user
+            warning.setPositiveButton("Yes") { dialog, which ->
+                // Removing the blocked user from the removed user's list, and
+                // rewriting said data to Firebase
+                currentUser.friendlist.remove(blockedUser.uid)
+                currentUserUID.let { cuuid ->
+                    mDbRef.child("user").child(cuuid!!).child("blockedUsers")
+                        .setValue(currentUser.friendRequests)
+                }
+            }
+
+            // Warning popup if no
+            warning.setNegativeButton("No") { dialog, which ->
+                return@setNegativeButton
+            }
+            warning.show()
         }
 
     }
