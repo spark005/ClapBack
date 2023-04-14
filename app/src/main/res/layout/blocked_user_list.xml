@@ -16,13 +16,13 @@
         android:src="@drawable/logo"
         android:text="Blocked Users"
         android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/userRecyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/userBRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userRecyclerView"
+        android:id="@+id/userBRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="550dp"
         android:layout_marginTop="60dp"
@@ -39,7 +39,7 @@
         android:id="@+id/back_button"
         android:layout_width="139dp"
         android:layout_height="70dp"
-        android:layout_below="@id/userRecyclerView"
+        android:layout_below="@id/userBRecyclerView"
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_background"
         android:text="GO BACK"
@@ -47,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/userBRecyclerView"
         app:layout_constraintVertical_bias="0.504" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

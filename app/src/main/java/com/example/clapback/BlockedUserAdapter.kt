@@ -18,40 +18,49 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 
 class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
-    RecyclerView.Adapter<BlockedUserAdapter.RequestViewHolder>() {
+    RecyclerView.Adapter<BlockedUserAdapter.BlockedUserViewHolder>() {
 
     lateinit var mAuth: FirebaseAuth
-    lateinit var mDbRef: DatabaseReference
     lateinit var currentUser: User
+    lateinit var mDbRef: DatabaseReference
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockedUserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.blocked_user_layout, parent, false)
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().getReference()
-        return RequestViewHolder(view)
+        return BlockedUserViewHolder(view)
     }
 
-
-    // Initializing unblock button and user image button
-    class RequestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class BlockedUserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val unblockBtn = itemView.findViewById<Button>(R.id.unblock_button)
-        val imageBtn = itemView.findViewById<ImageButton>(R.id.imageButton)
+        val image = itemView.findViewById<ImageButton>(R.id.imageButton)
+        val textName = itemView.findViewById<TextView>(R.id.txt_name)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BlockedUserViewHolder, position: Int) {
+
+        // Grabbing current user
+        mDbRef.child("user").child(mAuth.currentUser!!.uid).get().addOnSuccessListener {
+            currentUser = it.getValue(User::class.java)!!
+        }.addOnFailureListener {
+            Log.e("Error", "Couldn't find user")
+        }
 
         val blockedUser = userList[position]
-        val storage = FirebaseStorage.getInstance().reference.child("profilePic/${currentUser.uid}")
+        val storage = FirebaseStorage.getInstance().reference.child("profilePic/${blockedUser.uid}")
 
-        // Adding user profile pic next to their name
+        holder.textName.text = blockedUser.name
         val pic = File.createTempFile("profile", "jpg")
         storage.getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =
@@ -60,69 +69,28 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
                     pic.absolutePath
                 )
 
-            holder.imageBtn.setImageBitmap(bitmap)
+            holder.image.setImageBitmap(bitmap)
 
         }.addOnFailureListener{
-            holder.imageBtn.setImageResource(R.drawable.mongle)
+            holder.image.setImageResource(R.drawable.mongle)
         }
 
-        // When the user clicks an image, navigate to the selected user's profile
-        holder.imageBtn.setOnClickListener{
+        holder.image.setOnClickListener{
             val intent = Intent(context, OtherUserProfile::class.java)
             intent.putExtra("uid", blockedUser.uid)
-
             context.startActivity(intent)
         }
 
-        // Grabbing the current user
-        val currentUserUID = mAuth.currentUser?.uid
-        if (currentUserUID != null) {
-            mDbRef.child("user").child(currentUserUID).addValueEventListener(object:
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    currentUser = snapshot.getValue(User::class.java)!!
-                    Log.d("CURRENT USER", currentUser.toString())
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // commented out to_do("not yet implemented")
-                }
-
-            })
-        }
-
-        // When the user selects unblock user, the blocked user will be removed from the list
-        holder.unblockBtn.setOnClickListener {
-            val warning = AlertDialog.Builder(context)
-            warning.setTitle("Unblocking User")
-            warning.setMessage("Are you sure you want to unblock ${blockedUser.name}?")
-
-            // Warning popup if the user really wants to unblock user
-            warning.setPositiveButton("Yes") { dialog, which ->
-                // Removing the blocked user from the removed user's list, and
-                // rewriting said data to Firebase
-                currentUser.friendlist.remove(blockedUser.uid)
-                currentUserUID.let { cuuid ->
-                    mDbRef.child("user").child(cuuid!!).child("blockedUsers")
-                        .setValue(currentUser.friendRequests)
-                }
-            }
-
-            // Warning popup if no
-            warning.setNegativeButton("No") { dialog, which ->
-                return@setNegativeButton
-            }
-            warning.show()
-        }
+        // TODO implement this button, and make simplified profile page for user
+       holder.unblockBtn.setOnClickListener {
+           currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+               .setValue(currentUser.friendRequests) }
+       }
 
     }
 
     override fun getItemCount(): Int {
         return userList.size
-    }
-
-    class  UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image = itemView.findViewById<ImageButton>(R.id.imageButton)
     }
 
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
@@ -166,7 +134,6 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
         matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
     }
-
 
 
 }

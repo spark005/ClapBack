@@ -14,11 +14,11 @@ import com.google.firebase.database.*
 
 class BlockedUsersPage : BaseActivity(), OnSwipeListener {
 
-    private lateinit var userRecyclerView: RecyclerView
+    private lateinit var unblockRecyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
     private lateinit var currentUser: User
-    private lateinit var adapter: UserAdapter
+    private lateinit var adapter: BlockedUserAdapter
     private lateinit var detector: GestureDetectorCompat
     private lateinit var backButton: Button
     lateinit var blockedList: ArrayList<User>
@@ -34,11 +34,11 @@ class BlockedUsersPage : BaseActivity(), OnSwipeListener {
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
 
         blockedList = ArrayList()
-        adapter = UserAdapter(this, blockedList)
+        adapter = BlockedUserAdapter(this, blockedList)
 
-        userRecyclerView = findViewById(R.id.userRecyclerView)
-        userRecyclerView.layoutManager = LinearLayoutManager(this)
-        userRecyclerView.adapter = adapter
+        unblockRecyclerView = findViewById(R.id.userBRecyclerView)
+        unblockRecyclerView.layoutManager = LinearLayoutManager(this)
+        unblockRecyclerView.adapter = adapter
 
         // Initializing current user and userlist
         val currentUserUID = mAuth.currentUser?.uid
