@@ -43,7 +43,7 @@ class CustomReactions : AppCompatActivity() {
         add = findViewById(R.id.addButton)
         save = findViewById(R.id.saveButton)
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
-        storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
+        storage = FirebaseStorage.getInstance().reference.child("reactions/$profileUid")
 
         reactionList = ArrayList()
         crAdapter = CustomReactionAdapter(this, reactionList,storage)

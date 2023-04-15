@@ -51,7 +51,7 @@ class CustomReactionAdapter (val context: Context, var reactionList: ArrayList<S
     override fun onBindViewHolder(holder: CustomReactionAdapter.ReactionViewHolder, position: Int) {
         val reactorName = reactionList[position]
 
-        val pic = File.createTempFile("profile", "jpg")
+        val pic = File.createTempFile(reactorName, "jpg")
         storage.child(reactorName).getFile(pic).addOnSuccessListener {
             val bitmap: Bitmap =
                 modifyOrientation(
