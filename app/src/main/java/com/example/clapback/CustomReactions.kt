@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -14,8 +15,14 @@ import android.widget.RelativeLayout
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.tasks.await
 
 
 class CustomReactions : AppCompatActivity() {
@@ -24,6 +31,11 @@ class CustomReactions : AppCompatActivity() {
     private lateinit var save: Button
     private lateinit var newReaction: Uri
 
+    private lateinit var reactionList: ArrayList<String>
+    private lateinit var crAdapter: CustomReactionAdapter
+    private lateinit var myReactions: RecyclerView
+    lateinit var storage: StorageReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_reactions)
@@ -31,6 +43,15 @@ class CustomReactions : AppCompatActivity() {
         add = findViewById(R.id.addButton)
         save = findViewById(R.id.saveButton)
         val profileUid = FirebaseAuth.getInstance().currentUser?.uid
+        storage = FirebaseStorage.getInstance().reference.child("profilePic/$profileUid")
+
+        reactionList = ArrayList()
+        crAdapter = CustomReactionAdapter(this, reactionList,storage)
+
+        myReactions = findViewById(R.id.reactionRecyclerView)
+        myReactions.adapter = crAdapter
+
+        updateReactions()
 
         //FUNCTION FOR WHEN YOU SUCCESSFULLY GRAB AN IMAGE
         val getPic = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -84,6 +105,8 @@ class CustomReactions : AppCompatActivity() {
                     store.putFile(newReaction)
                     dialog.cancel()
                     save.visibility = View.GONE
+
+                    updateReactions()
                 }
             }
 
@@ -95,4 +118,20 @@ class CustomReactions : AppCompatActivity() {
         }
     }
 
+    //Used to updated the users reactions Recyclerview
+    private fun updateReactions() {
+        reactionList.clear()
+
+        //get all stored reactions and add them to the reactionList.
+        //Its not instantaneous so added an onComplete
+        storage.listAll().addOnCompleteListener {
+            for (react in it.getResult().items) {
+                reactionList.add(react.name)
+                crAdapter.notifyDataSetChanged()
+            }
+
+            crAdapter.notifyDataSetChanged()
+        }
+
+    }
 }

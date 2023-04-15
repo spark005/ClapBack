@@ -119,4 +119,14 @@
 
     </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/reactionRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_below="@id/exampleReact"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="458dp"
+        tools:listitem="@layout/activity_custom_reaction_adapter"/>
+
 </RelativeLayout>

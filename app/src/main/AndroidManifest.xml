@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack">
         <activity
+            android:name=".CustomReactionAdapter"
+            android:exported="false" />
+        <activity
             android:name=".CustomReactions"
             android:exported="false" />
 
