@@ -28,7 +28,7 @@ import java.io.File
 class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
     private lateinit var friends: CardView
-    private lateinit var chat: CardView
+    private lateinit var searchUsers: CardView
     private lateinit var settings: CardView
     private lateinit var bio: CardView
     private lateinit var requests: CardView
@@ -58,7 +58,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         supportActionBar?.hide()
 
         friends = findViewById(R.id.friends)
-        chat = findViewById(R.id.chat)
+        searchUsers = findViewById(R.id.search_users)
         settings = findViewById(R.id.settings)
         bio = findViewById(R.id.bio)
         requests = findViewById(R.id.requests)
@@ -124,6 +124,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
         requests.setOnClickListener {
             val intent = Intent(this, FriendRequest::class.java)
+            startActivity(intent)
+        }
+        searchUsers.setOnClickListener {
+            val intent = Intent(this, SearchOtherUsers::class.java)
             startActivity(intent)
         }
     }

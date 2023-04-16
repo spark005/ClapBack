@@ -79,7 +79,13 @@
             android:name=".WalkThrough"
             android:exported="false" />
         <activity
+            android:name=".OtherUserProfileNotFriend"
+            android:exported="true" />
+        <activity
             android:name=".FriendRequest"
+            android:exported="true" />
+        <activity
+            android:name=".SearchOtherUsers"
             android:exported="true" />
         <activity
             android:name=".OtherUserProfile"
