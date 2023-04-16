@@ -1,6 +1,7 @@
 package com.example.clapback
 
 import android.app.Notification
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.TextUtils
@@ -16,6 +17,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONException
@@ -148,13 +150,21 @@ class FriendRequest : AppCompatActivity() {
         // Allows user to send friend request
         sendRequestBtn.setOnClickListener {
 
+                //auto fill the usernameField from otheruserprofilenotfriend or searchotherusers
+                var searchedEmail = ""
+                if (intent.getStringExtra("OtherUserProfileNotFriend_email") != null) {
+                    searchedEmail = intent.getStringExtra("OtherUserProfileNotFriend_email")!!
+                } else {
+                    searchedEmail = usernameField.text.toString()
+                }
+
             // Error checking for no user entered
-            if (usernameField.text.toString().equals("")) {
+            if (usernameField.text.toString().equals("") && searchedEmail.equals("")) {
                 Toast.makeText(this, "Nothing Entered In Name Field", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val searchedEmail = usernameField.text.toString()
+        //    val searchedEmail = usernameField.text.toString()
             usernameField.text.clear()
             var searchUID = "Nothing"
 
@@ -168,7 +178,7 @@ class FriendRequest : AppCompatActivity() {
 
                         if (foundFriend?.email.equals(searchedEmail)) {
                             searchUID = foundFriend!!.uid.toString()
-                            sendRequest(searchUID)
+                            sendRequest(searchUID, mDbRef, currentUser)
                             break
                         }
 
@@ -185,11 +195,17 @@ class FriendRequest : AppCompatActivity() {
                     TODO("Not yet implemented")
                 }
             })
+
+            if (intent.getStringExtra("OtherUserProfileNotFriend_email") != null) {
+                val intent = Intent(this, SearchOtherUsers::class.java)
+                startActivity(intent)
+            }
         }
     }
 
     // Sends friend request to user and saves requests in database for both sender and recipient
-    fun sendRequest(searchUID: String) {
+    fun sendRequest(searchUID: String, mDbRef: DatabaseReference, currentUser: User) {
+      //  this.mDbRef = mDbRef
         mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
             val foundFriend = it.getValue(User::class.java)
 
