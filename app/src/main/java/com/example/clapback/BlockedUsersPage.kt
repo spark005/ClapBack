@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.GestureDetector
@@ -35,7 +36,6 @@ class BlockedUsersPage : BaseActivity(), OnSwipeListener {
 
         blockedList = ArrayList()
         adapter = BlockedUserAdapter(this, blockedList)
-
         unblockRecyclerView = findViewById(R.id.userBRecyclerView)
         unblockRecyclerView.layoutManager = LinearLayoutManager(this)
         unblockRecyclerView.adapter = adapter
@@ -51,7 +51,6 @@ class BlockedUsersPage : BaseActivity(), OnSwipeListener {
             // Going into user node of realtime database
             mDbRef.child("user").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-
                     blockedList.clear()
                     for (postSnapshot in snapshot.children) {
 
@@ -62,6 +61,7 @@ class BlockedUsersPage : BaseActivity(), OnSwipeListener {
                             && currentUser.blockedUsers.contains(traversedUser?.uid)
                         ) {
                             blockedList.add(traversedUser!!)
+                            adapter.notifyDataSetChanged()
                         }
 
                     }

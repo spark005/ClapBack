@@ -48,6 +48,10 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
         val textName = itemView.findViewById<TextView>(R.id.txt_name)
     }
 
+    override fun getItemCount(): Int {
+        return userList.size
+    }
+
     override fun onBindViewHolder(holder: BlockedUserViewHolder, position: Int) {
 
         // Grabbing current user
@@ -76,22 +80,39 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
         }
 
         holder.image.setOnClickListener{
-            val intent = Intent(context, OtherUserProfile::class.java)
+            val intent = Intent(context, BlockedUserProfile::class.java)
             intent.putExtra("uid", blockedUser.uid)
             context.startActivity(intent)
         }
 
-        // TODO implement this button, and make simplified profile page for user
+        // Make so blocked list updates
        holder.unblockBtn.setOnClickListener {
-           currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
-               .setValue(currentUser.friendRequests) }
+           val warning = AlertDialog.Builder(context)
+           warning.setTitle("Unblocking User")
+           warning.setMessage("Are you sure you want to unblock ${blockedUser.name}?")
+
+           // If the user chose yes on the warning popup, unblock user
+           warning.setPositiveButton("Yes") { dialog, which ->
+               userList.remove(blockedUser)
+               notifyDataSetChanged()
+               currentUser.blockedUsers.remove(blockedUser.uid)
+               currentUser.uid?.let { cuuid ->
+                   mDbRef.child("user").child(cuuid).child("blockedUsers")
+                       .setValue(currentUser.blockedUsers)
+               }
+               // Confirmation of unblocking
+               Toast.makeText(context, "${blockedUser.name} unblocked", Toast.LENGTH_SHORT).show()
+           }
+
+           // Warning popup if no
+           warning.setNegativeButton("No") { dialog, which ->
+               return@setNegativeButton
+           }
+           warning.show()
        }
 
     }
 
-    override fun getItemCount(): Int {
-        return userList.size
-    }
 
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {
         val ei: ExifInterface = ExifInterface(image_absolute_path);

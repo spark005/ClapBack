@@ -55,6 +55,9 @@
             android:name=".ProfilePic"
             android:exported="false" />
         <activity
+            android:name=".BlockedUserProfile"
+            android:exported="true"/>
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
