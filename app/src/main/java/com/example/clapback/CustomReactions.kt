@@ -46,7 +46,7 @@ class CustomReactions : AppCompatActivity() {
         storage = FirebaseStorage.getInstance().reference.child("reactions/$profileUid")
 
         reactionList = ArrayList()
-        crAdapter = CustomReactionAdapter(this, reactionList,storage)
+        crAdapter = CustomReactionAdapter(this, reactionList, storage)
 
         myReactions = findViewById(R.id.reactionRecyclerView)
         myReactions.adapter = crAdapter
@@ -90,7 +90,7 @@ class CustomReactions : AppCompatActivity() {
         save.setOnClickListener {
             //Name dialoge
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setTitle("Title")
+            builder.setTitle("Reaction Name")
 
             val input = EditText(this)
             builder.setView(input)

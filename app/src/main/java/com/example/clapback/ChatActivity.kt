@@ -145,7 +145,7 @@ class ChatActivity : BaseActivity() {
         sendButton = findViewById(R.id.sentButton)
         messageList = ArrayList()
         messageKeys = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList, mDbRef, senderRoom, receiverRoom, messageKeys, findViewById(R.id.replying))
+        messageAdapter = MessageAdapter(this, messageList, mDbRef, senderRoom, receiverRoom, messageKeys, findViewById(R.id.replying), senderUid)
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter

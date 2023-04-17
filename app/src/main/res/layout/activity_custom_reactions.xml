@@ -102,9 +102,9 @@
             android:id="@+id/reactionBoxSEX"
             android:layout_width="wrap_content"
             android:background="@color/salmon"
-            android:layout_toLeftOf="@id/sentMessageEX"
+            android:layout_toStartOf="@id/sentMessageEX"
             android:layout_marginRight="-15dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="105dp"
             android:layout_height="wrap_content"
             android:visibility="gone">
 
