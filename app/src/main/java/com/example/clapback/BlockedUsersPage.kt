@@ -3,6 +3,7 @@ package com.example.clapback
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Button
@@ -43,7 +44,7 @@ class BlockedUsersPage : BaseActivity(), OnSwipeListener {
         // Initializing current user and userlist
         val currentUserUID = mAuth.currentUser?.uid
 
-
+        // TODO, fix list removal
         // Adding blocked users to blocked list
         mDbRef.child("user").child(currentUserUID!!).get().addOnSuccessListener {
             currentUser = it.getValue(User::class.java)!!

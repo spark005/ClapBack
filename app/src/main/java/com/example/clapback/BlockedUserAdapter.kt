@@ -17,6 +17,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
@@ -28,7 +29,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 
-class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
+class BlockedUserAdapter (val context: Context, var unblockList: ArrayList<User>):
     RecyclerView.Adapter<BlockedUserAdapter.BlockedUserViewHolder>() {
 
     lateinit var mAuth: FirebaseAuth
@@ -49,7 +50,7 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
     }
 
     override fun getItemCount(): Int {
-        return userList.size
+        return unblockList.size
     }
 
     override fun onBindViewHolder(holder: BlockedUserViewHolder, position: Int) {
@@ -61,7 +62,7 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
             Log.e("Error", "Couldn't find user")
         }
 
-        val blockedUser = userList[position]
+        val blockedUser = unblockList[position]
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/${blockedUser.uid}")
 
         holder.textName.text = blockedUser.name
@@ -85,7 +86,7 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
             context.startActivity(intent)
         }
 
-        // Make so blocked list updates
+        // Make so unblocked list updates
        holder.unblockBtn.setOnClickListener {
            val warning = AlertDialog.Builder(context)
            warning.setTitle("Unblocking User")
@@ -93,15 +94,22 @@ class BlockedUserAdapter (val context: Context, var userList: ArrayList<User>):
 
            // If the user chose yes on the warning popup, unblock user
            warning.setPositiveButton("Yes") { dialog, which ->
-               userList.remove(blockedUser)
-               notifyDataSetChanged()
                currentUser.blockedUsers.remove(blockedUser.uid)
                currentUser.uid?.let { cuuid ->
                    mDbRef.child("user").child(cuuid).child("blockedUsers")
                        .setValue(currentUser.blockedUsers)
                }
+
+               //unblockList.remove(blockedUser)
+               //notifyDataSetChanged()
+
                // Confirmation of unblocking
                Toast.makeText(context, "${blockedUser.name} unblocked", Toast.LENGTH_SHORT).show()
+
+               // Updating page
+               // TODO this is a very jank way to update page. Update later
+               val intent = Intent(context, BlockedUsersPage::class.java)
+               context.startActivity(intent)
            }
 
            // Warning popup if no
