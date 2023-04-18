@@ -27,6 +27,9 @@ import java.io.File
 
 class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
+
+    private lateinit var blockedUsers: CardView
+    private lateinit var chat: CardView
     private lateinit var friends: CardView
     private lateinit var searchUsers: CardView
     private lateinit var settings: CardView
@@ -57,6 +60,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Brief line to remove action bar
         supportActionBar?.hide()
 
+
+        blockedUsers = findViewById(R.id.blocked_users);
+        chat = findViewById(R.id.chat)
         friends = findViewById(R.id.friends)
         searchUsers = findViewById(R.id.search_users)
         settings = findViewById(R.id.settings)
@@ -126,8 +132,17 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             val intent = Intent(this, FriendRequest::class.java)
             startActivity(intent)
         }
+
+
+        // Blocked users button
+        blockedUsers.setOnClickListener {
+            val intent = Intent(this, BlockedUsersPage::class.java)
+            startActivity(intent)
+        }    
+
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
+
             startActivity(intent)
         }
     }
