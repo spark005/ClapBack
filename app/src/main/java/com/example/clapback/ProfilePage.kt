@@ -29,8 +29,6 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
 
     private lateinit var blockedUsers: CardView
-    private lateinit var chat: CardView
-    private lateinit var friends: CardView
     private lateinit var searchUsers: CardView
     private lateinit var settings: CardView
     private lateinit var bio: CardView
@@ -62,8 +60,6 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
 
         blockedUsers = findViewById(R.id.blocked_users);
-        chat = findViewById(R.id.chat)
-        friends = findViewById(R.id.friends)
         searchUsers = findViewById(R.id.search_users)
         settings = findViewById(R.id.settings)
         bio = findViewById(R.id.bio)
