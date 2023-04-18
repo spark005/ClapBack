@@ -5,6 +5,7 @@
     package="com.example.clapback">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,19 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+
 
         <activity
             android:name=".SettingsActivity"
@@ -70,7 +84,13 @@
             android:name=".WalkThrough"
             android:exported="false" />
         <activity
+            android:name=".OtherUserProfileNotFriend"
+            android:exported="true" />
+        <activity
             android:name=".FriendRequest"
+            android:exported="true" />
+        <activity
+            android:name=".SearchOtherUsers"
             android:exported="true" />
         <activity
             android:name=".OtherUserProfile"
@@ -80,6 +100,9 @@
             android:exported="true" />
         <activity
             android:name=".CustomizeTheme"
+            android:exported="true" />
+        <activity
+            android:name=".ChatLog"
             android:exported="true" />
         <activity
             android:name=".Login"

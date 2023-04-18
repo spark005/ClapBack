@@ -18,6 +18,10 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!-- Download path -->
+    <string name="chat_log_download_title">Download Chat Log</string>
+    <string name="chat_log_download_description">Download the chat log for this conversation.</string>
+
     <!-- Default Texts -->
     <string name="default_bio">No Description</string>
 </resources>
