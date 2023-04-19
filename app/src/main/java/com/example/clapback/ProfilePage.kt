@@ -143,21 +143,6 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
     }
 
-    fun notificationsPopup(view: View){
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-
-        with(builder) {
-            setTitle("Notifications")
-            val dialogLayoutall = inflater.inflate(R.layout.notifications_switch, null)
-            notificationToggleall = dialogLayoutall.findViewById<Switch>(R.id.toggle_notifications)
-
-
-        newReactions.setOnClickListener {
-            val intent = Intent(this, CustomReactions::class.java)
-            startActivity(intent)
-        }
-    }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
