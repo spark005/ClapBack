@@ -16,6 +16,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -25,7 +26,7 @@ import java.io.File
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                      val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
-                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout):
+                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout, val sender: String?, val receiver: String?):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -90,6 +91,20 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         3 -> {
                             reaction.setImageResource(R.drawable.rnelson)
                         }
+                        4 -> {
+                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$receiver")
+                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
+                                val bitmap: Bitmap =
+                                    modifyOrientation(
+                                        BitmapFactory.decodeFile(pic.absolutePath),
+                                        pic.absolutePath
+                                    )
+                                reaction.setImageBitmap(bitmap)
+                            }.addOnFailureListener{
+
+                            }
+                        }
                     }
                 } else {
                     reactionBox.setVisibility(View.GONE)
@@ -133,6 +148,20 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         }
                         3 -> {
                             reaction.setImageResource(R.drawable.rnelson)
+                        }
+                        4 -> {
+                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
+                                val bitmap: Bitmap =
+                                    modifyOrientation(
+                                        BitmapFactory.decodeFile(pic.absolutePath),
+                                        pic.absolutePath
+                                    )
+                                reaction.setImageBitmap(bitmap)
+                            }.addOnFailureListener{
+
+                            }
                         }
                     }
                 } else {
@@ -244,6 +273,42 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                         }
                                         R.id.laugh -> {
                                             currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.customReacts -> {
+                                            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                                            builder.setTitle("Reactions")
+
+                                            //set the view as recycler
+                                            builder.setView(R.layout.select_reaction_view)
+
+
+                                            builder.setNegativeButton("Cancel"){ dialog, which ->
+                                                dialog.cancel()
+                                            }
+
+                                            // have to show first before we can edit recycler
+                                            val built = builder.show()
+                                            val rcv = built.findViewById<RecyclerView>(R.id.reactionCustomRecyclerView)
+                                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                                            val reactionList = ArrayList<String>()
+                                            val srAdapter = SelectReaction(built.context, reactionList, storage, currentMessage, mDbRef, senderRoom, receiverRoom, built)
+                                            //set layout as grid with a row size of
+                                            rcv.layoutManager = GridLayoutManager(built.context, 5)
+                                            rcv.adapter = srAdapter
+
+                                            reactionList.clear()
+                                            //get all stored reactions and add them to the reactionList.
+                                            //Its not instantaneous so added an onComplete
+                                            storage.listAll().addOnCompleteListener {
+                                                for (react in it.getResult().items) {
+                                                    reactionList.add(react.name)
+                                                    srAdapter.notifyDataSetChanged()
+                                                }
+
+                                                srAdapter.notifyDataSetChanged()
+                                            }
+
                                             notifyDataSetChanged()
                                         }
                                     }
