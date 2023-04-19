@@ -96,6 +96,7 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
         var otherUser = User()
         mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
             otherUser = it.getValue(User::class.java)!!
+            username.text = otherUser.name
 
             if (otherUser.bio == "") {
                 description.text = getString(R.string.default_bio)
