@@ -17,6 +17,8 @@
         android:theme="@style/Theme.ClapBack">
         <activity
             android:name=".FavoritesAndBio"
+            />
+        <activity
             android:name=".SelectReaction"
             android:exported="false" />
         <activity
@@ -51,8 +53,6 @@
             android:exported="true"
             android:label="Settings" />
         <activity android:name=".Settings" />
-        <activity
-            android:name=".Settings"/>
         <activity
             android:name=".BlockedUsersPage"/>
         <activity
