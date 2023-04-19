@@ -5,67 +5,90 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_layer">
 
-
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/my_bio_h"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Music:"
+        android:text="My Bio:"
         android:textSize="20dp"
         android:textStyle="bold"
+        android:layout_marginTop="100dp"/>
+
+    <TextView
+        android:id="@+id/my_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/my_bio_h"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/my_bio_h"
+        android:paddingLeft="15dp"
+        android:text="(Set this by editing your profile)" />
+
+    <TextView
+        android:id="@+id/my_fav_song_h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Favorite Song:"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_alignTop="@id/my_bio"
+        android:layout_marginTop="175dp" />
+
+    <TextView
+        android:id="@+id/my_fav_book_h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Favorite Book:"
         android:layout_marginTop="100dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="173dp" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Book:"
-        android:layout_marginTop="150dp"
-        android:layout_alignTop="@+id/textView10"
+        android:layout_alignTop="@+id/my_fav_song_h"
         android:textSize="20dp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="325dp" />
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/my_fav_mov_h"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView11"
-        android:layout_marginTop="150dp"
-        android:text="Movie:"
+        android:layout_alignTop="@+id/my_fav_book_h"
+        android:layout_marginTop="100dp"
+        android:text="My Favorite Movie:"
         android:textSize="20dp"
-        android:textStyle="bold"
-
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="476dp" />
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/my_fav_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView10"
+        android:layout_toRightOf="@+id/my_fav_song_h"
         android:paddingLeft="15dp"
-        android:layout_alignBottom="@+id/textView10"
-        android:text="TextView" />
+        android:layout_alignBottom="@+id/my_fav_song_h"
+        android:text="(Set this by editing your profile)" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/my_fav_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView11"
-        android:layout_alignBottom="@+id/textView11"
+        android:layout_toRightOf="@+id/my_fav_book_h"
+        android:layout_alignBottom="@+id/my_fav_book_h"
         android:paddingLeft="23.5dp"
-        android:text="TextView" />
+        android:text="(Set this by editing your profile)" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/my_fav_movie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView12"
-        android:layout_alignBottom="@+id/textView12"
+        android:layout_toRightOf="@+id/my_fav_mov_h"
+        android:layout_alignBottom="@+id/my_fav_mov_h"
         android:paddingLeft="15dp"
-        android:text="TextView" />
+        android:text="(Set this by editing your profile)" />
+
+    <Button
+        android:id="@+id/back_to_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_below="@id/my_fav_mov_h"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/btn_background_2"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

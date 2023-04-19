@@ -21,6 +21,7 @@ import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONException
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.io.File
 
 class OtherUserProfile: AppCompatActivity() {
@@ -32,9 +33,12 @@ class OtherUserProfile: AppCompatActivity() {
     private lateinit var description: TextView
     private lateinit var social: TextView
     private lateinit var image: CircleImageView
-    private lateinit var nickname: EditText
-    private lateinit var saveBtn: Button
-    private lateinit var cancelBtn: Button
+    private lateinit var book: TextView
+    private lateinit var movie: TextView
+    private lateinit var music: TextView
+    //private lateinit var nickname: EditText
+    //private lateinit var saveBtn: Button
+    //private lateinit var cancelBtn: Button
     private lateinit var reportBtn: Button
     private lateinit var removeFriend: TextView
 
@@ -50,9 +54,12 @@ class OtherUserProfile: AppCompatActivity() {
         description = findViewById(R.id.description)
         social = findViewById(R.id.social)
         image = findViewById(R.id.other_profile_image)
-        nickname = findViewById(R.id.change_nickname)
-        saveBtn = findViewById(R.id.save_btn)
-        cancelBtn = findViewById(R.id.cancel_btn)
+        book = findViewById(R.id.book)
+        movie = findViewById(R.id.movie)
+        music = findViewById(R.id.music)
+        //nickname = findViewById(R.id.change_nickname)
+        //saveBtn = findViewById(R.id.save_btn)
+        //cancelBtn = findViewById(R.id.cancel_btn)
         reportBtn = findViewById(R.id.report_btn)
         removeFriend = findViewById(R.id.remove_friend)
 
@@ -89,12 +96,10 @@ class OtherUserProfile: AppCompatActivity() {
                     }
                 }
             }
-
             if (otherUser.bio == "") {
-                description.text = getString(R.string.default_bio)
+                description.text = "No Description"
             } else {
-                description.setText(otherUser.bio + " | " + otherUser.fmovie + " | " +
-                        otherUser.fmusic + " | " + otherUser.fbook).toString()
+                description.text = otherUser.bio
             }
 
             if (otherUser.social == "") {
@@ -102,11 +107,23 @@ class OtherUserProfile: AppCompatActivity() {
             } else {
                 social.text = otherUser.social
             }
+
+            if (otherUser.fbook != "") {
+                book.text = otherUser.fbook
+            }
+
+            if (otherUser.fmovie != "") {
+                movie.text = otherUser.fmovie
+            }
+
+            if (otherUser.fmusic != "") {
+                music.text = otherUser.fmusic
+            }
         }.addOnFailureListener {
             Log.e("ERROR", it.toString())
         }
 
-        saveBtn.setOnClickListener {
+        /*saveBtn.setOnClickListener {
             val nickNameGet = nickname.text.toString()
 
             if (nickNameGet == "") {
@@ -117,12 +134,12 @@ class OtherUserProfile: AppCompatActivity() {
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
-        cancelBtn.setOnClickListener {
+        /*cancelBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
         reportBtn.setOnClickListener {
             val intent = Intent(this, Report::class.java).apply {

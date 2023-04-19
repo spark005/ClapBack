@@ -130,6 +130,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
             startActivity(intent)
         }
+        bio.setOnClickListener {
+            val intent = Intent(this, FavoritesAndBio::class.java)
+            startActivity(intent)
+        }
     }
 
     fun notificationsPopup(view: View){
