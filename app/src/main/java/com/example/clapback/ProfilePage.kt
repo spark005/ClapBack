@@ -21,25 +21,27 @@ import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 
 class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
-    private lateinit var friends: CardView
+
+    private lateinit var blockedUsers: CardView
     private lateinit var searchUsers: CardView
     private lateinit var settings: CardView
     private lateinit var bio: CardView
     private lateinit var requests: CardView
-    private lateinit var notifications: CardView
+    private lateinit var newReactions: CardView
     private lateinit var edit: Button
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var notificationToggleall: Switch
-    private lateinit var notificationTogglem: Switch
-    private lateinit var notificationTogglefr: Switch
+    //private lateinit var notificationToggleall: Switch
+    //private lateinit var notificationTogglem: Switch
+    //private lateinit var notificationTogglefr: Switch
 
 
     // Username's set parameters on profile page
@@ -57,12 +59,13 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Brief line to remove action bar
         supportActionBar?.hide()
 
-        friends = findViewById(R.id.friends)
+
+        blockedUsers = findViewById(R.id.blocked_users);
         searchUsers = findViewById(R.id.search_users)
         settings = findViewById(R.id.settings)
         bio = findViewById(R.id.bio)
         requests = findViewById(R.id.requests)
-        notifications = findViewById(R.id.notifications)
+        newReactions = findViewById(R.id.newReactions)
         detector = GestureDetectorCompat(this, DiaryGestureListener(this))
         edit = findViewById(R.id.edit)
         image = findViewById(R.id.profile_image)
@@ -126,8 +129,31 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             val intent = Intent(this, FriendRequest::class.java)
             startActivity(intent)
         }
+
+        newReactions.setOnClickListener{
+            var strk: Int? = 0
+            mDbRef.child("user").child(profileUid!!).child("streak").get().addOnSuccessListener {
+                strk = it.getValue<Int?>()
+
+                //if less than 50 you cant see custom
+                if ((strk)!! >= 50) {
+                    val intent = Intent(this, CustomReactions::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
+
+        // Blocked users button
+        blockedUsers.setOnClickListener {
+            val intent = Intent(this, BlockedUsersPage::class.java)
+            startActivity(intent)
+        }
+
+
+
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
+
             startActivity(intent)
         }
         bio.setOnClickListener {
@@ -136,38 +162,7 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
     }
 
-    fun notificationsPopup(view: View){
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
 
-        with(builder) {
-            setTitle("Notifications")
-            val dialogLayoutall = inflater.inflate(R.layout.notifications_switch, null)
-            notificationToggleall = dialogLayoutall.findViewById<Switch>(R.id.toggle_notifications)
-
-            notificationTogglem = dialogLayoutall.findViewById<Switch>(R.id.toggle_messnotifications)
-
-            notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.frqtoggle_notifications)
-
-            mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
-                val currentUser = it.getValue(User::class.java)
-                notificationToggleall.isChecked = currentUser?.notifications!!
-                notificationTogglem.isChecked = currentUser?.messNotifs!!
-                notificationTogglefr.isChecked = currentUser?.frNotifs!!
-            }
-            setView(dialogLayoutall)
-            setPositiveButton("OK") { dialogInterface, i -> setNotifications(dialogInterface, i) }
-            show()
-        }
-    }
-
-    private fun setNotifications(dialogInterface: DialogInterface, i: Int) {
-        Log.d("Debug", notificationToggleall.isChecked.toString())
-        mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggleall.isChecked)
-        mDbRef.child("user").child(profileUid).child("messNotifs").setValue(notificationTogglem.isChecked)
-        mDbRef.child("user").child(profileUid).child("frNotifs").setValue(notificationTogglefr.isChecked)
-
-    }
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         detector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)

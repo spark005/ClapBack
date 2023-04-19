@@ -9,6 +9,7 @@ open class Message {
     var image: String? = null
     var messageId: String? = null
     var reaction: Int? = null
+    var reactName: String? = null
     var reply: String? = null
     var deleted: Boolean? = null
     var edited: Boolean? = null
@@ -42,6 +43,27 @@ open class Message {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reaction")
                     .setValue(this.reaction)
             }
+    }
+
+    fun setReactionName(name: String?, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+        if (name.equals(this.reactName)) {
+            this.reaction = null
+            this.reactName = null
+        } else {
+            this.reactName = name
+            this.reaction = 4
+        }
+        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reactName")
+            .setValue(this.reactName).addOnSuccessListener {
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reactName")
+                    .setValue(this.reactName).addOnSuccessListener {
+                        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reaction")
+                        .setValue(this.reaction).addOnSuccessListener {
+                            mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reaction")
+                                .setValue(this.reaction)
+                        } }
+            }
+
     }
 
     fun setTime(time: String, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {

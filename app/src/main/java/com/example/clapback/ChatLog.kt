@@ -71,7 +71,7 @@ class ChatLog : BaseActivity() {
         messageKeys = ArrayList()
 
 
-        messageAdapter = MessageAdapter(this, messageList, mDbRef, senderRoom, receiverRoom, messageKeys, findViewById(R.id.replying_chat_log))
+        messageAdapter = MessageAdapter(this, messageList, mDbRef, senderRoom, receiverRoom, messageKeys, findViewById(R.id.replying_chat_log), senderUid, friendUid)
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter

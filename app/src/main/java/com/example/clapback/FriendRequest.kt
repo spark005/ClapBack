@@ -205,7 +205,6 @@ class FriendRequest : AppCompatActivity() {
 
     // Sends friend request to user and saves requests in database for both sender and recipient
     fun sendRequest(searchUID: String, mDbRef: DatabaseReference, currentUser: User) {
-      //  this.mDbRef = mDbRef
         mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
             val foundFriend = it.getValue(User::class.java)
 

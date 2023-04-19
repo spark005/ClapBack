@@ -13,7 +13,7 @@
         android:layout_marginTop="70dp"
         android:src="@drawable/logo"
         android:text="Settings"
-        android:textSize="50dp"/>
+        android:textSize="50dp" />
 
     <Button
         android:id="@+id/change_password_button"

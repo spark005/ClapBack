@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:text="User"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/txt_name"
+        android:layout_marginTop="5dp"
+        android:background="@color/salmon" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginLeft="2.5dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/white"
+        android:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/unblock_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginEnd="2.5dp"
+        android:layout_marginBottom="2.5dp"
+        android:background="@drawable/red_btn_background"
+        android:padding="10dp"
+        android:text="Unblock User"
+        android:textColor="@color/white" />
+</RelativeLayout>

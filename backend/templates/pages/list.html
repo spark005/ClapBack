@@ -1,0 +1,11 @@
+{% extends 'layouts/main.html' %}
+{% block title %}List of Paired Friends{% endblock %}
+{% block content %}
+<h1>List of paired friends</h1>
+<ul>
+    {% for pair in final %}
+    <li>({{ pair[0] }}), ({{ pair[1] }})</li>
+    {% endfor %}
+</ul>
+<button onclick="pairFriends()">Pair Friends</button>
+{% endblock %}
