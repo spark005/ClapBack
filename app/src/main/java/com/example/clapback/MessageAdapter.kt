@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
@@ -258,6 +259,17 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             R.id.react -> {
                                 val popup = PopupMenu(context, holder.itemView)
                                 popup.inflate(R.menu.reactions)
+
+                                //very 3am kind of way to get a user's current streak
+                                var strk: Int? = 0
+                                mDbRef.child("user").child(sender!!).child("streak").get().addOnSuccessListener {
+                                    strk = it.getValue<Int?>()
+
+                                    //if less than 50 you cant see custom
+                                    if ((strk)!! < 50) {
+                                        popup.menu.findItem(R.id.customReacts).isVisible = false
+                                    }
+                                }
 
 
                                 popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
