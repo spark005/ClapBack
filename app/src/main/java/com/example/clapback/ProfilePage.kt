@@ -129,12 +129,18 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             startActivity(intent)
         }
 
+        newReactions.setOnClickListener{
+            val intent = Intent(this, CustomReactions::class.java)
+            startActivity(intent)
+        }
 
         // Blocked users button
         blockedUsers.setOnClickListener {
             val intent = Intent(this, BlockedUsersPage::class.java)
             startActivity(intent)
-        }    
+        }
+
+
 
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)

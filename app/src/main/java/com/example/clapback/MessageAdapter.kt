@@ -93,7 +93,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         }
                         4 -> {
                             val storage = FirebaseStorage.getInstance().reference.child("reactions/$receiver")
-                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            val pic = File.createTempFile("customReaction", "jpg")
                             storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
                                 val bitmap: Bitmap =
                                     modifyOrientation(
@@ -151,7 +151,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         }
                         4 -> {
                             val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
-                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            val pic = File.createTempFile("customReaction", "jpg")
                             storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
                                 val bitmap: Bitmap =
                                     modifyOrientation(
@@ -309,7 +309,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                                 srAdapter.notifyDataSetChanged()
                                             }
 
-                                            notifyDataSetChanged()
                                         }
                                     }
 
