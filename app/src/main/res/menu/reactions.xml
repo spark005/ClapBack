@@ -11,4 +11,8 @@
         android:id="@+id/laugh"
         android:title="HAHA" />
 
+    <item
+        android:id="@+id/customReacts"
+        android:title="Custom" />
+
 </menu>

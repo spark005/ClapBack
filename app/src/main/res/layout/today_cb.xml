@@ -10,9 +10,12 @@
         android:id="@+id/streak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Streak: 0"
         android:layout_alignParentEnd="true"
-        android:layout_margin="5dp"/>
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="Streak: 0" />
 
     <TextView
         android:id="@+id/cb_of_day"
@@ -52,6 +55,7 @@
         android:layout_below="@id/lets_chat"/>
 
     <TextView
+        android:id="@+id/until"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -59,6 +63,29 @@
         android:layout_below="@+id/remaining_time"
         android:layout_marginTop="20dp"/>
 
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/until"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textViewHorizontalProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+
+    <ProgressBar
+        android:layout_below="@id/textViewHorizontalProgress"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/progressBarHorizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="50"
+        android:minHeight="50dp"
+        android:minWidth="200dp"
+        android:progress="0"
+        android:progressBackgroundTint="@android:color/white"
+        android:progressTint="@color/black" />
 
 
 </RelativeLayout>

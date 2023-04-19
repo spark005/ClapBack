@@ -2,10 +2,12 @@ package com.example.clapback
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
@@ -24,6 +26,11 @@ class Time : AppCompatActivity() {
     private lateinit var mDbRef: DatabaseReference
 
     private lateinit var detector: GestureDetectorCompat
+    private lateinit var progressBarHorizontal: ProgressBar
+    private lateinit var textViewHorizontalProgress: TextView
+
+    var progressStatus = 0
+    var handler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +45,16 @@ class Time : AppCompatActivity() {
         streak = findViewById(R.id.streak)
         currentTimeTextView = findViewById(R.id.remaining_time)
         btn_lets_chat = findViewById(R.id.lets_chat)
+        progressBarHorizontal = findViewById(R.id.progressBarHorizontal)
+        textViewHorizontalProgress = findViewById(R.id.textViewHorizontalProgress)
 
         mDbRef.child("user").child(mAuth.currentUser!!.uid).child("streak").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val new_streak = snapshot.getValue(Integer::class.java)
                 streak.text = String.format("Streak: %d", new_streak)
+
+                //Set progress bar status to streaks
+                progressStatus = new_streak!!.toInt()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -73,6 +85,21 @@ class Time : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        //whats a handler? who knows
+        //This is used to show the streak progress bar
+        handler = Handler(Handler.Callback {
+
+            progressBarHorizontal.progress = progressStatus
+            textViewHorizontalProgress.text = "${progressStatus}/${progressBarHorizontal.max} till next reaction!"
+
+            //idk anything after this line
+            handler?.sendEmptyMessageDelayed(0, 100)
+
+            true
+        })
+        handler?.sendEmptyMessage(0)
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
