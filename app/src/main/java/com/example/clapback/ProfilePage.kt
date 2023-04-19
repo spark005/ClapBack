@@ -21,6 +21,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
@@ -129,12 +130,26 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             startActivity(intent)
         }
 
+        newReactions.setOnClickListener{
+            var strk: Int? = 0
+            mDbRef.child("user").child(profileUid!!).child("streak").get().addOnSuccessListener {
+                strk = it.getValue<Int?>()
+
+                //if less than 50 you cant see custom
+                if ((strk)!! >= 50) {
+                    val intent = Intent(this, CustomReactions::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
 
         // Blocked users button
         blockedUsers.setOnClickListener {
             val intent = Intent(this, BlockedUsersPage::class.java)
             startActivity(intent)
-        }    
+        }
+
+
 
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
