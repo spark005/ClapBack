@@ -102,11 +102,11 @@ class CustomReactions : AppCompatActivity() {
 
                     val store = FirebaseStorage.getInstance().getReference("reactions/$profileUid/$name")
 
-                    store.putFile(newReaction)
-                    dialog.cancel()
-                    save.visibility = View.GONE
-
-                    updateReactions()
+                    store.putFile(newReaction).addOnCompleteListener {
+                        save.visibility = View.GONE
+                        updateReactions()
+                        dialog.cancel()
+                    }
                 }
             }
 
