@@ -80,6 +80,16 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
+        var strk: Int? = 0
+        mDbRef.child("user").child(profileUid!!).child("streak").get().addOnSuccessListener {
+            strk = it.getValue<Int?>()
+
+            //if less than 50 you cant see custom
+            if ((strk)!! >= 50) {
+                newReactions.findViewById<TextView>(R.id.custName).text = "Custom Reactions"
+            }
+        }
+
         // Setting the profile picture's username and Bio fields
         if (profileUid != null) {
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
@@ -131,15 +141,11 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         }
 
         newReactions.setOnClickListener{
-            var strk: Int? = 0
-            mDbRef.child("user").child(profileUid!!).child("streak").get().addOnSuccessListener {
-                strk = it.getValue<Int?>()
 
-                //if less than 50 you cant see custom
-                if ((strk)!! >= 50) {
-                    val intent = Intent(this, CustomReactions::class.java)
-                    startActivity(intent)
-                }
+            //if less than 50 you cant see custom
+            if ((strk)!! >= 50) {
+                val intent = Intent(this, CustomReactions::class.java)
+                startActivity(intent)
             }
         }
 
