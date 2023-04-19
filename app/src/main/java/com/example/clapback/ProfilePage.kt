@@ -156,6 +156,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
             startActivity(intent)
         }
+        bio.setOnClickListener {
+            val intent = Intent(this, FavoritesAndBio::class.java)
+            startActivity(intent)
+        }
     }
 
 
