@@ -98,8 +98,8 @@ class Login : AppCompatActivity() {
             val now = System.currentTimeMillis()
             val lastDate = getDateTime(lastSignIn!! + 3600*1000*24)
             val currentDate = getDateTime(now)
-//            Log.d("DEBUG", lastDate!!)
-//            Log.d("DEBUG", currentDate!!)
+            Log.d("DEBUG", lastDate!!)
+            Log.d("DEBUG", currentDate!!)
             if (it.exists() && (lastDate == currentDate)) {
                 val user = it.getValue(User::class.java)
                 var streak = user?.streak!!
