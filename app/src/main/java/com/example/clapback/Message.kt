@@ -53,11 +53,17 @@ open class Message {
             this.reactName = name
             this.reaction = 4
         }
-        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reactionName")
+        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reactName")
             .setValue(this.reactName).addOnSuccessListener {
-                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reactionName")
-                    .setValue(this.reactName)
+                mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reactName")
+                    .setValue(this.reactName).addOnSuccessListener {
+                        mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reaction")
+                        .setValue(this.reaction).addOnSuccessListener {
+                            mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reaction")
+                                .setValue(this.reaction)
+                        } }
             }
+
     }
 
     fun setTime(time: String, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
