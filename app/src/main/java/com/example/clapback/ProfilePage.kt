@@ -71,8 +71,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         image = findViewById(R.id.profile_image)
 
         // Text fields on user profile page
-        userBio = findViewById(R.id.name)
-        username = findViewById(R.id.username)
+        //userBio = findViewById(R.id.name)
+        username = findViewById(R.id.name)
         socialMedia = findViewById(R.id.social)
 
         profileUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
@@ -85,12 +85,12 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                 val currentUser = it.getValue(User::class.java)
 
-                if (!currentUser?.bio.equals("")) {
+                /*if (!currentUser?.bio.equals("")) {
                     userBio.setText(currentUser?.bio + " | " + currentUser?.fmovie + " | " +
                             currentUser?.fmusic + " | " + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
-                }
+                }*/
 
                 if (!currentUser?.social.equals("")) {
                     socialMedia.setText(currentUser?.social).toString()
