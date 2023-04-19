@@ -2,6 +2,8 @@ package com.example.clapback
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -13,8 +15,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Time : AppCompatActivity() {
+    companion object {
+        var CURRENT_REMAINING_TIME = "current_time_string"
+    }
 
     private lateinit var streak: TextView
     private lateinit var currentTimeTextView: TextView
@@ -24,6 +30,9 @@ class Time : AppCompatActivity() {
     private lateinit var mDbRef: DatabaseReference
 
     private lateinit var detector: GestureDetectorCompat
+
+    private var remainingTimeInMillis: Long = 0
+    private var countdownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,29 +59,78 @@ class Time : AppCompatActivity() {
             }
         })
 
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        var remainingHour=0
-        if (minute == 0) {
-            remainingHour = 24 - hour
-        } else {
-            remainingHour = 24 - hour - 1
-        }
-        val remainingMinute = 60 - minute
-        if (remainingMinute == 0) {
-            remainingHour = 60
+        if (remainingTimeInMillis == 0L) {
+            startCountdownTimer()
         }
 
-        val currentTimeString = String.format("%02d:%02d", remainingHour, remainingMinute)
-        currentTimeTextView.text = currentTimeString
+        val handler = Handler()
+        handler.post(object : Runnable {
+            override fun run() {
+                val remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTimeInMillis)
+                val remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(remainingTimeInMillis) % 60
+                val remainingSeconds = TimeUnit.MILLISECONDS.toSeconds(remainingTimeInMillis) % 60
+                currentTimeTextView.text = String.format("%02d:%02d:%02d", remainingHours, remainingMinutes, remainingSeconds)
+
+                updateCurrentRemainingTime()
+
+                if (remainingTimeInMillis == 0L) {
+                    // Do something when timer finishes
+                    resetCountdownTimer()
+                    startCountdownTimer()
+                } else {
+                    handler.postDelayed(this, 1000)
+                }
+            }
+        })
+
 
 
         btn_lets_chat.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    fun updateCurrentRemainingTime(): String {
+        val remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTimeInMillis)
+        val remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(remainingTimeInMillis) % 60
+        val remainingSeconds = TimeUnit.MILLISECONDS.toSeconds(remainingTimeInMillis) % 60
+
+        CURRENT_REMAINING_TIME = String.format("%02d:%02d:%02d", remainingHours, remainingMinutes, remainingSeconds)
+        return CURRENT_REMAINING_TIME
+    }
+
+    fun startCountdownTimer() {
+        val currentTimeMillis = System.currentTimeMillis()
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"))
+        calendar.timeInMillis = currentTimeMillis
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+
+        if (currentTimeMillis >= calendar.timeInMillis) {
+            calendar.add(Calendar.DATE, 1)
+        }
+
+        remainingTimeInMillis = calendar.timeInMillis - currentTimeMillis
+
+        countdownTimer = object : CountDownTimer(remainingTimeInMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                remainingTimeInMillis = millisUntilFinished
+                 updateCurrentRemainingTime()
+            }
+
+            override fun onFinish() {
+                remainingTimeInMillis = 0
+            }
+        }
+        updateCurrentRemainingTime()
+        countdownTimer?.start()
+    }
+
+    fun resetCountdownTimer() {
+        countdownTimer?.cancel()
+        remainingTimeInMillis = 0
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
