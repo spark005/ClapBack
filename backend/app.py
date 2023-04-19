@@ -12,7 +12,6 @@ from flask import Flask, render_template, request, jsonify, abort, redirect, url
 user_list = []
 friendlist = []
 matched = {}
-# pairs = [("1234", "5678"), ("10101", "20202")]
 admin = "BjhDxngcjdgpGA5CCzvE7Gdp35q2"
 final = []
 # data = {"name": "Mortimer 'Morty' Smith"}
@@ -23,6 +22,22 @@ def create_app(test_config=None):
     firebase = firebase_admin.initialize_app(cred)
     pb = pyrebase.initialize_app(json.load(open('fbconfig.json')))
     db = pb.database()
+
+    def update_friends_queue(uid, remove_id):
+        temp = db.child("user").child(uid).child("queue").get()
+        if temp.val() is None:
+            temp = db.child("user").child(uid).child("friendlist").get()
+
+        temp_list = []
+        
+        for f in temp.each():
+            temp_list.append(f.val())
+        
+        temp_list.remove(remove_id)
+        temp_list.append(remove_id)
+
+        db.child("user").child(uid).child("queue").set(temp_list)
+        
 
     def match_friend(uid):
         print("User: "+uid)
@@ -35,7 +50,6 @@ def create_app(test_config=None):
             friendlist.clear()
             for f in friends.each():
                 friendlist.append(f.val())
-            # friendlist = friends.val()
             
             print("FriendList")
             print(friendlist)
@@ -52,21 +66,26 @@ def create_app(test_config=None):
             friendlist.append(friend)
             
             matched[friend] = True
+            matched[uid] = True
             print("Queue")
             print(friendlist)
-            # db.child("user").child(uid).child("queue").set(friendlist)
+
+            update_friends_queue(friend, uid)
+            db.child("user").child(uid).child("queue").set(friendlist)
 
             return (uid, friend)
         else:
+            matched[uid] = True
             return (uid, admin)
 
     @app.route("/")
     def index():
-        # return render_template('pages/login.html')
-        return render_template('pages/list.html', pairs=final)
+        print(final)
+        return render_template('pages/list.html', final=final)
 
     @app.route("/select_cb")
     def select_cb():
+        final.clear()
         user_list.clear()
         users = db.child("user").get()
         
@@ -77,63 +96,17 @@ def create_app(test_config=None):
         random.shuffle(user_list)
         
         for user in user_list:
-            if (matched[user] is False):
+            if matched[user] is False and user != admin:
+                print("==========================")
                 matched_pair = match_friend(user)
                 print("Matched pair")
                 print(matched_pair)
-                # final.append(matched_pair)
+                print("==========================")
+                final.append(matched_pair)
 
-        return redirect(url_for('index'))
-
-    @app.route("/api/userinfo")
-    @check_token
-    def userinfo():
-        if request.user:
-            users = request.user
         return jsonify({
-            "success": True,
-            "data": users
+            'success': True
         })
-
-    @app.route("/api/signup", methods=['POST'])
-    def sign_up():
-        body = request.get_json()
-        email = body.get('email', None)
-        username = body.get('username', None)
-        password = body.get('password', None)
-        print(email, username, password)
-        if email is None or password is None:
-            abort(400, {'message': 'Missing email or password'})
-        try:
-            user = auth.create_user(
-                email=email,
-                password=password
-            )
-            return jsonify({
-                "success": True,
-                "userId": user.uid
-            })
-        except Exception as e:
-            print(e)
-            abort(400, {'message': str(e)})
-    
-    @app.route("/api/login", methods=['POST'])
-    def login():
-        body = request.get_json()
-        email = body.get('email', None)
-        password = body.get('password', None)
-        try:
-            user = pb.auth().sign_in_with_email_and_password(email, password)
-            jwt = user['idToken']
-            return jsonify({
-                "success": True,
-                "token": jwt
-            }), 200
-        except Exception as e:
-            print(e)
-            error_json = e.args[1]
-            error = json.loads(error_json)['error']['message']            
-            abort(400, {'message': error.split(" ")[0]})
 
     @app.errorhandler(400)
     def bad_request(error):
