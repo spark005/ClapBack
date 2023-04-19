@@ -38,9 +38,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var notificationToggleall: Switch
-    private lateinit var notificationTogglem: Switch
-    private lateinit var notificationTogglefr: Switch
+    //private lateinit var notificationToggleall: Switch
+    //private lateinit var notificationTogglem: Switch
+    //private lateinit var notificationTogglefr: Switch
 
 
     // Username's set parameters on profile page
