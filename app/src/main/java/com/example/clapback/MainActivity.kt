@@ -159,7 +159,7 @@ class MainActivity : BaseActivity(), OnSwipeListener {
 
             })
         }
-        
+
         if (item.itemId == R.id.logout) {
             // logic for logout
 

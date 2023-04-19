@@ -27,8 +27,9 @@ import java.io.File
 
 class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
-    private lateinit var friends: CardView
-    private lateinit var chat: CardView
+
+    private lateinit var blockedUsers: CardView
+    private lateinit var searchUsers: CardView
     private lateinit var settings: CardView
     private lateinit var bio: CardView
     private lateinit var requests: CardView
@@ -57,8 +58,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         // Brief line to remove action bar
         supportActionBar?.hide()
 
-        friends = findViewById(R.id.friends)
-        chat = findViewById(R.id.chat)
+
+        blockedUsers = findViewById(R.id.blocked_users);
+        searchUsers = findViewById(R.id.search_users)
         settings = findViewById(R.id.settings)
         bio = findViewById(R.id.bio)
         requests = findViewById(R.id.requests)
@@ -126,6 +128,30 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             val intent = Intent(this, FriendRequest::class.java)
             startActivity(intent)
         }
+
+
+        // Blocked users button
+        blockedUsers.setOnClickListener {
+            val intent = Intent(this, BlockedUsersPage::class.java)
+            startActivity(intent)
+        }    
+
+        searchUsers.setOnClickListener {
+            val intent = Intent(this, SearchOtherUsers::class.java)
+
+            startActivity(intent)
+        }
+    }
+
+    fun notificationsPopup(view: View){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+
+        with(builder) {
+            setTitle("Notifications")
+            val dialogLayoutall = inflater.inflate(R.layout.notifications_switch, null)
+            notificationToggleall = dialogLayoutall.findViewById<Switch>(R.id.toggle_notifications)
+
 
         newReactions.setOnClickListener {
             val intent = Intent(this, CustomReactions::class.java)

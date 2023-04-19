@@ -10,6 +10,7 @@ class User {
     var bio: String? = ""
     var image: Uri? = null
     var nickname: String? = null
+    var clapback: String? = null
 
     var fmovie: String? = ""
     var fmusic: String? = ""

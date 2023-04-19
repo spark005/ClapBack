@@ -36,14 +36,14 @@
             android:paddingRight="20dp"
             android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="10dp" />
+            android:textSize="7dp" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/replyMessage"
         android:layout_width="wrap_content"
-        android:background="@drawable/reply_mess"
+        android:background="@drawable/btn_background"
         android:layout_marginLeft="-25dp"
         android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="@color/grey"
+            android:textColor="@color/light_grey"
             android:text="reply"
             android:textSize="18sp" />
     </RelativeLayout>
@@ -62,7 +62,6 @@
     <RelativeLayout
         android:id="@+id/reactionBoxS"
         android:layout_width="wrap_content"
-        android:background="@color/salmon"
         android:layout_toLeftOf="@id/sentMessage"
         android:layout_marginRight="-15dp"
         android:layout_marginTop="35dp"

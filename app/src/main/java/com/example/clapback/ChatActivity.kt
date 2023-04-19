@@ -15,6 +15,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
@@ -66,6 +68,7 @@ class ChatActivity : BaseActivity() {
     private lateinit var backgroundImage: Uri
     private lateinit var typingIndicator: View
     private lateinit var typingText: TextView
+    var friendUid: String = ""
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -107,7 +110,7 @@ class ChatActivity : BaseActivity() {
         var mDbRef = FirebaseDatabase.getInstance().getReference()
 
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-        val friendUid = intent.getStringExtra("uid")
+        friendUid = intent.getStringExtra("uid")!!
         val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(friendUid!!).child("nickname")
 
 
@@ -328,9 +331,28 @@ class ChatActivity : BaseActivity() {
         findViewById<ImageView>(R.id.cancelReply).setOnClickListener(){
             findViewById<RelativeLayout>(R.id.replying).visibility = View.GONE
         }
-
-
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.chat_log, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.new_item_chat_log -> {
+                // Handle new item click
+                val intent = Intent(this@ChatActivity, ChatLog::class.java).apply {
+                    putExtra("uid", friendUid)
+                }
+                startActivity(intent)
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
 
     private fun addTypingIndicator() {
             runOnUiThread {

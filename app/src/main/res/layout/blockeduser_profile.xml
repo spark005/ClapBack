@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_layer">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/other_profile_image"
+        android:layout_width="296dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/mongle"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
+
+    <TextView
+        android:id="@+id/other_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/other_profile_image"
+        android:layout_alignStart="@+id/other_profile_image"
+        android:layout_alignEnd="@+id/other_profile_image"
+        android:layout_marginTop="25dp"
+        android:text="nickname"
+        android:textAlignment="center"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/social"
+        android:textSize="20dp"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(social media)"
+        android:textAlignment="center"
+        android:layout_alignStart="@+id/other_username"
+        android:layout_alignEnd="@+id/other_username"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/other_username" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="description"
+        android:textAlignment="center"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_alignStart="@+id/social"
+        android:layout_alignEnd="@+id/social"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/social" />
+
+
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="59dp"
+        android:layout_marginTop="134dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginBottom="144dp"
+        android:background="@drawable/btn_background"
+        android:text="Back to Unblock List"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

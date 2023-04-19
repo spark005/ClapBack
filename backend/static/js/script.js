@@ -254,3 +254,26 @@ if (document.getElementById('form-login')) {
       }
   }
 }
+
+function pairFriends() {
+  fetch('/select_cb', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(res => {
+      return res.json()
+  })
+  .then(jsonRes => {
+      if (jsonRes.success) {
+          console.log('Success: ' + jsonRes)
+          window.location.replace('/')
+      } else {
+          alert('Error: ' + jsonRes)
+      }
+  })
+  .catch(e => {
+      console.log(e)
+  })
+}
