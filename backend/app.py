@@ -103,6 +103,10 @@ def create_app(test_config=None):
                 print(matched_pair)
                 print("==========================")
                 final.append(matched_pair)
+        
+        for pair in final:
+            db.child("user").child(pair[0]).child("clapback").set(pair[1])
+            db.child("user").child(pair[1]).child("clapback").set(pair[0])
 
         return jsonify({
             'success': True
