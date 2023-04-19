@@ -143,15 +143,28 @@ class ChatActivity : BaseActivity() {
         }
 
         /**
-         * If the other user is CB, then
+         * If the other user is CB, then display the remaining time on the tool bar
          */
-        val handler = Handler()
-        handler.post(object : Runnable {
-            override fun run() {
-                supportActionBar?.subtitle = Time.CURRENT_REMAINING_TIME
-                handler.postDelayed(this, 1000)
-            }
-        })
+            val handler = Handler()
+            handler.post(object : Runnable {
+                override fun run() {
+
+                    mDbRef.child("user").child(currentUserUid).child("clapback").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.getValue(String::class.java) == receiverUID) {
+                                supportActionBar?.subtitle = Time.CURRENT_REMAINING_TIME
+                            }
+                        }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                        }
+                    })
+
+
+                //    supportActionBar?.subtitle = Time.CURRENT_REMAINING_TIME
+                    handler.postDelayed(this, 1000)
+                }
+            })
+
 
 
         typingText = findViewById(R.id.typing_text)
