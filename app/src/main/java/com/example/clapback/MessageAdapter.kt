@@ -26,7 +26,7 @@ import java.io.File
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                      val mDbRef: DatabaseReference, val senderRoom: String?, val receiverRoom: String?,
-                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout, val sender: String?):
+                     val messageKeys: ArrayList<String?>, val repto : RelativeLayout, val sender: String?, val receiver: String?):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1;
@@ -92,7 +92,18 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             reaction.setImageResource(R.drawable.rnelson)
                         }
                         4 -> {
+                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$receiver")
+                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
+                                val bitmap: Bitmap =
+                                    modifyOrientation(
+                                        BitmapFactory.decodeFile(pic.absolutePath),
+                                        pic.absolutePath
+                                    )
+                                reaction.setImageBitmap(bitmap)
+                            }.addOnFailureListener{
 
+                            }
                         }
                     }
                 } else {
@@ -139,7 +150,18 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             reaction.setImageResource(R.drawable.rnelson)
                         }
                         4 -> {
+                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
+                                val bitmap: Bitmap =
+                                    modifyOrientation(
+                                        BitmapFactory.decodeFile(pic.absolutePath),
+                                        pic.absolutePath
+                                    )
+                                reaction.setImageBitmap(bitmap)
+                            }.addOnFailureListener{
 
+                            }
                         }
                     }
                 } else {
@@ -270,8 +292,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                             val rcv = built.findViewById<RecyclerView>(R.id.reactionCustomRecyclerView)
                                             val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
                                             val reactionList = ArrayList<String>()
-                                            val srAdapter = SelectReaction(built.context, reactionList, storage)
-
+                                            val srAdapter = SelectReaction(built.context, reactionList, storage, currentMessage, mDbRef, senderRoom, receiverRoom, built)
                                             //set layout as grid with a row size of
                                             rcv.layoutManager = GridLayoutManager(built.context, 5)
                                             rcv.adapter = srAdapter
@@ -288,7 +309,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                                 srAdapter.notifyDataSetChanged()
                                             }
 
-                                            currentMessage.setReaction(4, mDbRef, senderRoom, receiverRoom, key.toString())
                                             notifyDataSetChanged()
                                         }
                                     }

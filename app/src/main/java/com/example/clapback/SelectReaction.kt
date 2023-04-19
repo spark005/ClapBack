@@ -27,7 +27,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 
-class SelectReaction (val context: Context, var reactionList: ArrayList<String>, var storage: StorageReference):
+class SelectReaction (val context: Context, var reactionList: ArrayList<String>, var storage: StorageReference,
+                      var currentMessage: Message, val mDbRef: DatabaseReference, val senderRoom: String?,
+                      val receiverRoom: String?, var built: AlertDialog):
     RecyclerView.Adapter<SelectReaction.ReactionViewHolder>() {
 
     lateinit var currentUser: User
@@ -62,6 +64,10 @@ class SelectReaction (val context: Context, var reactionList: ArrayList<String>,
 
         }
 
+        holder.itemView.setOnClickListener{
+            currentMessage.setReactionName(reactorName, mDbRef, senderRoom, receiverRoom, currentMessage.messageId.toString())
+            built.cancel()
+        }
     }
 
     private fun modifyOrientation(bitmap: Bitmap, image_absolute_path: String): Bitmap {

@@ -46,6 +46,13 @@ open class Message {
     }
 
     fun setReactionName(name: String?, mDbRef: DatabaseReference, senderRoom: String?, receiverRoom: String?, key: String) {
+        if (name.equals(this.reactName)) {
+            this.reaction = null
+            this.reactName = null
+        } else {
+            this.reactName = name
+            this.reaction = 4
+        }
         mDbRef.child("chats").child(senderRoom!!).child("messages").child(key).child("reactionName")
             .setValue(this.reactName).addOnSuccessListener {
                 mDbRef.child("chats").child(receiverRoom!!).child("messages").child(key).child("reactionName")
