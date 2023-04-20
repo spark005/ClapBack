@@ -91,8 +91,25 @@ class Time : AppCompatActivity() {
         handler = Handler(Handler.Callback {
 
             progressBarHorizontal.progress = progressStatus
-            textViewHorizontalProgress.text = "${progressStatus}/${progressBarHorizontal.max} till next reaction!"
-
+            if (progressStatus < 50) {
+                if (progressStatus < 20) {
+                    if (progressStatus < 5) {
+                        //progressStatus < 5
+                        progressBarHorizontal.max = 5
+                    } else {
+                        //5 <= progressStatus < 20
+                        progressBarHorizontal.max = 20
+                    }
+                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till next reaction!"
+                } else {
+                    //20 <= progressStatus < 50
+                    progressBarHorizontal.max = 50
+                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till custom reactions!"
+                }
+            } else {
+                //progressStatus >= 50
+                textViewHorizontalProgress.text = "You got all the Reactions!"
+            }
             //idk anything after this line
             handler?.sendEmptyMessageDelayed(0, 100)
 

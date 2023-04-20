@@ -277,15 +277,6 @@ class ChatActivity : BaseActivity() {
             messageBox.setText("")
 
 
-            /*var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("You got a message")
-                .setContentText("Do you want to view it?")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-            notificationManager.notify(1234, builder.build())*/
-
-
             mDbRef.child("user").child(receiverUID.toString()).get().addOnSuccessListener{
                 val foundFriend = it.getValue(User::class.java)
 
