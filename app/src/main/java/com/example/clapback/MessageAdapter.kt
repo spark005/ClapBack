@@ -106,6 +106,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
                             }
                         }
+                        5 -> {
+                            reaction.setImageResource(R.drawable.tup)
+                        }
+                        6 -> {
+                            reaction.setImageResource(R.drawable.tdown)
+                        }
                     }
                 } else {
                     reactionBox.setVisibility(View.GONE)
@@ -163,6 +169,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             }.addOnFailureListener{
 
                             }
+                        }
+                        5 -> {
+                            reaction.setImageResource(R.drawable.tup)
+                        }
+                        6 -> {
+                            reaction.setImageResource(R.drawable.tdown)
                         }
                     }
                 } else {
@@ -268,6 +280,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                     //if less than 50 you cant see custom
                                     if ((strk)!! < 50) {
                                         popup.menu.findItem(R.id.customReacts).isVisible = false
+                                        if ((strk)!! < 20) {
+                                            popup.menu.findItem(R.id.thumbsDown).isVisible = false
+                                            if ((strk)!! < 5) {
+                                                popup.menu.findItem(R.id.thumbsUp).isVisible = false
+                                            }
+                                        }
                                     }
                                 }
 
@@ -285,6 +303,14 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                         }
                                         R.id.laugh -> {
                                             currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.thumbsUp -> {
+                                            currentMessage.setReaction(5, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.thumbsDown -> {
+                                            currentMessage.setReaction(6, mDbRef, senderRoom, receiverRoom, key.toString())
                                             notifyDataSetChanged()
                                         }
                                         R.id.customReacts -> {
