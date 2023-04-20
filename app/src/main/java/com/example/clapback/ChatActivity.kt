@@ -16,6 +16,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -367,6 +368,7 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
         when (item.itemId) {
             R.id.new_item_chat_log -> {
                 // Handle new item click
@@ -374,6 +376,22 @@ class ChatActivity : BaseActivity() {
                     putExtra("uid", friendUid)
                 }
                 startActivity(intent)
+                return true
+            }
+            R.id.request_prompt -> {
+                //grab array of prompts oncreate, then select one of the prompts
+                //then construct message and send to chatroom
+                Log.d("Sender room", senderRoom!!)
+                Log.d("Receiver room", receiverRoom!!)
+                val timestamp:String? = System.currentTimeMillis().toString()
+                var promptIndex = 0
+                val messageObj = Message("How was your day today?", "prompt" + promptIndex.toString(), timestamp)
+
+                mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObj.messageId!!)
+                    .setValue(messageObj).addOnSuccessListener {
+                        mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObj.messageId!!)
+                            .setValue(messageObj)
+                    }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

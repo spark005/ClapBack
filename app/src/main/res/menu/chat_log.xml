@@ -3,4 +3,7 @@
     <item
         android:id="@+id/new_item_chat_log"
         android:title="Chat log" />
+    <item
+        android:id="@+id/request_prompt"
+        android:title="Conversation prompt"/>
 </menu>
