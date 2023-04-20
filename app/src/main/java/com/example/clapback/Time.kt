@@ -1,5 +1,6 @@
 package com.example.clapback
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -47,6 +48,7 @@ class Time : AppCompatActivity() {
 
     var progressStatus = 0
     var handler: Handler? = null
+    var iknow: Boolean? = false
 
     private var remainingTimeInMillis: Long = 0
     private var countdownTimer: CountDownTimer? = null
@@ -71,6 +73,19 @@ class Time : AppCompatActivity() {
 
         currentUid = mAuth.currentUser?.uid.toString()
 
+        mDbRef.child("user").child(currentUid).child("iKnow").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                iknow = snapshot.getValue(Boolean::class.java)
+
+                if (iknow == null) {
+                    iknow = false
+                }
+
+            } override fun onCancelled(error: DatabaseError) {
+                Log.d("iknow ERROR", "iknow is not working")
+            }
+        })
+
         mDbRef.child("user").child(currentUid).child("streak").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val new_streak = snapshot.getValue(Integer::class.java)
@@ -78,6 +93,30 @@ class Time : AppCompatActivity() {
 
                 //Set progress bar status to streaks
                 progressStatus = new_streak!!.toInt()
+
+                if (progressStatus == 50 && !(iknow!!)) {
+                    val warning = AlertDialog.Builder(this@Time)
+                    warning.setTitle("Congratulations!")
+                    warning.setMessage("You unlocked custom Reactions!")
+
+                    warning.setPositiveButton("Alright!") { dialog, which ->
+                        dialog.cancel()
+                    }
+                    warning.show()
+                    mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
+                } else if ((progressStatus == 5 || progressStatus == 20) && !(iknow!!)) {
+                    val warning = AlertDialog.Builder(this@Time)
+                    warning.setTitle("Congratulations!")
+                    warning.setMessage("You unlocked a new reaction!")
+
+                    warning.setPositiveButton("Alright!") { dialog, which ->
+                        dialog.cancel()
+                    }
+                    warning.show()
+                    mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
+                } else {
+                    mDbRef.child("user").child(currentUid).child("iKnow").setValue(false)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -158,14 +197,32 @@ class Time : AppCompatActivity() {
         handler = Handler(Handler.Callback {
 
             progressBarHorizontal.progress = progressStatus
-            textViewHorizontalProgress.text = "${progressStatus}/${progressBarHorizontal.max} till next reaction!"
-
+            if (progressStatus < 50) {
+                if (progressStatus < 20) {
+                    if (progressStatus < 5) {
+                        //progressStatus < 5
+                        progressBarHorizontal.max = 5
+                    } else {
+                        //5 <= progressStatus < 20
+                        progressBarHorizontal.max = 20
+                    }
+                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till next reaction!"
+                } else {
+                    //20 <= progressStatus < 50
+                    progressBarHorizontal.max = 50
+                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till custom reactions!"
+                }
+            } else {
+                //progressStatus >= 50
+                textViewHorizontalProgress.text = "You got all the Reactions!"
+            }
             //idk anything after this line
             handler?.sendEmptyMessageDelayed(0, 100)
 
             true
         })
         handler?.sendEmptyMessage(0)
+
 
     }
 
