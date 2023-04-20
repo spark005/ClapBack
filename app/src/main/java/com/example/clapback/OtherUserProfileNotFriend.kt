@@ -14,6 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -29,6 +33,10 @@ import java.io.File
  */
 class OtherUserProfileNotFriend: AppCompatActivity() {
 
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(this.applicationContext)
+    }
+
     private lateinit var mDbRef: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
 
@@ -39,6 +47,10 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
     private lateinit var cancelBtn: Button
     private lateinit var addFriendBtn: Button
     private lateinit var currentUser: User
+
+    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private val serverKey = "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
+    private val contentType = "application/json"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +67,15 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
         cancelBtn = findViewById(R.id.cancel_btn)
         addFriendBtn = findViewById(R.id.addFriend_btn)
 
-        val currentUserUid = mAuth.currentUser?.uid
+        // Grabbing the current user
+        /*val currentUserUid = mAuth.currentUser?.uid
         if (currentUserUid != null) {
             mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener { snapshot ->
                 currentUser = snapshot.getValue(User::class.java)!!
             }.addOnFailureListener { exception ->
                 // handle error
             }
-        }
+        }*/
 
         val otherUserUid = intent.getStringExtra("uid")
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/$otherUserUid")
@@ -83,6 +96,7 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
         var otherUser = User()
         mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
             otherUser = it.getValue(User::class.java)!!
+            username.text = otherUser.name
 
             if (otherUser.bio == "") {
                 description.text = getString(R.string.default_bio)
@@ -106,13 +120,27 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
         }
 
         addFriendBtn.setOnClickListener {
-            mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
+            /*mDbRef.child("user").child(otherUserUid!!).get().addOnSuccessListener {
                 otherUser = it.getValue(User::class.java)!!
                 val intent = Intent(this, FriendRequest::class.java).apply {
                     putExtra("OtherUserProfileNotFriend_email", otherUser.email)
                 }
                 startActivity(intent)
                 Toast.makeText(this@OtherUserProfileNotFriend, "Press Send Friend Request!", Toast.LENGTH_SHORT).show()
+            }*/
+            // Grabbing the current user
+            val currentUserUid = mAuth.currentUser?.uid
+            if (currentUserUid != null) {
+                mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener { snapshot ->
+                    currentUser = snapshot.getValue(User::class.java)!!
+                    sendRequest(otherUserUid, mDbRef, currentUser)
+                    val intent = Intent(this, SearchOtherUsers::class.java)
+                    startActivity(intent)
+                    Toast.makeText(this@OtherUserProfileNotFriend, "Request Sent!", Toast.LENGTH_SHORT).show()
+
+                }.addOnFailureListener { exception ->
+                    // handle error
+                }
             }
         }
     }
@@ -157,5 +185,92 @@ class OtherUserProfileNotFriend: AppCompatActivity() {
         val matrix = Matrix()
         matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
+    }
+    // Sends friend request to user and saves requests in database for both sender and recipient
+    fun sendRequest(searchUID: String, mDbRef: DatabaseReference, currentUser: User) {
+        mDbRef.child("user").child(searchUID).get().addOnSuccessListener {
+            val foundFriend = it.getValue(User::class.java)
+
+            // Error handler if getValue doesn't "populate" the foundFriend user object
+            // **For Debugging Purposes**
+            if (foundFriend == null) {
+
+                Toast.makeText(this, "**BIG ERROR HERE FIX**", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
+
+            // Request not sent if the user blocked the sender
+            if (foundFriend.blockedUsers.contains(currentUser.uid)) {
+                Toast.makeText(this, "You were blocked by this user, request not sent", Toast.LENGTH_LONG).show()
+                return@addOnSuccessListener
+            }
+
+            // TODO If friend request was already sent before, this doesn't work
+            if (foundFriend.friendRequests.contains(FriendR(currentUser.uid, foundFriend.uid, true))) {
+
+                Toast.makeText(this, "Friend request already sent", Toast.LENGTH_SHORT).show()
+
+            } else {
+
+                // Adding the request to both user's request list
+                foundFriend.friendRequests.add(FriendR(currentUser.uid, foundFriend.uid, true))
+                currentUser.friendRequests.add(FriendR(currentUser.uid,
+                    foundFriend.uid, false))
+
+                // Uploading friend requests to database of both parties
+                foundFriend.uid?.let { ffuid -> mDbRef.child("user").child(ffuid).child("friendRequests")
+                    .setValue(foundFriend.friendRequests)}
+                currentUser.uid?.let { cuuid -> mDbRef.child("user").child(cuuid).child("friendRequests")
+                    .setValue(currentUser.friendRequests)}
+
+                if (foundFriend.notifications!! && foundFriend.frNotifs!!) {
+                    val topic = "/topics/" + foundFriend.uid.toString()
+
+                    val notification = JSONObject()
+                    val notificationBody = JSONObject()
+
+                    try {
+                        notificationBody.put("title", "You have a Friend Request!")
+                        notificationBody.put(
+                            "message",
+                            currentUser.name + " has just sent you a friend request!"
+                        )
+                        notification.put("to", topic)
+                        notification.put("data", notificationBody)
+                        Log.e("TAG", "try")
+                    } catch (e: JSONException) {
+                        Log.e("TAG", "onSend: " + e.message)
+                    }
+
+                    sendNotification(notification)
+                }
+            }
+
+        } .addOnFailureListener {
+            // If user not found
+            Toast.makeText(this, "User Not In Database", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun sendNotification(notification: JSONObject) {
+        Log.e("TAG", "sendNotification")
+        val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
+            Response.Listener<JSONObject> { response ->
+                Log.i("TAG", "onResponse: $response")
+            },
+            Response.ErrorListener {
+                Toast.makeText(this@OtherUserProfileNotFriend, "Request error", Toast.LENGTH_LONG).show()
+                Log.i("TAG", "onErrorResponse: Didn't work")
+            }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["Authorization"] = serverKey
+                params["Content-Type"] = contentType
+                return params
+            }
+        }
+
+        requestQueue.add(jsonObjectRequest)
     }
 }

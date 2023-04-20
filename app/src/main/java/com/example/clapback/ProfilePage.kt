@@ -21,6 +21,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
@@ -38,9 +39,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var notificationToggleall: Switch
-    private lateinit var notificationTogglem: Switch
-    private lateinit var notificationTogglefr: Switch
+    //private lateinit var notificationToggleall: Switch
+    //private lateinit var notificationTogglem: Switch
+    //private lateinit var notificationTogglefr: Switch
 
 
     // Username's set parameters on profile page
@@ -70,8 +71,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         image = findViewById(R.id.profile_image)
 
         // Text fields on user profile page
-        userBio = findViewById(R.id.name)
-        username = findViewById(R.id.username)
+        //userBio = findViewById(R.id.name)
+        username = findViewById(R.id.name)
         socialMedia = findViewById(R.id.social)
 
         profileUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
@@ -79,17 +80,27 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
+        var strk: Int? = 0
+        mDbRef.child("user").child(profileUid!!).child("streak").get().addOnSuccessListener {
+            strk = it.getValue<Int?>()
+
+            //if less than 50 you cant see custom
+            if ((strk)!! >= 50) {
+                newReactions.findViewById<TextView>(R.id.custName).text = "Custom Reactions"
+            }
+        }
+
         // Setting the profile picture's username and Bio fields
         if (profileUid != null) {
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                 val currentUser = it.getValue(User::class.java)
 
-                if (!currentUser?.bio.equals("")) {
+                /*if (!currentUser?.bio.equals("")) {
                     userBio.setText(currentUser?.bio + " | " + currentUser?.fmovie + " | " +
                             currentUser?.fmusic + " | " + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
-                }
+                }*/
 
                 if (!currentUser?.social.equals("")) {
                     socialMedia.setText(currentUser?.social).toString()
@@ -129,16 +140,30 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             startActivity(intent)
         }
 
+        newReactions.setOnClickListener{
+
+            //if less than 50 you cant see custom
+            if ((strk)!! >= 50) {
+                val intent = Intent(this, CustomReactions::class.java)
+                startActivity(intent)
+            }
+        }
 
         // Blocked users button
         blockedUsers.setOnClickListener {
             val intent = Intent(this, BlockedUsersPage::class.java)
             startActivity(intent)
-        }    
+        }
+
+
 
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
 
+            startActivity(intent)
+        }
+        bio.setOnClickListener {
+            val intent = Intent(this, FavoritesAndBio::class.java)
             startActivity(intent)
         }
     }

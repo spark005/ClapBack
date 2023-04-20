@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 
@@ -93,7 +94,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         }
                         4 -> {
                             val storage = FirebaseStorage.getInstance().reference.child("reactions/$receiver")
-                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            val pic = File.createTempFile("customReaction", "jpg")
                             storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
                                 val bitmap: Bitmap =
                                     modifyOrientation(
@@ -104,6 +105,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             }.addOnFailureListener{
 
                             }
+                        }
+                        5 -> {
+                            reaction.setImageResource(R.drawable.tup)
+                        }
+                        6 -> {
+                            reaction.setImageResource(R.drawable.tdown)
                         }
                     }
                 } else {
@@ -151,7 +158,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         }
                         4 -> {
                             val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
-                            val pic = File.createTempFile(currentMessage.reactName, "jpg")
+                            val pic = File.createTempFile("customReaction", "jpg")
                             storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
                                 val bitmap: Bitmap =
                                     modifyOrientation(
@@ -162,6 +169,12 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                             }.addOnFailureListener{
 
                             }
+                        }
+                        5 -> {
+                            reaction.setImageResource(R.drawable.tup)
+                        }
+                        6 -> {
+                            reaction.setImageResource(R.drawable.tdown)
                         }
                     }
                 } else {
@@ -259,6 +272,23 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                 val popup = PopupMenu(context, holder.itemView)
                                 popup.inflate(R.menu.reactions)
 
+                                //very 3am kind of way to get a user's current streak
+                                var strk: Int? = 0
+                                mDbRef.child("user").child(sender!!).child("streak").get().addOnSuccessListener {
+                                    strk = it.getValue<Int?>()
+
+                                    //if less than 50 you cant see custom
+                                    if ((strk)!! < 50) {
+                                        popup.menu.findItem(R.id.customReacts).isVisible = false
+                                        if ((strk)!! < 20) {
+                                            popup.menu.findItem(R.id.thumbsDown).isVisible = false
+                                            if ((strk)!! < 5) {
+                                                popup.menu.findItem(R.id.thumbsUp).isVisible = false
+                                            }
+                                        }
+                                    }
+                                }
+
 
                                 popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
@@ -273,6 +303,14 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                         }
                                         R.id.laugh -> {
                                             currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.thumbsUp -> {
+                                            currentMessage.setReaction(5, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.thumbsDown -> {
+                                            currentMessage.setReaction(6, mDbRef, senderRoom, receiverRoom, key.toString())
                                             notifyDataSetChanged()
                                         }
                                         R.id.customReacts -> {
@@ -309,7 +347,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                                                 srAdapter.notifyDataSetChanged()
                                             }
 
-                                            notifyDataSetChanged()
                                         }
                                     }
 
