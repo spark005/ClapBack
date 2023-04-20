@@ -39,9 +39,9 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
     private lateinit var detector: GestureDetectorCompat
     private lateinit var image: CircleImageView
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var notificationToggleall: Switch
-    private lateinit var notificationTogglem: Switch
-    private lateinit var notificationTogglefr: Switch
+    //private lateinit var notificationToggleall: Switch
+    //private lateinit var notificationTogglem: Switch
+    //private lateinit var notificationTogglefr: Switch
 
 
     // Username's set parameters on profile page
@@ -71,8 +71,8 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         image = findViewById(R.id.profile_image)
 
         // Text fields on user profile page
-        userBio = findViewById(R.id.name)
-        username = findViewById(R.id.username)
+        //userBio = findViewById(R.id.name)
+        username = findViewById(R.id.name)
         socialMedia = findViewById(R.id.social)
 
         profileUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
@@ -95,12 +95,12 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
             mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                 val currentUser = it.getValue(User::class.java)
 
-                if (!currentUser?.bio.equals("")) {
+                /*if (!currentUser?.bio.equals("")) {
                     userBio.setText(currentUser?.bio + " | " + currentUser?.fmovie + " | " +
                             currentUser?.fmusic + " | " + currentUser?.fbook).toString()
                 } else {
                     userBio.setText("Bio").toString()
-                }
+                }*/
 
                 if (!currentUser?.social.equals("")) {
                     socialMedia.setText(currentUser?.social).toString()
@@ -160,6 +160,10 @@ class ProfilePage : AppCompatActivity(), OnSwipeListener {
         searchUsers.setOnClickListener {
             val intent = Intent(this, SearchOtherUsers::class.java)
 
+            startActivity(intent)
+        }
+        bio.setOnClickListener {
+            val intent = Intent(this, FavoritesAndBio::class.java)
             startActivity(intent)
         }
     }

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -47,6 +48,7 @@ import kotlin.time.toDuration
 import java.io.File
 import java.net.URI
 import java.time.*
+import java.util.concurrent.TimeUnit
 
 
 private const val RC_SELECT_IMAGE = 2
@@ -139,6 +141,31 @@ class ChatActivity : BaseActivity() {
                 }
             }
         }
+
+        /**
+         * If the other user is CB, then display the remaining time on the tool bar
+         */
+            val handler = Handler()
+            handler.post(object : Runnable {
+                override fun run() {
+
+                    mDbRef.child("user").child(currentUserUid).child("clapback").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.getValue(String::class.java) == receiverUID) {
+                                supportActionBar?.subtitle = Time.CURRENT_REMAINING_TIME
+                            }
+                        }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                        }
+                    })
+
+
+                //    supportActionBar?.subtitle = Time.CURRENT_REMAINING_TIME
+                    handler.postDelayed(this, 1000)
+                }
+            })
+
+
 
         typingText = findViewById(R.id.typing_text)
         typingIndicator = findViewById(R.id.typingIndicator)

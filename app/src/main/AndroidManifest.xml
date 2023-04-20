@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClapBack">
         <activity
+            android:name=".FavoritesAndBio"
+            />
+        <activity
             android:name=".SelectReaction"
             android:exported="false" />
         <activity
@@ -35,26 +38,21 @@
             </intent-filter>
         </service>
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
 
-
-
         <activity
             android:name=".SettingsActivity"
             android:exported="true"
             android:label="Settings" />
-            
-        <activity
-            android:name=".Settings"/>
+        <activity android:name=".Settings" />
         <activity
             android:name=".BlockedUsersPage"/>
         <activity
