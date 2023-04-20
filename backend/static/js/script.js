@@ -277,3 +277,22 @@ function pairFriends() {
       console.log(e)
   })
 }
+
+function resetAtMidnight() {
+  var now = new Date();
+  var night = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0, 0, 0
+  );
+  var msToMidnight = night.getTime() - now.getTime();
+  console.log(msToMidnight)
+
+  setTimeout(function() {
+      pairFriends();
+      resetAtMidnight();
+  }, msToMidnight);
+}
+
+resetAtMidnight()
