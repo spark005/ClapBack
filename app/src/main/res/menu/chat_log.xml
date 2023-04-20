@@ -6,4 +6,7 @@
     <item
         android:id="@+id/request_prompt"
         android:title="Conversation prompt"/>
+    <item
+        android:id="@+id/back_to_chats"
+        android:title="Back"/>
 </menu>

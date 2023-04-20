@@ -394,6 +394,12 @@ class ChatActivity : BaseActivity() {
                     }
                 return true
             }
+            R.id.back_to_chats -> {
+                val intent = Intent(this@ChatActivity, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
