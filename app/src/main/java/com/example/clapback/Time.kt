@@ -94,26 +94,30 @@ class Time : AppCompatActivity() {
                 //Set progress bar status to streaks
                 progressStatus = new_streak!!.toInt()
 
-                if (progressStatus == 50 && !(iknow!!)) {
-                    val warning = AlertDialog.Builder(this@Time)
-                    warning.setTitle("Congratulations!")
-                    warning.setMessage("You unlocked custom Reactions!")
+                if (progressStatus == 50) {
+                    if (!(iknow!!)) {
+                        val warning = AlertDialog.Builder(this@Time)
+                        warning.setTitle("Congratulations!")
+                        warning.setMessage("You unlocked custom Reactions!")
 
-                    warning.setPositiveButton("Alright!") { dialog, which ->
-                        dialog.cancel()
+                        warning.setPositiveButton("Alright!") { dialog, which ->
+                            dialog.cancel()
+                        }
+                        warning.show()
+                        mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
                     }
-                    warning.show()
-                    mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
-                } else if ((progressStatus == 5 || progressStatus == 20) && !(iknow!!)) {
-                    val warning = AlertDialog.Builder(this@Time)
-                    warning.setTitle("Congratulations!")
-                    warning.setMessage("You unlocked a new reaction!")
+                } else if (progressStatus == 5 || progressStatus == 20) {
+                    if (!(iknow!!)) {
+                        val warning = AlertDialog.Builder(this@Time)
+                        warning.setTitle("Congratulations!")
+                        warning.setMessage("You unlocked a new reaction!")
 
-                    warning.setPositiveButton("Alright!") { dialog, which ->
-                        dialog.cancel()
+                        warning.setPositiveButton("Alright!") { dialog, which ->
+                            dialog.cancel()
+                        }
+                        warning.show()
+                        mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
                     }
-                    warning.show()
-                    mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
                 } else {
                     mDbRef.child("user").child(currentUid).child("iKnow").setValue(false)
                 }
