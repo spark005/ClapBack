@@ -29,7 +29,7 @@
     <RelativeLayout
         android:id="@+id/reactionBoxC"
         android:layout_width="wrap_content"
-        android:layout_toLeftOf="@id/convo_prompt"
+        android:layout_alignLeft="@id/convo_prompt"
         android:layout_marginRight="-15dp"
         android:layout_marginTop="35dp"
         android:layout_height="wrap_content"

@@ -384,6 +384,8 @@ class ChatActivity : BaseActivity() {
                 Log.d("Sender room", senderRoom!!)
                 Log.d("Receiver room", receiverRoom!!)
                 val timestamp:String? = System.currentTimeMillis().toString()
+
+                //placeholders for now
                 var promptIndex = 0
                 val messageObj = Message("How was your day today?", "prompt" + promptIndex.toString(), timestamp)
 
@@ -394,6 +396,7 @@ class ChatActivity : BaseActivity() {
                     }
                 return true
             }
+            //back button
             R.id.back_to_chats -> {
                 val intent = Intent(this@ChatActivity, MainActivity::class.java)
                 finish()

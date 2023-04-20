@@ -283,6 +283,85 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
 
         holder.itemView.setOnClickListener {
             when (holder.javaClass) {
+                ConversationPromptViewHolder::class.java -> {
+                    val viewHolder = holder as ConversationPromptViewHolder
+                    //val key = messageKeys[position]
+                    val key = currentMessage.messageId
+                    val firstPopup = PopupMenu(context, holder.itemView)
+                    firstPopup.inflate(R.menu.r_or_r)
+                    firstPopup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                        when (item!!.itemId) {
+                            R.id.reply -> {
+                                repto.findViewById<TextView>(R.id.replyingTo).text = holder.conversationPrompt.text
+                                repto.visibility = View.VISIBLE
+                            }
+                            R.id.react -> {
+                                val popup = PopupMenu(context, holder.itemView)
+                                popup.inflate(R.menu.reactions)
+
+                                popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                                    when (item!!.itemId) {
+                                        R.id.heart -> {
+                                            currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.question -> {
+                                            currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.laugh -> {
+                                            currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.customReacts -> {
+                                            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                                            builder.setTitle("Reactions")
+
+                                            //set the view as recycler
+                                            builder.setView(R.layout.select_reaction_view)
+
+
+                                            builder.setNegativeButton("Cancel"){ dialog, which ->
+                                                dialog.cancel()
+                                            }
+
+                                            // have to show first before we can edit recycler
+                                            val built = builder.show()
+                                            val rcv = built.findViewById<RecyclerView>(R.id.reactionCustomRecyclerView)
+                                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                                            val reactionList = ArrayList<String>()
+                                            val srAdapter = SelectReaction(built.context, reactionList, storage, currentMessage, mDbRef, senderRoom, receiverRoom, built)
+                                            //set layout as grid with a row size of
+                                            rcv.layoutManager = GridLayoutManager(built.context, 5)
+                                            rcv.adapter = srAdapter
+
+                                            reactionList.clear()
+                                            //get all stored reactions and add them to the reactionList.
+                                            //Its not instantaneous so added an onComplete
+                                            storage.listAll().addOnCompleteListener {
+                                                for (react in it.getResult().items) {
+                                                    reactionList.add(react.name)
+                                                    srAdapter.notifyDataSetChanged()
+                                                }
+
+                                                srAdapter.notifyDataSetChanged()
+                                            }
+
+                                        }
+                                    }
+
+                                    true
+                                })
+                                popup.show()
+                            }
+                        }
+
+                        true
+                    })
+                    firstPopup.show()
+                }
                 ReceiveViewHolder::class.java -> {
                     val viewHolder = holder as ReceiveViewHolder
                     //val key = messageKeys[position]
