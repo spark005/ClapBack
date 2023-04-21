@@ -117,6 +117,7 @@ class ChatActivity : BaseActivity() {
             }
             val color = PreferenceManager.getDefaultSharedPreferences(this).getInt("Color", 0)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+            //supportActionBar?.
         } else if (isDark()) {
             background.setImageResource(R.drawable.dark)
             findViewById<ImageView>(R.id.sentButton).setImageResource(R.drawable.whitesend)
@@ -286,15 +287,6 @@ class ChatActivity : BaseActivity() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        fun notific() {
-            var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("You got a message")
-                .setContentText("Do you want to view it?")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-            notificationManager.notify(1234, builder.build())
-        }
 
         // logic for adding data to recyclerView
         mDbRef.child("chats").child(senderRoom!!).child("messages")
