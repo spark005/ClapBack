@@ -58,7 +58,8 @@ class recFriends : AppCompatActivity() {
                     if (randUser.friendlist.size != 0) {
                         Log.d("CURRENT USER", "-------------" + randUser.friendlist.size + "----------------")
                         for (randUsers in randUser.friendlist) {
-                            if (randUsers == currentUserUID) {
+                            // Checking if the friend friend's is you or an already added friend
+                            if (randUsers == currentUserUID || currentUser.friendlist.contains(randUsers)) {
                                 continue
                             }
                             mDbRef.child("user").child(randUsers).get().addOnSuccessListener { rand ->
