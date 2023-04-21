@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -105,6 +106,9 @@ class ChatActivity : BaseActivity() {
             }
             val color = PreferenceManager.getDefaultSharedPreferences(this).getInt("Color", 0)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+        } else if (isDark()) {
+            background.setImageResource(R.drawable.dark)
+            findViewById<ImageView>(R.id.sentButton).setImageResource(R.drawable.whitesend)
         } else {
             chatLayout.setBackgroundColor(getResources().getColor(getColor()))
         }

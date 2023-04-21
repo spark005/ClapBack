@@ -44,14 +44,14 @@ abstract class BaseActivity : AppCompatActivity() {
             else -> -1
         }
         PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(KEY_THEME, currentTheme).apply()
-        if (currentTheme == THIRD) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("Background", 0).apply()
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("Color", 0).apply()
-        }
     }
 
     protected fun isCustom(): Boolean {
         return currentTheme == -1
+    }
+
+    protected fun isDark(): Boolean {
+        return currentTheme == THIRD
     }
 
     private fun getColorPrimary() = when(currentTheme) {
