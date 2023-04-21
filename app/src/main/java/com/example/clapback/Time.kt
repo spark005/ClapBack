@@ -106,11 +106,11 @@ class Time : AppCompatActivity() {
                         warning.show()
                         mDbRef.child("user").child(currentUid).child("iKnow").setValue(true)
                     }
-                } else if (progressStatus == 5 || progressStatus == 20) {
+                } else if (progressStatus == 10 || progressStatus == 40) {
                     if (!(iknow!!)) {
                         val warning = AlertDialog.Builder(this@Time)
                         warning.setTitle("Congratulations!")
-                        warning.setMessage("You unlocked a new reaction!")
+                        warning.setMessage("You unlocked a new theme!")
 
                         warning.setPositiveButton("Alright!") { dialog, which ->
                             dialog.cancel()
@@ -202,19 +202,36 @@ class Time : AppCompatActivity() {
 
             progressBarHorizontal.progress = progressStatus
             if (progressStatus < 50) {
-                if (progressStatus < 20) {
-                    if (progressStatus < 5) {
-                        //progressStatus < 5
-                        progressBarHorizontal.max = 5
+                if (progressStatus < 40) {
+                    if (progressStatus < 20) {
+                        if (progressStatus < 10) {
+                            if (progressStatus < 5) {
+                                //progressStatus < 5
+                                progressBarHorizontal.max = 5
+                                textViewHorizontalProgress.text =
+                                    (progressBarHorizontal.max - progressStatus).toString() + " days till next reaction!"
+                            } else {
+                                //5 <= progressStatus < 10
+                                progressBarHorizontal.max = 10
+                                textViewHorizontalProgress.text =
+                                    (progressBarHorizontal.max - progressStatus).toString() + " days till dark theme!"
+                            }
+                            //10 <= progressStatus < 20
+                            progressBarHorizontal.max = 20
+                            textViewHorizontalProgress.text =
+                                (progressBarHorizontal.max - progressStatus).toString() + " days till next reaction!"
+                        }
                     } else {
-                        //5 <= progressStatus < 20
-                        progressBarHorizontal.max = 20
+                        //20 <= progressStatus < 40
+                        progressBarHorizontal.max = 40
+                        textViewHorizontalProgress.text =
+                            (progressBarHorizontal.max - progressStatus).toString() + " days till custom reactions!"
                     }
-                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till next reaction!"
                 } else {
-                    //20 <= progressStatus < 50
+                    //40 <= progressStatus < 50
                     progressBarHorizontal.max = 50
-                    textViewHorizontalProgress.text = (progressBarHorizontal.max - progressStatus).toString() + " days till custom reactions!"
+                    textViewHorizontalProgress.text =
+                        (progressBarHorizontal.max - progressStatus).toString() + " days till custom themes!"
                 }
             } else {
                 //progressStatus >= 50

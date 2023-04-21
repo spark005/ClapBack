@@ -179,14 +179,24 @@ class MainActivity : BaseActivity(), OnSwipeListener {
         }
 
         if (item.itemId == R.id.themes) {
-            val items = arrayOf("Default Theme", "Warm Theme", "Customize")
+
+            val items: Array<String>
+            if (currentUser.streak!! < 40) {
+                if (currentUser.streak!! < 10) {
+                    items = arrayOf("Default Theme", "Warm Theme")
+                } else {
+                    items = arrayOf("Default Theme", "Warm Theme", "Dark Theme")
+                }
+            } else {
+                items = arrayOf("Default Theme", "Warm Theme", "Dark Theme", "Customize")
+            }
             val builder = AlertDialog.Builder(this)
 
             with(builder) {
                 setTitle("Change Themes")
                 setItems(items) { dialog, which ->
                     switchTheme(items[which])
-                    if (which == 2) {
+                    if (which == 3) {
                         val intent = Intent(this@MainActivity, CustomizeTheme::class.java)
                         finish()
                         startActivity(intent)
