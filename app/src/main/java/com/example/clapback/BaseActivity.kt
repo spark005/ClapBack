@@ -40,6 +40,7 @@ abstract class BaseActivity : AppCompatActivity() {
         currentTheme = when(theme) {
             "Default Theme" -> DEFAULT
             "Warm Theme" -> SECOND
+            "Dark Theme" -> THIRD
             else -> -1
         }
         PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(KEY_THEME, currentTheme).apply()
@@ -49,15 +50,21 @@ abstract class BaseActivity : AppCompatActivity() {
         return currentTheme == -1
     }
 
+    protected fun isDark(): Boolean {
+        return currentTheme == THIRD
+    }
+
     private fun getColorPrimary() = when(currentTheme) {
         DEFAULT -> R.color.blue
         SECOND -> R.color.colorPrimarySecond
+        THIRD -> R.color.black
         else -> android.R.color.background_light
     }
 
     protected fun getColor() = when(currentTheme) {
         DEFAULT -> R.color.white
         SECOND -> R.color.colorAccentSecond
+        THIRD -> R.color.black
         else -> android.R.color.background_light
     }
 
@@ -65,5 +72,6 @@ abstract class BaseActivity : AppCompatActivity() {
         private const val KEY_THEME = "Theme"
         private const val DEFAULT = R.style.Theme_ClapBack
         private const val SECOND = R.style.Theme_Second
+        private const val THIRD = R.style.Theme_Third
     }
 }

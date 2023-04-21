@@ -70,5 +70,28 @@
             android:layout_height="wrap_content"
             android:padding="15dp"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cbnots"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frnots">
+
+        <TextView
+            android:id="@+id/cbtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:padding="15dp"
+            android:text="CB"
+            android:layout_weight="1"/>
+
+        <Switch
+            android:id="@+id/cbtoggle_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"/>
+    </LinearLayout>
 </RelativeLayout>
 

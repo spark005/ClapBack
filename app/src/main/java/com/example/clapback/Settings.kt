@@ -28,6 +28,7 @@ class Settings : AppCompatActivity() {
     private lateinit var notificationToggleall: Switch
     private lateinit var notificationTogglem: Switch
     private lateinit var notificationTogglefr: Switch
+    private lateinit var notificationTogglecb: Switch
 
     private lateinit var profileUid: String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,11 +70,14 @@ class Settings : AppCompatActivity() {
 
                 notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.frqtoggle_notifications)
 
+                notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.cbtoggle_notifications)
+
                 mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                     val currentUser = it.getValue(User::class.java)
                     notificationToggleall.isChecked = currentUser?.notifications!!
                     notificationTogglem.isChecked = currentUser?.messNotifs!!
                     notificationTogglefr.isChecked = currentUser?.frNotifs!!
+                    notificationTogglecb.isChecked = currentUser?.cbNotifs!!
                 }
                 setView(dialogLayoutall)
                 setPositiveButton("OK") { dialogInterface, i -> setNotifications(dialogInterface, i) }
@@ -116,7 +120,7 @@ class Settings : AppCompatActivity() {
         mDbRef.child("user").child(profileUid).child("notifications").setValue(notificationToggleall.isChecked)
         mDbRef.child("user").child(profileUid).child("messNotifs").setValue(notificationTogglem.isChecked)
         mDbRef.child("user").child(profileUid).child("frNotifs").setValue(notificationTogglefr.isChecked)
-
+        mDbRef.child("user").child(profileUid).child("cbNotifs").setValue(notificationTogglecb.isChecked)
     }
 
     // Function to completely delete user
