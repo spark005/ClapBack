@@ -13,9 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -93,7 +91,7 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
             intent.putExtra("uid", currentUser.uid)
 
 
-
+            Toast.makeText(context, "messaging locked for this user", Toast.LENGTH_LONG).show()
             context.startActivity(intent)
         }
     }
