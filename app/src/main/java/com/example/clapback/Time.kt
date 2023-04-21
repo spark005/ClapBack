@@ -172,6 +172,7 @@ class Time : AppCompatActivity() {
                                         textViewHorizontalProgress.text =
                                             (progressBarHorizontal.max - progressStatus).toString() + " days till dark theme!"
                                     }
+                                } else {
                                     //10 <= progressStatus < 20
                                     progressBarHorizontal.max = 20
                                     textViewHorizontalProgress.text =
