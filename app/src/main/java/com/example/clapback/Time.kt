@@ -56,6 +56,7 @@ class Time : AppCompatActivity() {
     var progressStatus = 0
     var handler: Handler? = null
     var iknow: Boolean? = false
+    var cbnoti = false
 
     private var remainingTimeInMillis: Long = 0
     private var countdownTimer: CountDownTimer? = null
@@ -229,7 +230,7 @@ class Time : AppCompatActivity() {
                             cb_image.setImageResource(R.drawable.pfp)
                         }
 
-                        if (!(cb == null)) {
+                        if (!(cb == null) && cbnoti) {
                             if (cb.notifications!! && cb.cbNotifs!!) {
                                 val notification = JSONObject()
                                 val notifcationBody = JSONObject()
@@ -249,6 +250,8 @@ class Time : AppCompatActivity() {
 
                                 sendNotification(notification)
                             }
+                        } else {
+                            cbnoti = true
                         }
 
                         Log.d("Target User", cb?.name!!)
