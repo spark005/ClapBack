@@ -15,13 +15,20 @@ import android.view.MotionEvent
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -52,6 +59,14 @@ class Time : AppCompatActivity() {
 
     private var remainingTimeInMillis: Long = 0
     private var countdownTimer: CountDownTimer? = null
+    private val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private val serverKey =
+        "key=" + "AAAAE_TUIns:APA91bE-ueNd3N7EXpSiRujjrZIenbNz3ihrMZ1Tl9Y2dPce-EsAo0ei5PsfS2YcXxStzBnHcZ4CKG5jpPJBt248JiQRikj3_1xmvE-Xlt0XIJuVy9IeMNcN-Q7uJHZO9J7EGTNHNo4r"
+    private val contentType = "application/json"
+
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(this.applicationContext)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +88,7 @@ class Time : AppCompatActivity() {
 
         currentUid = mAuth.currentUser?.uid.toString()
 
+        //used for reward notifications
         mDbRef.child("user").child(currentUid).child("iKnow").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 iknow = snapshot.getValue(Boolean::class.java)
@@ -86,6 +102,7 @@ class Time : AppCompatActivity() {
             }
         })
 
+        //streak rewards
         mDbRef.child("user").child(currentUid).child("streak").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val new_streak = snapshot.getValue(Integer::class.java)
@@ -94,6 +111,7 @@ class Time : AppCompatActivity() {
                 //Set progress bar status to streaks
                 progressStatus = new_streak!!.toInt()
 
+                //reward popup
                 if (progressStatus == 50) {
                     if (!(iknow!!)) {
                         val warning = AlertDialog.Builder(this@Time)
@@ -208,6 +226,28 @@ class Time : AppCompatActivity() {
 
                         }.addOnFailureListener{
                             cb_image.setImageResource(R.drawable.pfp)
+                        }
+
+                        if (!(cb == null)) {
+                            if (cb.notifications!! && cb.cbNotifs!!) {
+                                val notification = JSONObject()
+                                val notifcationBody = JSONObject()
+                                val topic = "/topics/" + cb_uid
+
+                                try {
+                                    notifcationBody.put("title", "CB TIME!")
+                                    notifcationBody.put(
+                                        "message",
+                                        "Your CB is Ready!"
+                                    )   //Enter your notification message
+                                    notification.put("to", topic)
+                                    notification.put("data", notifcationBody)
+                                } catch (e: JSONException) {
+
+                                }
+
+                                sendNotification(notification)
+                            }
                         }
 
                         Log.d("Target User", cb?.name!!)
@@ -402,5 +442,24 @@ class Time : AppCompatActivity() {
         val matrix = Matrix()
         matrix.preScale(if (horizontal) (-1f) else 1f, if (vertical) (-1f) else 1f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true);
+    }
+
+    private fun sendNotification(notification: JSONObject) {
+        val jsonObjectRequest = object : JsonObjectRequest(FCM_API, notification,
+            Response.Listener<JSONObject> {
+
+            },
+            Response.ErrorListener {
+                Toast.makeText(this@Time, "Request error", Toast.LENGTH_LONG).show()
+            }) {
+
+            override fun getHeaders(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["Authorization"] = serverKey
+                params["Content-Type"] = contentType
+                return params
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
     }
 }
