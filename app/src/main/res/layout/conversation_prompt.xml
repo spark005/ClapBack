@@ -20,6 +20,7 @@
             android:id="@+id/txt_convo_prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="300dp"
             android:text="This is sent message"
             android:textColor="@color/white"
             android:padding="10dp"

@@ -419,6 +419,7 @@ class ChatActivity : BaseActivity() {
             R.id.request_prompt -> {
                 //grab array of prompts oncreate, then select one of the prompts
                 //then construct message and send to chatroom
+                //encapsulate in if (friendUid.equals(current user CB))
                 val timestamp:String? = System.currentTimeMillis().toString()
                 val messageObj = Message(prompts[promptIndex.toInt()], "prompt", timestamp)
 
