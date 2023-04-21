@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.renderscript.Sampler.Value
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -141,9 +142,19 @@ class ChatActivity : BaseActivity() {
         senderRoom = receiverUID + senderUid
         receiverRoom = senderUid + receiverUID
 
-        mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").get().addOnSuccessListener {
-            promptIndex = it.value as Long
-        }
+        //mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").get().addOnSuccessListener {
+        //    promptIndex = it.value as Long
+        //}
+        mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").get().addOnSuccessListener {
+                        it.value as Long
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
         mDbRef.child("chats").child(senderRoom!!).child("daily_prompts").addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
@@ -165,11 +176,12 @@ class ChatActivity : BaseActivity() {
                     }
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
+
+        //mDbRef.child("prompts").addValueEventListener(object: ValueEventListener {
+        //    override
+        //})
 
         val mList = null
 

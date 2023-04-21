@@ -1,9 +1,11 @@
 package com.example.clapback
 
+
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Build
@@ -54,6 +56,11 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
                     holder.textName.text = currentUser.name
                 } else {
                     holder.textName.text = nickName
+                }
+                if (currentUser.clapback != currentUserUid)  {
+                    holder.textName.setTextColor(Color.RED)
+                } else {
+                    holder.textName.setTextColor(Color.GRAY)
                 }
             }
         }
