@@ -34,27 +34,31 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
     val ITEM_SENT = 2;
     val IMAGE_RECEIVE = 3
     val IMAGE_SENT = 4
+    val PROMPT = 5
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         when (viewType) {
-            1 -> {
+            ITEM_RECEIVE -> {
                 val view: View = LayoutInflater.from(context).inflate(R.layout.receive, parent, false)
                 return ReceiveViewHolder(view)
             }
-            2 -> {
+            ITEM_SENT -> {
                 val view: View = LayoutInflater.from(context).inflate(R.layout.send, parent, false)
                 return SentViewHolder(view)
             }
-            3 -> {
+            IMAGE_RECEIVE -> {
                 val view: View = LayoutInflater.from(context).inflate(R.layout.receive_image, parent, false)
                 return ReceiveImgViewHolder(view)
 
             }
-
+            IMAGE_SENT -> {
+                val view: View = LayoutInflater.from(context).inflate(R.layout.send_image, parent, false)
+                return SentImgViewHolder(view)
+            }
         }
-        val view: View = LayoutInflater.from(context).inflate(R.layout.send_image, parent, false)
-        return SentImgViewHolder(view)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.conversation_prompt, parent, false)
+        return ConversationPromptViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -249,12 +253,127 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
                         Log.d("Video Attachment", "it didn't")
                     }
                 }
+            }
+            ConversationPromptViewHolder::class.java -> {
+                val viewHolder = holder as ConversationPromptViewHolder
+                holder.conversationPrompt.text = currentMessage.message
+                val reactionBox = holder.itemView.findViewById<RelativeLayout>(R.id.reactionBoxC)
+                if (currentMessage.reaction != null) {
+                    reactionBox.setVisibility(View.VISIBLE)
+                    val reaction = holder.itemView.findViewById<ImageView>(R.id.reactionC)
 
+                    when(currentMessage.reaction) {
+                        1 -> {
+                            reaction.setImageResource(R.drawable.rheart)
+                        }
+                        2 -> {
+                            reaction.setImageResource(R.drawable.rquest)
+                        }
+                        3 -> {
+                            reaction.setImageResource(R.drawable.rnelson)
+                        }
+                        4 -> {
+                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                            val pic = File.createTempFile("customReaction", "jpg")
+                            storage.child(currentMessage.reactName!!).getFile(pic).addOnSuccessListener {
+                                val bitmap: Bitmap =
+                                    modifyOrientation(
+                                        BitmapFactory.decodeFile(pic.absolutePath),
+                                        pic.absolutePath
+                                    )
+                                reaction.setImageBitmap(bitmap)
+                            }.addOnFailureListener{
+
+                            }
+                        }
+                    }
+                } else {
+                    reactionBox.setVisibility(View.GONE)
+                }
             }
         }
 
         holder.itemView.setOnClickListener {
             when (holder.javaClass) {
+                ConversationPromptViewHolder::class.java -> {
+                    val viewHolder = holder as ConversationPromptViewHolder
+                    //val key = messageKeys[position]
+                    val key = currentMessage.messageId
+                    val firstPopup = PopupMenu(context, holder.itemView)
+                    firstPopup.inflate(R.menu.r_or_r)
+                    firstPopup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                        when (item!!.itemId) {
+                            R.id.reply -> {
+                                repto.findViewById<TextView>(R.id.replyingTo).text = holder.conversationPrompt.text
+                                repto.visibility = View.VISIBLE
+                            }
+                            R.id.react -> {
+                                val popup = PopupMenu(context, holder.itemView)
+                                popup.inflate(R.menu.reactions)
+
+                                popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                                    when (item!!.itemId) {
+                                        R.id.heart -> {
+                                            currentMessage.setReaction(1, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.question -> {
+                                            currentMessage.setReaction(2, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.laugh -> {
+                                            currentMessage.setReaction(3, mDbRef, senderRoom, receiverRoom, key.toString())
+                                            notifyDataSetChanged()
+                                        }
+                                        R.id.customReacts -> {
+                                            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                                            builder.setTitle("Reactions")
+
+                                            //set the view as recycler
+                                            builder.setView(R.layout.select_reaction_view)
+
+
+                                            builder.setNegativeButton("Cancel"){ dialog, which ->
+                                                dialog.cancel()
+                                            }
+
+                                            // have to show first before we can edit recycler
+                                            val built = builder.show()
+                                            val rcv = built.findViewById<RecyclerView>(R.id.reactionCustomRecyclerView)
+                                            val storage = FirebaseStorage.getInstance().reference.child("reactions/$sender")
+                                            val reactionList = ArrayList<String>()
+                                            val srAdapter = SelectReaction(built.context, reactionList, storage, currentMessage, mDbRef, senderRoom, receiverRoom, built)
+                                            //set layout as grid with a row size of
+                                            rcv.layoutManager = GridLayoutManager(built.context, 5)
+                                            rcv.adapter = srAdapter
+
+                                            reactionList.clear()
+                                            //get all stored reactions and add them to the reactionList.
+                                            //Its not instantaneous so added an onComplete
+                                            storage.listAll().addOnCompleteListener {
+                                                for (react in it.getResult().items) {
+                                                    reactionList.add(react.name)
+                                                    srAdapter.notifyDataSetChanged()
+                                                }
+
+                                                srAdapter.notifyDataSetChanged()
+                                            }
+
+                                        }
+                                    }
+
+                                    true
+                                })
+                                popup.show()
+                            }
+                        }
+
+                        true
+                    })
+                    firstPopup.show()
+                }
                 ReceiveViewHolder::class.java -> {
                     val viewHolder = holder as ReceiveViewHolder
                     //val key = messageKeys[position]
@@ -463,7 +582,9 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
     override fun getItemViewType(position: Int): Int {
 
         val currentMessage = messageList[position]
-
+        if (currentMessage.senderId!!.startsWith("prompt")) {
+            return PROMPT
+        }
         if (FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
             if (currentMessage.image != null) {
                 return IMAGE_SENT
@@ -475,7 +596,6 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
             return IMAGE_RECEIVE
         }
         return ITEM_RECEIVE
-
     }
 
     override fun getItemCount(): Int {
@@ -497,5 +617,9 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>,
     class ReceiveImgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveImgMessage = itemView.findViewById<ImageView>(R.id.received_image)
         val receiveVidMessage = itemView.findViewById<VideoView>(R.id.received_video)
+    }
+
+    class ConversationPromptViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val conversationPrompt = itemView.findViewById<TextView>(R.id.txt_convo_prompt)
     }
 }

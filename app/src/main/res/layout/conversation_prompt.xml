@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/convo_prompt"
+        android:layout_width="wrap_content"
+        android:background="@drawable/btn_background_3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        >
+
+        <!--android:layout_below="@id/replyMessage"
+        android:layout_above="@+id/sentMessage"-->
+        <TextView
+            android:id="@+id/txt_convo_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:text="This is sent message"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reactionBoxC"
+        android:layout_width="wrap_content"
+        android:layout_alignLeft="@id/convo_prompt"
+        android:layout_marginRight="-15dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/reactionC"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>
