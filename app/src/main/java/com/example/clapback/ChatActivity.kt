@@ -55,13 +55,14 @@ private const val RC_SELECT_IMAGE = 2
 class ChatActivity : BaseActivity() {
 
     private lateinit var chatLayout: RelativeLayout
+    private lateinit var messageWriter: LinearLayout
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sendButton: ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var messageKeys: ArrayList<String?>
-    private lateinit var  mDbRef: DatabaseReference
+    private lateinit var mDbRef: DatabaseReference
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
     private lateinit var selectImageButton: ImageView
@@ -95,8 +96,10 @@ class ChatActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        messageWriter = findViewById(R.id.linearLayout)
         chatLayout = findViewById(R.id.chat_layout)
         background = findViewById(R.id.background)
+
         if (isCustom()) {
             backgroundPic = PreferenceManager.getDefaultSharedPreferences(this).getString("Background", null)
             if (backgroundPic != null) {
@@ -139,6 +142,15 @@ class ChatActivity : BaseActivity() {
                 } else {
                     supportActionBar?.title = nickName
                 }
+            }
+        }
+
+        // Implementation for locking user out of chatting with other users
+        mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener {
+            val currentUser = it.getValue(User::class.java)!!
+            if (currentUser.clapback != receiverUID) {
+                Toast.makeText(this, "Not your CB! Cannot send messages", Toast.LENGTH_LONG).show()
+                messageWriter.visibility = View.GONE
             }
         }
 

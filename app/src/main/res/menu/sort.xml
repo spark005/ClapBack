@@ -6,4 +6,7 @@
     <item
         android:id="@+id/go_back"
         android:title="Back" />
+    <item
+        android:id="@+id/rec_friends"
+        android:title="Recommended Friends"/>
 </menu>

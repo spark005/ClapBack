@@ -18,14 +18,18 @@
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/blockeduser_profile.xml" value="0.4" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/delete_account.xml" value="0.264" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/otherusers_profile_page.xml" value="0.2586050724637681" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/rec_friends_page.xml" value="0.1" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/receive.xml" value="0.23550724637681159" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/receive_image.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/request_layout.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/search_all_users.xml" value="0.2" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/send_image.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/setting_layout.xml" value="0.264" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/settings_activity.xml" value="0.3625" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_layout.xml" value="0.264" />
         <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/layout/user_profile_page.xml" value="0.6" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/menu/menu.xml" value="0.264" />
+        <entry key="..\:/Users/swimm/AndroidStudioProjects/ClapBack/app/src/main/res/menu/sort.xml" value="0.24615384615384617" />
       </map>
     </option>
   </component>
