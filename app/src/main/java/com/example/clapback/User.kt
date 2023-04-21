@@ -23,6 +23,7 @@ class User {
     var notifications: Boolean? = true
     var messNotifs: Boolean? = true
     var frNotifs: Boolean? = true
+    var cbNotifs: Boolean? = true
     var friendlist = ArrayList<String>()
     var blockedUsers = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()
