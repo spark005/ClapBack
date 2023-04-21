@@ -67,7 +67,9 @@ class CustomReactionAdapter (val context: Context, var reactionList: ArrayList<S
         holder.reactName.text = reactorName
 
         holder.trash.setOnClickListener {
-
+            storage.child(reactorName).delete().addOnSuccessListener {
+                reactionList.remove(reactorName)
+            }
         }
 
     }

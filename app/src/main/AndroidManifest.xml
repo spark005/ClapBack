@@ -27,7 +27,8 @@
         <activity
             android:name=".CustomReactions"
             android:exported="false" />
-
+        <activity
+            android:name=".recFriends"/>
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="true"

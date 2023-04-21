@@ -18,9 +18,12 @@ class User {
     var social: String? = ""
 
     var streak: Int? = 1
+    //user has already been notified of their reward
+    var iKnow: Boolean? = false
     var notifications: Boolean? = true
     var messNotifs: Boolean? = true
     var frNotifs: Boolean? = true
+    var cbNotifs: Boolean? = true
     var friendlist = ArrayList<String>()
     var blockedUsers = ArrayList<String>()
     var friendRequests = ArrayList<FriendR>()

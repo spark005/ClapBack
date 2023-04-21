@@ -27,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -59,13 +60,14 @@ private const val RC_SELECT_IMAGE = 2
 class ChatActivity : BaseActivity() {
 
     private lateinit var chatLayout: RelativeLayout
+    private lateinit var messageWriter: LinearLayout
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sendButton: ImageView
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var messageKeys: ArrayList<String?>
-    private lateinit var  mDbRef: DatabaseReference
+    private lateinit var mDbRef: DatabaseReference
     private lateinit var channel: NotificationChannel
     private lateinit var notificationManager: NotificationManager
     private lateinit var selectImageButton: ImageView
@@ -102,8 +104,10 @@ class ChatActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        messageWriter = findViewById(R.id.linearLayout)
         chatLayout = findViewById(R.id.chat_layout)
         background = findViewById(R.id.background)
+
         if (isCustom()) {
             backgroundPic = PreferenceManager.getDefaultSharedPreferences(this).getString("Background", null)
             if (backgroundPic != null) {
@@ -112,6 +116,9 @@ class ChatActivity : BaseActivity() {
             }
             val color = PreferenceManager.getDefaultSharedPreferences(this).getInt("Color", 0)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+        } else if (isDark()) {
+            background.setImageResource(R.drawable.dark)
+            findViewById<ImageView>(R.id.sentButton).setImageResource(R.drawable.whitesend)
         } else {
             chatLayout.setBackgroundColor(getResources().getColor(getColor()))
         }
@@ -177,6 +184,15 @@ class ChatActivity : BaseActivity() {
                 } else {
                     supportActionBar?.title = nickName
                 }
+            }
+        }
+
+        // Implementation for locking user out of chatting with other users
+        mDbRef.child("user").child(currentUserUid).get().addOnSuccessListener {
+            val currentUser = it.getValue(User::class.java)!!
+            if (currentUser.clapback != receiverUID) {
+                Toast.makeText(this, "Not your CB! Cannot send messages", Toast.LENGTH_LONG).show()
+                messageWriter.visibility = View.GONE
             }
         }
 
@@ -341,15 +357,6 @@ class ChatActivity : BaseActivity() {
                 }
 
             messageBox.setText("")
-
-
-            /*var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("You got a message")
-                .setContentText("Do you want to view it?")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-            notificationManager.notify(1234, builder.build())*/
 
 
             mDbRef.child("user").child(receiverUID.toString()).get().addOnSuccessListener{

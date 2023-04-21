@@ -150,6 +150,10 @@ class SearchOtherUsers : AppCompatActivity(){
             val intent = Intent(this, ProfilePage::class.java)
             startActivity(intent)
         }
+        if (item.itemId == R.id.rec_friends) {
+            val intent = Intent(this, recFriends::class.java)
+            startActivity(intent)
+        }
         return true
     }
 }
