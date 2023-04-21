@@ -10,6 +10,7 @@ import android.database.Cursor
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import kotlin.collections.*
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -35,6 +36,8 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.storage.FirebaseStorage
 import org.json.JSONException
 import org.json.JSONObject
@@ -71,7 +74,10 @@ class ChatActivity : BaseActivity() {
     private lateinit var backgroundImage: Uri
     private lateinit var typingIndicator: View
     private lateinit var typingText: TextView
+    private lateinit var prompts :List<String>
     var friendUid: String = ""
+    var promptIndex : Long = 0
+    val MAX_INDEX : Long = 9
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -127,6 +133,37 @@ class ChatActivity : BaseActivity() {
 
         senderRoom = receiverUID + senderUid
         receiverRoom = senderUid + receiverUID
+
+        mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").get().addOnSuccessListener {
+            promptIndex = it.value as Long
+        }
+        mDbRef.child("chats").child(senderRoom!!).child("daily_prompts").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    mDbRef.child("prompts").get().addOnSuccessListener {
+                        prompts = it.value as List<String>
+                        //prompts are per chatroom
+                        prompts = prompts.shuffled()
+                        mDbRef.child("chats").child(senderRoom!!).child("daily_prompts").setValue(prompts).addOnSuccessListener {
+                            mDbRef.child("chats").child(receiverRoom!!).child("daily_prompts").setValue(prompts)
+                        }
+                        mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").setValue(0).addOnSuccessListener {
+                            mDbRef.child("chats").child(receiverRoom!!).child("prompt_idx").setValue(0)
+                        }
+                    }
+                }
+                else {
+                    mDbRef.child("chats").child(senderRoom!!).child("daily_prompts").get().addOnSuccessListener {
+                        prompts = it.value as List<String>
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
         val mList = null
 
         var typingRef = mDbRef.child("chats").child(receiverRoom!!).child("senderTyping")
@@ -302,6 +339,7 @@ class ChatActivity : BaseActivity() {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObject.messageId!!)
                         .setValue(messageObject)
                 }
+
             messageBox.setText("")
 
 
@@ -381,25 +419,33 @@ class ChatActivity : BaseActivity() {
             R.id.request_prompt -> {
                 //grab array of prompts oncreate, then select one of the prompts
                 //then construct message and send to chatroom
-                Log.d("Sender room", senderRoom!!)
-                Log.d("Receiver room", receiverRoom!!)
                 val timestamp:String? = System.currentTimeMillis().toString()
-
-                //placeholders for now
-                var promptIndex = 0
-                val messageObj = Message("How was your day today?", "prompt" + promptIndex.toString(), timestamp)
+                val messageObj = Message(prompts[promptIndex.toInt()], "prompt", timestamp)
 
                 mDbRef.child("chats").child(senderRoom!!).child("messages").child(messageObj.messageId!!)
                     .setValue(messageObj).addOnSuccessListener {
                         mDbRef.child("chats").child(receiverRoom!!).child("messages").child(messageObj.messageId!!)
                             .setValue(messageObj)
                     }
+                if (promptIndex == MAX_INDEX) {
+                    prompts = prompts.shuffled()
+                    mDbRef.child("chats").child(senderRoom!!).child("daily_prompts").setValue(prompts).addOnSuccessListener {
+                        mDbRef.child("chats").child(receiverRoom!!).child("daily_prompts").setValue(prompts)
+                    }
+                    promptIndex = 0
+                }
+                else {
+                    promptIndex++
+                }
                 return true
             }
             //back button
             R.id.back_to_chats -> {
+                //please use the back button so that the prompt index is saved
+                mDbRef.child("chats").child(senderRoom!!).child("prompt_idx").setValue(promptIndex).addOnSuccessListener {
+                    mDbRef.child("chats").child(receiverRoom!!).child("prompt_idx").setValue(promptIndex)
+                }
                 val intent = Intent(this@ChatActivity, MainActivity::class.java)
-                finish()
                 startActivity(intent)
                 return true
             }
