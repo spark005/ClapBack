@@ -1,6 +1,7 @@
 package com.example.clapback
 
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -44,8 +45,8 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
         val storage = FirebaseStorage.getInstance().reference.child("profilePic/${currentUser.uid}")
 
 
-
-        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname").child(currentUser.uid!!).child("nickname")
+        val nickName = mDbRef.child("user").child(currentUserUid!!).child("friendlist_nickname")
+            .child(currentUser.uid!!).child("nickname")
 
         nickName.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -55,7 +56,7 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
                 } else {
                     holder.textName.text = nickName
                 }
-                if (currentUser.clapback != currentUserUid)  {
+                if (currentUser.clapback != currentUserUid) {
                     holder.textName.setTextColor(Color.RED)
                 } else {
                     holder.textName.setTextColor(Color.GRAY)
@@ -73,11 +74,11 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
 
             holder.image.setImageBitmap(bitmap)
 
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             holder.image.setImageResource(R.drawable.mongle)
         }
 
-        holder.image.setOnClickListener{
+        holder.image.setOnClickListener {
             val intent = Intent(context, OtherUserProfile::class.java)
             intent.putExtra("uid", currentUser.uid)
 
@@ -85,14 +86,40 @@ class UserAdapter (val context: Context, var userList: ArrayList<User>):
         }
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
+            if (currentUser.clapback != currentUserUid) {
+                val warning = AlertDialog.Builder(context)
+                warning.setTitle("Locked User")
+                warning.setMessage("This user is not your CB, do you still want to enter the chatroom?")
+
+                // If the user chose yes on the warning popup, unblock user
+                warning.setPositiveButton("Yes") { dialog, which ->
+                    val intent = Intent(context, ChatActivity::class.java)
+                    intent.putExtra("name", currentUser.name)
+                    intent.putExtra("uid", currentUser.uid)
+                    context.startActivity(intent)
+                }
+
+                // Warning popup if no
+                warning.setNegativeButton("No") { dialog, which ->
+                    return@setNegativeButton
+                }
+                warning.show()
+                /*val intent = Intent(context, ChatActivity::class.java)
 
             intent.putExtra("name", currentUser.name)
             intent.putExtra("uid", currentUser.uid)
 
 
             Toast.makeText(context, "messaging locked for this user", Toast.LENGTH_LONG).show()
-            context.startActivity(intent)
+            context.startActivity(intent)*/
+            } else {
+                val intent = Intent(context, ChatActivity::class.java)
+
+                intent.putExtra("name", currentUser.name)
+                intent.putExtra("uid", currentUser.uid)
+                context.startActivity(intent)
+
+            }
         }
     }
 
