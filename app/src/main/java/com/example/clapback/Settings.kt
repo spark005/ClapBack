@@ -70,7 +70,7 @@ class Settings : AppCompatActivity() {
 
                 notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.frqtoggle_notifications)
 
-                notificationTogglefr = dialogLayoutall.findViewById<Switch>(R.id.cbtoggle_notifications)
+                notificationTogglecb = dialogLayoutall.findViewById<Switch>(R.id.cbtoggle_notifications)
 
                 mDbRef.child("user").child(profileUid).get().addOnSuccessListener {
                     val currentUser = it.getValue(User::class.java)
